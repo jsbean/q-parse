@@ -9,6 +9,9 @@
 //
 
 #include <iostream>
+#include <assert.h>
+
+#include "Weight.hpp"
 
 int main(int argc, const char * argv[]) {
     // insert code here...

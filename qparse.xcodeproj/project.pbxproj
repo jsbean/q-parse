@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* main.cpp */; };
+		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
+		325121591DA406A000D2C789 /* FloatWeight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121571DA406A000D2C789 /* FloatWeight.cpp */; };
+		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
+		32EBB0B51DA3B3F100D2CBA8 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */; };
+		32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +29,17 @@
 
 /* Begin PBXFileReference section */
 		324E4EBB1D9FC3B100114F39 /* qparse */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qparse; sourceTree = BUILT_PRODUCTS_DIR; };
-		324E4EBE1D9FC3B100114F39 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		324E4EBE1D9FC3B100114F39 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = qparse/main.cpp; sourceTree = "<group>"; };
+		325121541DA4065600D2C789 /* WTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WTA.cpp; path = ../src/Automata/WTA.cpp; sourceTree = "<group>"; };
+		325121551DA4065600D2C789 /* WTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WTA.hpp; path = ../src/Automata/WTA.hpp; sourceTree = "<group>"; };
+		325121571DA406A000D2C789 /* FloatWeight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FloatWeight.cpp; path = ../src/Automata/FloatWeight.cpp; sourceTree = "<group>"; };
+		325121581DA406A000D2C789 /* FloatWeight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FloatWeight.hpp; path = ../src/Automata/FloatWeight.hpp; sourceTree = "<group>"; };
+		32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Weight.cpp; path = src/Automata/Weight.cpp; sourceTree = SOURCE_ROOT; };
+		32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Weight.hpp; path = src/Automata/Weight.hpp; sourceTree = SOURCE_ROOT; };
+		32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = src/Automata/Label.cpp; sourceTree = SOURCE_ROOT; };
+		32EBB0B41DA3B3F100D2CBA8 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = src/Automata/Label.hpp; sourceTree = SOURCE_ROOT; };
+		32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Complexity.cpp; path = src/Automata/Complexity.cpp; sourceTree = SOURCE_ROOT; };
+		32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Complexity.hpp; path = src/Automata/Complexity.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +56,8 @@
 		324E4EB21D9FC3B000114F39 = {
 			isa = PBXGroup;
 			children = (
-				324E4EBD1D9FC3B100114F39 /* qparse */,
+				324E4EBE1D9FC3B100114F39 /* main.cpp */,
+				324E4EBD1D9FC3B100114F39 /* Sources */,
 				324E4EBC1D9FC3B100114F39 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,11 +70,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		324E4EBD1D9FC3B100114F39 /* qparse */ = {
+		324E4EBD1D9FC3B100114F39 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				324E4EBE1D9FC3B100114F39 /* main.cpp */,
+				32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */,
+				32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */,
+				325121581DA406A000D2C789 /* FloatWeight.hpp */,
+				325121571DA406A000D2C789 /* FloatWeight.cpp */,
+				32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */,
+				32EBB0B41DA3B3F100D2CBA8 /* Label.hpp */,
+				32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */,
+				32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */,
+				325121551DA4065600D2C789 /* WTA.hpp */,
+				325121541DA4065600D2C789 /* WTA.cpp */,
 			);
+			name = Sources;
 			path = qparse;
 			sourceTree = "<group>";
 		};
@@ -119,7 +145,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				325121591DA406A000D2C789 /* FloatWeight.cpp in Sources */,
+				32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */,
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
+				32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */,
+				32EBB0B51DA3B3F100D2CBA8 /* Label.cpp in Sources */,
+				325121561DA4065600D2C789 /* WTA.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +277,7 @@
 				324E4EC41D9FC3B100114F39 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
