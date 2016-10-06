@@ -13,10 +13,13 @@
 
 #endif /* Weight_hpp */
 
-// abstract class for weights in automata transitions
+// template class for weights in automata transitions
+// can be used for weights in file (serialized WTA)
 class Weight
 {
 public:
+    
+    Weight(double v=0): _val(v) {};
     
     virtual ~Weight();
     

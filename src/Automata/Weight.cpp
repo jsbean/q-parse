@@ -14,9 +14,9 @@
 // AV: specific compare's not based on value?
 int Weight::compare(const Weight& w)
 {
-    if(_val < w.value())
+    if(_val < w._val)
         return -1;
-    else if(_val == w.value())
+    else if(_val == w._val)
         return 0;
     else return 1;
 }
@@ -25,13 +25,13 @@ int Weight::compare(const Weight& w)
 // default to min
 void Weight::add(const Weight& w)
 {
-    if(_val > w.value())
-        _val = w.value();
+    if(_val > w._val)
+        _val = w._val;
 };
 
 
 // default to plus
 void Weight::mult(const Weight& w)
 {
-    _val += w.value();
+    _val += w._val;
 }

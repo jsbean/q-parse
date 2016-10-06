@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* main.cpp */; };
 		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
-		325121591DA406A000D2C789 /* FloatWeight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121571DA406A000D2C789 /* FloatWeight.cpp */; };
+		3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215A1DA40E4800D2C789 /* Distance.cpp */; };
+		3251215F1DA40E6400D2C789 /* ComboWeight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215D1DA40E6400D2C789 /* ComboWeight.cpp */; };
+		3262BBD71DA63DB900796318 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBD51DA63DB900796318 /* Label.cpp */; };
+		3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBD81DA63E7200796318 /* Segment.cpp */; };
+		3262BBE01DA6415900796318 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBDE1DA6415900796318 /* Event.cpp */; };
+		32D939661DA4F868004497D2 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32D939641DA4F867004497D2 /* Path.cpp */; };
 		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
-		32EBB0B51DA3B3F100D2CBA8 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */; };
 		32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */; };
 /* End PBXBuildFile section */
 
@@ -32,12 +36,20 @@
 		324E4EBE1D9FC3B100114F39 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = qparse/main.cpp; sourceTree = "<group>"; };
 		325121541DA4065600D2C789 /* WTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WTA.cpp; path = ../src/Automata/WTA.cpp; sourceTree = "<group>"; };
 		325121551DA4065600D2C789 /* WTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WTA.hpp; path = ../src/Automata/WTA.hpp; sourceTree = "<group>"; };
-		325121571DA406A000D2C789 /* FloatWeight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FloatWeight.cpp; path = ../src/Automata/FloatWeight.cpp; sourceTree = "<group>"; };
-		325121581DA406A000D2C789 /* FloatWeight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FloatWeight.hpp; path = ../src/Automata/FloatWeight.hpp; sourceTree = "<group>"; };
+		3251215A1DA40E4800D2C789 /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = src/Input/Distance.cpp; sourceTree = SOURCE_ROOT; };
+		3251215B1DA40E4800D2C789 /* Distance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Distance.hpp; path = src/Input/Distance.hpp; sourceTree = SOURCE_ROOT; };
+		3251215D1DA40E6400D2C789 /* ComboWeight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComboWeight.cpp; path = src/Automata/ComboWeight.cpp; sourceTree = SOURCE_ROOT; };
+		3251215E1DA40E6400D2C789 /* ComboWeight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWeight.hpp; path = src/Automata/ComboWeight.hpp; sourceTree = SOURCE_ROOT; };
+		3262BBD51DA63DB900796318 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = ../src/Output/Label.cpp; sourceTree = "<group>"; };
+		3262BBD61DA63DB900796318 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
+		3262BBD81DA63E7200796318 /* Segment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Segment.cpp; path = src/Input/Segment.cpp; sourceTree = SOURCE_ROOT; };
+		3262BBD91DA63E7200796318 /* Segment.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Segment.hpp; path = src/Input/Segment.hpp; sourceTree = SOURCE_ROOT; };
+		3262BBDE1DA6415900796318 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = src/Input/Event.cpp; sourceTree = SOURCE_ROOT; };
+		3262BBDF1DA6415900796318 /* Event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Event.hpp; path = src/Input/Event.hpp; sourceTree = SOURCE_ROOT; };
+		32D939641DA4F867004497D2 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Path.cpp; path = src/Input/Path.cpp; sourceTree = SOURCE_ROOT; };
+		32D939651DA4F868004497D2 /* Path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Path.hpp; path = src/Input/Path.hpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Weight.cpp; path = src/Automata/Weight.cpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Weight.hpp; path = src/Automata/Weight.hpp; sourceTree = SOURCE_ROOT; };
-		32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = src/Automata/Label.cpp; sourceTree = SOURCE_ROOT; };
-		32EBB0B41DA3B3F100D2CBA8 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = src/Automata/Label.hpp; sourceTree = SOURCE_ROOT; };
 		32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Complexity.cpp; path = src/Automata/Complexity.cpp; sourceTree = SOURCE_ROOT; };
 		32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Complexity.hpp; path = src/Automata/Complexity.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -75,14 +87,22 @@
 			children = (
 				32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */,
 				32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */,
-				325121581DA406A000D2C789 /* FloatWeight.hpp */,
-				325121571DA406A000D2C789 /* FloatWeight.cpp */,
-				32EBB0B31DA3B3F100D2CBA8 /* Label.cpp */,
-				32EBB0B41DA3B3F100D2CBA8 /* Label.hpp */,
+				3251215B1DA40E4800D2C789 /* Distance.hpp */,
+				3251215A1DA40E4800D2C789 /* Distance.cpp */,
+				32D939651DA4F868004497D2 /* Path.hpp */,
+				32D939641DA4F867004497D2 /* Path.cpp */,
+				3251215D1DA40E6400D2C789 /* ComboWeight.cpp */,
+				3251215E1DA40E6400D2C789 /* ComboWeight.hpp */,
 				32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */,
 				32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */,
 				325121551DA4065600D2C789 /* WTA.hpp */,
 				325121541DA4065600D2C789 /* WTA.cpp */,
+				3262BBD61DA63DB900796318 /* Label.hpp */,
+				3262BBD51DA63DB900796318 /* Label.cpp */,
+				3262BBD91DA63E7200796318 /* Segment.hpp */,
+				3262BBD81DA63E7200796318 /* Segment.cpp */,
+				3262BBDF1DA6415900796318 /* Event.hpp */,
+				3262BBDE1DA6415900796318 /* Event.cpp */,
 			);
 			name = Sources;
 			path = qparse;
@@ -145,12 +165,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				325121591DA406A000D2C789 /* FloatWeight.cpp in Sources */,
+				3251215F1DA40E6400D2C789 /* ComboWeight.cpp in Sources */,
 				32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */,
+				3262BBE01DA6415900796318 /* Event.cpp in Sources */,
+				3262BBD71DA63DB900796318 /* Label.cpp in Sources */,
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
 				32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */,
-				32EBB0B51DA3B3F100D2CBA8 /* Label.cpp in Sources */,
 				325121561DA4065600D2C789 /* WTA.cpp in Sources */,
+				32D939661DA4F868004497D2 /* Path.cpp in Sources */,
+				3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */,
+				3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
