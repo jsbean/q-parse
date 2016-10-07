@@ -10,7 +10,7 @@
 
 
 
-Segment::Segment(double b, double e, size_t r):_begin(b),_end(e),_res(r)
+Segment::Segment(double b, double e, int r):_begin(b),_end(e),_res(r)
 {
     assert(r >= 1);
     assert(_begin <= _end);
@@ -30,20 +30,31 @@ void Segment::push(Event* e)
     _date.push_back(date);
 }
 
-int Segment::count(const Path& p)
+size_t Segment::size() const
 {
-    int pl = p.begin();
-    assert (pl >= 0);
-    int rl = p.end();
-    assert (rl <= _res);
-    size_t m = _date.size();
-    int c = 0;
-    int i = 0;
-    for(i=0; (i < m) && (_date[i] < pl); i++);
-    if (i >= m)
-        return c;
-    for(c=0; (i < m) && (_date[i] < rl); i++)
-        c++;
-    return c;
+    return _date.size();
 }
 
+int Segment::date(size_t i) const
+{
+    assert(i < _date.size());
+    return _date[i];
+}
+
+
+//int Segment::count(const Path& p)
+//{
+//    int pl = p.begin();
+//    assert (pl >= 0);
+//    int rl = p.end();
+//    assert (rl <= _res);
+//    size_t m = _date.size();
+//    int c = 0;
+//    int i = 0;
+//    for(i=0; (i < m) && (_date[i] < pl); i++);
+//    if (i >= m)
+//        return c;
+//    for(c=0; (i < m) && (_date[i] < rl); i++)
+//        c++;
+//    return c;
+//}

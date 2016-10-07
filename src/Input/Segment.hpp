@@ -21,7 +21,6 @@
 #include <assert.h>
 
 #include "Event.hpp"
-#include "Path.hpp"
 
 #endif /* Segment_hpp */
 
@@ -35,17 +34,21 @@ public:
     // - start date b
     // - end date e
     // - resolution r
-    Segment(double, double, size_t);
+    Segment(double, double, int);
     
     //add new timestamped event
     void push(Event*);
-
-    // return the number of elements of the segment contained in the Path
-    int count(const Path&);
     
+    size_t size() const;
+    
+    int date(size_t) const;
+    
+    // return the number of elements of this segment contained in the given Path
+    // int count(const Path&);
+
 private:
     // resolution
-    size_t _res;
+    int _res;
 
     // start date (in seconds) of segment
     double _begin;
