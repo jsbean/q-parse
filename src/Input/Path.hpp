@@ -10,8 +10,8 @@
 #define Path_hpp
 
 #include <stdio.h>
-#include <vector>
 #include <assert.h>
+#include <vector>
 
 #include "segment.hpp"
 
@@ -68,25 +68,48 @@ protected:
 
 
 
+
 class PathInput: public Path
 {
 public:
-
-    // PathInput(r, s) = path associated to a input segment s and the interval [0..r]
-    PathInput(int, const Segment* const);
+    // PathInput(r, s) = path associated to a input segment s and the interval [0..r].
+    // Initial (toplevel) path.
+    PathInput(const Segment* const);
     
-    // PathInput(r, s, b, l) = path associated to a input segment s, the interval [b..b+l].
-    PathInput(int r, const Segment* const, int, int);
+    // PathInput(r, s, b, l) = path = interval [b..b+l] subset [0,..,r] associated to a input segment s.
+    // construction of recursive paths.
+    // WARNING: must be aligned.
+    PathInput(const Segment* const, int, int);
+    
+    // input segment
+    const Segment* const input() const { return _seg; }
+    
+    // date in stored Segment
+    //int date(size_t) const;
+    
+    // number of points of segment in the fist half of this interval
+    int l_size() const { return _seg_llen; }
+    
+    // index in segment of the first element of segment inside the fist half of this interval
+    // out_of_range (= size of segment) id lsize() == 0
+    size_t l_first() const { return _seg_lbeg; }
 
+    // number of points of segment in the fist half of this interval
+    int r_size() const { return _seg_rlen; }
+    
+    // index in segment of the first element of segment inside the fist half of this interval
+    // out_of_range (= size of segment) id rsize() == 0
+    size_t r_first() const { return _seg_rbeg; }
+    
     // sub(k) return the list of subpaths obtained by
-    // division of this Path into k segments
-    // the interval length must be divisible by n
+    // division of this Path into k segments.
+    // the interval length must be divisible by k.
     vector<PathInput*> subs(int);
     
 private:
 
     // resolution
-    int _res;
+    int _res;  // SUPPR (deja dans segment)
     
     const Segment* const _seg;
     

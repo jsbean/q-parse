@@ -36,6 +36,9 @@ bool Path::aligned(int p)
     return ((_begin <= p) && (p <= mid));
 }
 
+
+
+
 Path* Path::sub(int n, int i)
 {
     assert (n > 0);
@@ -46,6 +49,7 @@ Path* Path::sub(int n, int i)
     
     return new Path((_begin + ((i-1)* len)), len);
 }
+
 
 
 size_t PathInput::align(size_t b)
@@ -85,21 +89,29 @@ size_t PathInput::align(size_t b)
     }
 
     // post-conds:
-    assert ((_seg_llen > 0)  || (_seg_lbeg >= m));
-    assert ((_seg_llen == 0)  || (_seg_lbeg < m));
-    assert ((_seg_llen == 0)  || (_seg_lbeg+_seg_llen-1 < m));
-    assert ((_seg_llen == 0) || ((_seg->date(_seg_lbeg) >= _begin) &&
-                                 (_seg->date(_seg_lbeg) <= mid)));
-    assert ((_seg_llen == 0) || ((_seg->date(_seg_lbeg+_seg_llen-1) >= _begin) &&
-                                (_seg->date(_seg_lbeg+_seg_llen-1) <= mid)));
+    assert (_seg_llen >= 0);
+    assert (_seg_llen < m);
+    assert (_seg_lbeg >= 0);
     
-    assert ((_seg_rlen > 0) || (_seg_rbeg >= m));
-    assert ((_seg_rlen == 0)  || (_seg_rbeg < m));
-    assert ((_seg_rlen == 0)  || (_seg_rbeg+_seg_rlen-1 < m));
-    assert ((_seg_llen == 0) || ((_seg->date(_seg_rbeg) > mid) &&
-                                 (_seg->date(_seg_lbeg) < end)));
-    assert ((_seg_llen == 0) || ((_seg->date(_seg_rbeg+_seg_rlen-1) > mid) &&
-                                 (_seg->date(_seg_lbeg+_seg_rlen-1) < end)));
+    assert ((_seg_llen >  0) || (_seg_lbeg >= m));
+    assert ((_seg_llen == 0) || (_seg_lbeg < m));
+    assert ((_seg_llen == 0) || (_seg_lbeg+_seg_llen-1 < m));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) >= _begin));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) <= mid));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_llen-1) >= _begin));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_llen-1) <= mid));
+    
+    assert (_seg_rlen >= 0);
+    assert (_seg_rlen < m);
+    assert (_seg_rbeg >= 0);
+
+    assert ((_seg_rlen >  0) || (_seg_rbeg >= m));
+    assert ((_seg_rlen == 0) || (_seg_rbeg < m));
+    assert ((_seg_rlen == 0) || (_seg_rbeg+_seg_rlen-1 < m));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_rbeg) > mid));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) < end));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_rbeg+_seg_rlen-1) > mid));
+    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_rlen-1) < end));
 
     // i (next point) out of interval
     assert ((i >= m) || (_seg->date(i) >= end));
@@ -108,34 +120,40 @@ size_t PathInput::align(size_t b)
 }
 
 
-PathInput::PathInput(int r, const Segment* const s) :_res(r),_seg(s)
+PathInput::PathInput(const Segment* const s) :_seg(s)
 {
     assert(s != NULL);
-    assert (r >= 0);
+    _res = s->resolution();
     _begin = 0;
-    _len = r;
+    _len = _res;
     align(0);
 }
 
 
-PathInput::PathInput(int r, const Segment* const s, int b, int l) :_res(r),_seg(s)
+PathInput::PathInput(const Segment* const s, int b, int l) :_seg(s)
 {
     assert(s != NULL);
-    assert (r >= 0);
     assert (b >= 0);
     assert (l > 0);
     
+    _res = s->resolution();
     _begin = b;
     _len = l;
 }
 
 
+//int PathInput::date(size_t i) const
+//{
+//    assert(i >= 0);
+//    assert(i < _seg->size());
+//    return _seg->date(i);
+//}
+
 
 vector<PathInput*> PathInput::subs(int n)
 {
     assert (n > 0);
-    // this interval length must be divisible by n
-    assert ((_len % n) == 0);
+    assert ((_len % n) == 0); // this interval length must be divisible by n
     assert(_begin >= 0);
     assert(_begin < _res);
 
@@ -146,10 +164,10 @@ vector<PathInput*> PathInput::subs(int n)
     
     for (size_t i=0; i < n; i++)
     {
-        PathInput* p = new PathInput(_res, _seg, b, len);
+        PathInput* p = new PathInput(_seg, b, len);
         v.push_back(p);
         b += len;
-        j = p->align(j);
+        j = p->align(j); // align the newly created sub-PathInput
     }
     
     assert (v.size() == n);

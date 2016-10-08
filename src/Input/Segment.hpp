@@ -31,16 +31,19 @@ class Segment
 {
 public:
     // Segment(b,e,r) constructs an empty segment (no events) with
-    // - start date b
-    // - end date e
-    // - resolution r
+    // b: start date (in seconds)
+    // e: end date (in seconds)
+    // r: resolution
     Segment(double, double, int);
+    
+    int resolution() const { return _res; }   
     
     //add new timestamped event
     void push(Event*);
     
     size_t size() const;
-    
+
+    // date(i) is the date of the ith compenent of this segment, in [0,..,RES]
     int date(size_t) const;
     
     // return the number of elements of this segment contained in the given Path
@@ -65,5 +68,4 @@ private:
     // list of timestamps casted to [0.._res]
     vector<int> _date;
     
-    // bit vector
 };

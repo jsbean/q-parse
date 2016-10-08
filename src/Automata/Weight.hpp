@@ -13,16 +13,14 @@
 
 #endif /* Weight_hpp */
 
-// template class for weights in automata transitions
+// class for weights in automata transitions
 // can be used for weights in file (serialized WTA)
 class Weight
 {
 public:
     
     Weight(double v=0): _val(v) {};
-    
-    virtual ~Weight();
-    
+        
     double value() const { return _val; }
     
     // add weight in parameter to this weight (modified in place)
@@ -46,6 +44,5 @@ protected:
     
     // store
     mutable double _val;
-    
     
 };

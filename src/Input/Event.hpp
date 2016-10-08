@@ -7,6 +7,11 @@
 //
 // input events
 // STUB. to be completed/instanciated if needed.
+//
+// input interface with OpenMusic or MEI etc
+// keep track of input event list
+// event are not stored internaly (in WTA). we just preserve the order.
+// and remap afterwards to input event list (with dfs)
 
 
 #ifndef Event_hpp
