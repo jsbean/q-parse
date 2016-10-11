@@ -10,12 +10,20 @@
 
 #include <iostream>
 #include <assert.h>
+#include <string>
 
-#include "Weight.hpp"
+#include "WTA.hpp"
+
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    std::cout << "Hello, World!\n";
+    assert (argc == 2);
+    string filename = argv[1];
+    std::cout << "Read " << filename << '\n';
+
+    WTA* ta = new WTA(filename);
+    ta->print();
+    delete ta;
     return 0;
 }
 

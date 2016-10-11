@@ -13,8 +13,8 @@
 		3251215F1DA40E6400D2C789 /* ComboWeight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215D1DA40E6400D2C789 /* ComboWeight.cpp */; };
 		3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBD81DA63E7200796318 /* Segment.cpp */; };
 		3262BBE01DA6415900796318 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBDE1DA6415900796318 /* Event.cpp */; };
-		32D57C291DA7D2EB0025F173 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32D57C271DA7D2EB0025F173 /* Label.cpp */; };
 		32D939661DA4F868004497D2 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32D939641DA4F867004497D2 /* Path.cpp */; };
+		32EB18A41DAD474500E0B0D1 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EB18A21DAD474500E0B0D1 /* Label.cpp */; };
 		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
 		32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */; };
 /* End PBXBuildFile section */
@@ -44,10 +44,10 @@
 		3262BBD91DA63E7200796318 /* Segment.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Segment.hpp; path = src/Input/Segment.hpp; sourceTree = SOURCE_ROOT; };
 		3262BBDE1DA6415900796318 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Event.cpp; path = src/Input/Event.cpp; sourceTree = SOURCE_ROOT; };
 		3262BBDF1DA6415900796318 /* Event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Event.hpp; path = src/Input/Event.hpp; sourceTree = SOURCE_ROOT; };
-		32D57C271DA7D2EB0025F173 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = ../src/Output/Label.cpp; sourceTree = "<group>"; };
-		32D57C281DA7D2EB0025F173 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
 		32D939641DA4F867004497D2 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Path.cpp; path = src/Input/Path.cpp; sourceTree = SOURCE_ROOT; };
 		32D939651DA4F868004497D2 /* Path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Path.hpp; path = src/Input/Path.hpp; sourceTree = SOURCE_ROOT; };
+		32EB18A21DAD474500E0B0D1 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = ../src/Output/Label.cpp; sourceTree = "<group>"; };
+		32EB18A31DAD474500E0B0D1 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
 		32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Weight.cpp; path = src/Automata/Weight.cpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Weight.hpp; path = src/Automata/Weight.hpp; sourceTree = SOURCE_ROOT; };
 		32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Complexity.cpp; path = src/Automata/Complexity.cpp; sourceTree = SOURCE_ROOT; };
@@ -101,8 +101,8 @@
 				3262BBD81DA63E7200796318 /* Segment.cpp */,
 				3262BBDF1DA6415900796318 /* Event.hpp */,
 				3262BBDE1DA6415900796318 /* Event.cpp */,
-				32D57C281DA7D2EB0025F173 /* Label.hpp */,
-				32D57C271DA7D2EB0025F173 /* Label.cpp */,
+				32EB18A31DAD474500E0B0D1 /* Label.hpp */,
+				32EB18A21DAD474500E0B0D1 /* Label.cpp */,
 			);
 			name = Sources;
 			path = qparse;
@@ -171,7 +171,7 @@
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
 				32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */,
 				325121561DA4065600D2C789 /* WTA.cpp in Sources */,
-				32D57C291DA7D2EB0025F173 /* Label.cpp in Sources */,
+				32EB18A41DAD474500E0B0D1 /* Label.cpp in Sources */,
 				32D939661DA4F868004497D2 /* Path.cpp in Sources */,
 				3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */,
 				3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */,

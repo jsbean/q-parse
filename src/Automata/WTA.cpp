@@ -90,19 +90,21 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
 void WTA::dump(ostream& o)
 {
     for (std::map<State,vector<Transition*>*>::iterator i = _table.begin();
-         i != _table.end(); i++)
+         i != _table.end(); ++i)
     {
-        o << i->first << " ( ";
+        State s = i->first;
         vector<Transition*>* tv = i->second;
+        assert (tv);
         for(size_t j = 0; j < tv->size(); j++)
         {
             Transition* t = tv->at(j);
+            assert (t);
+            o << s << " ( ";
             for(size_t k = 0; k < t->size(); k++)
                 o << t->antecedent(k) << " ";
             
             o << ") " << (t->weight()).value() << '\n';
         }
-        o << '\n';
     }
 }
 
@@ -160,13 +162,25 @@ size_t WTA::countAll() const
 }
 
 
+vector<Transition*>* WTA::getTrs(State s)
+{
+    vector<Transition*>* tv = _table[s];
+    if (tv == NULL) // not found
+    {
+        tv = new vector<Transition*>;
+        _table[s] = tv;
+    }
+    return tv;
+}
+
+
 // add a new transition for state s.
 // if s is not registered, it is added to the table.
 // return the index of this transition in the list of transitions of head s.
 size_t WTA::add(State s, Weight w)
 {
-    vector<Transition*>* tv = _table[s];
-    assert (tv != NULL);
+    vector<Transition*>* tv = getTrs(s);
+    assert (tv);
     Transition* t = new Transition(w);
     tv->push_back(t);
     _cpt_tr++;
@@ -178,7 +192,7 @@ size_t WTA::add(State s, Weight w)
 // s must be a registered state and have at least i transitions
 void WTA::add(State s, size_t i, State q)
 {
-    assert (registered(s));
+    //assert (registered(s));
     vector<Transition*>* tv = _table[s];
     assert (tv);
     assert (i < _table.size());
@@ -190,14 +204,18 @@ void WTA::add(State s, size_t i, State q)
 
 void WTA::add(State s, vector<State> sl, Weight w)
 {
-    vector<Transition*>* tv = _table[s];
-    assert (tv != NULL);
+    cout << "add " << s << "( " << sl.size() << " ) " << w.value();
+    cout << " size table = " << _table.size() << '\n';
+    vector<Transition*>* tv = getTrs(s);
+    assert(tv);
     Transition* t = new Transition(w);
     // copy content of sl to body of new transition
+    assert(t);
     for(int i=0; i < sl.size(); i++)
         t->add(sl[i]);
     _cpt_tr++;
     _cpt_size += sl.size();
+    assert(tv);
     tv->push_back(t); // add transition to transitions of s
 }
 

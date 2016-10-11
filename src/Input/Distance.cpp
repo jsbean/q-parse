@@ -15,7 +15,7 @@ Distance::Distance(const PathInput* const p)
     
     const Segment* s = p->input();
     assert (s != NULL);
-    const int m = p->input()->size();
+//    const size_t m = p->input()->size();
     const int b = p->begin();
     const int e = p->end();
     const int ll = p->l_size();

@@ -120,6 +120,12 @@ public:
     // save to file
     void save(string);
     
+    // write table content to output stream
+    void dump(ostream&);
+    
+    // print sizes and table content to std output
+    void print();
+    
     // number of states
     size_t countStates() const;
     
@@ -141,11 +147,7 @@ protected:
     //vector<vector<Transition*>*> _table;
     map<State,vector<Transition*>*> _table;
     
+    vector<Transition*>* getTrs(State s);
     
-    // write table content to output stream
-    void dump(ostream&);
-    
-    // print sizes and table content to std output
-    void print();
 };
 
