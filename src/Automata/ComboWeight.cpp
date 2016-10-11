@@ -8,6 +8,11 @@
 
 #include "ComboWeight.hpp"
 
+
+//default
+double ComboWeight::_alpha = 0.5;
+
+
 ComboWeight::ComboWeight(const Weight* const w, const Distance* const d)
 {
     _val = (1 - _alpha) * w->value() + _alpha * d->value();

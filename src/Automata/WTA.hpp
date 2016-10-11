@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
+#include <map>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -63,6 +64,9 @@ public:
 
     void setWeight(Weight w);
     
+    // size of body
+    size_t size() const;
+    
     // antecedent(i) returns the ith state in the body
     State antecedent(size_t);
     
@@ -86,18 +90,14 @@ public:
     WTA(string);
     
     
-    // register a fresh state
-    State newState();
-
-    // addState(s) register the State s as new state
-    // s must not be registered in the table
-    void addState(State);
+    // addState(s)
+    // register the State s as new state if it is not present in the table, and returns pointer on its new (empty) transition vector
+    // or returns a pointer to the transition vector of s if it is registered
+    vector<Transition*>* addState(State);
 
     bool registered(State) const;
 
-    // number of states
-    size_t size() const;
-    
+   
     // add(s, sl, w) add a new transition of head s with empty body and weight w.
     // s must be a registered state.
     // return the index of this transition in the list of transition of head s.
@@ -110,20 +110,42 @@ public:
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // s must be a registered state
     // return the index of this transition in the list of transition of head s
-    size_t add(State, vector<State>, Weight);
+    void add(State, vector<State>, Weight);
     
     
-    // get(s, i) return the ith transition of head state s
-    Transition* get(State, size_t) const;
+    // at(s, i) return the ith transition of head state s.
+    // s must be registered
+    Transition* at(State, size_t);
+    
+    // save to file
+    void save(string);
+    
+    // number of states
+    size_t countStates() const;
+    
+    // number of transition
+    size_t countTransitions() const;
+    
+    // number of symbols (state occurences)
+    size_t countAll() const;
+    
+protected:
+
+    // number of transitions
+    size_t _cpt_tr;
+
+    // full size (number of occurences of states)
+    size_t _cpt_size;
+   
+    
+    //vector<vector<Transition*>*> _table;
+    map<State,vector<Transition*>*> _table;
     
     
-private:
+    // write table content to output stream
+    void dump(ostream&);
     
-    size_t _cptState;
-    
-    size_t _cptTr;
-    
-    vector<vector<Transition*>*> _table;
-    
+    // print sizes and table content to std output
+    void print();
 };
 
