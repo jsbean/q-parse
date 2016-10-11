@@ -30,6 +30,55 @@ State Transition::antecedent(size_t i)
 WTA::WTA():_cptState(0), _cptTr(0)
 { }
 
+
+WTA::WTA(string filename):_cptState(0), _cptTr(0)
+{
+    ifstream file;
+    
+    file.open(filename, ios_base::in);
+    if(!file.is_open())
+        throw "cannot open file";
+    
+    //read stream line by line
+    for(string line; getline(file, line); )
+    {
+        istringstream in(line);   //make a stream from the line
+        
+        // skip initial spaces
+        //for(i=0; (i < line.size()) && (line[i] = ' '); i++);
+        //if ((i >= line.size()) || (!isdigit(line[i])))  break;
+
+        
+        // process 1 line of the form "s (s0 ... sn) w"
+        State s;
+        if (!(in >> s))
+            break;
+
+        string buf;
+        in >> buf;
+        if (buf != "(")
+            break;
+
+        // extract s0 ... sn into buf
+        getline(in, buf, ')');
+        
+        istringstream ins(buf);
+        vector<State> body;
+        State q;
+        while (ins >> q)
+            body.push_back(q);
+
+        float w;
+        if (!(in >> w))
+            break;
+        
+        int i;
+        // TBC
+        
+    }
+    file.close();
+}
+
 size_t WTA::newState()
 {
     size_t pos = _cptState;

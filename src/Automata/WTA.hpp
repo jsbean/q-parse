@@ -31,6 +31,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <unordered_map>
 
 #include "Weight.hpp"
@@ -75,30 +79,39 @@ class WTA
 {
 public:
     
+    // empty automaton
     WTA();
+
+    // read from file
+    WTA(string);
     
-    // register a new state
-    size_t newState();
+    
+    // register a fresh state
+    State newState();
+
+    // addState(s) register the State s as new state
+    // s must not be registered in the table
+    void addState(State);
 
     bool registered(State) const;
 
     // number of states
     size_t size() const;
     
-    // add(s, sl, w) add a new transition of head s and body sl and weight w
-    // s must be a registered state
-    // return the index of this transition in the list of transition of head s
-    size_t add(State, vector<State>, Weight);
-
     // add(s, sl, w) add a new transition of head s with empty body and weight w.
     // s must be a registered state.
     // return the index of this transition in the list of transition of head s.
     size_t add(State, Weight);
-    
+
     // add(s, i, q) add the state q at the end of the body of the ith transition of head s.
     // s must be a registered state
     void add(State, size_t, State);
-  
+
+    // add(s, sl, w) add a new transition of head s and body sl and weight w
+    // s must be a registered state
+    // return the index of this transition in the list of transition of head s
+    size_t add(State, vector<State>, Weight);
+    
     
     // get(s, i) return the ith transition of head state s
     Transition* get(State, size_t) const;
