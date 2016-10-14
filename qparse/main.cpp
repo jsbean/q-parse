@@ -19,6 +19,7 @@ int main(int argc, const char * argv[]) {
     // test maps
     map<State,vector<Transition*>> _table;
     // creation
+    cout << "size table[0]=" << _table[0].size() << "\n";;
     vector<Transition*>* v = &_table[0]; // ptr
     cout << "size v=" << v->size() << "\n";;
     Weight w;

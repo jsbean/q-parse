@@ -100,28 +100,27 @@ public:
     
     ~WTA();
     
-    // addState(s)
-    // register the State s as new state if it is not present in the table, and returns pointer on its new (empty) transition vector
-    // or returns a pointer to the transition vector of s if it is registered
-    vector<Transition*>* addState(State);
+    // addState(s) returns a pointer to the transition vector of s.
+    // if s is not present in the table register it as new state (with empty vector of transitions)
+    // a pointer to the transition vector of s if it is registered
+    // vector<Transition*>* addState(State);
 
     bool registered(State) const;
 
    
-    // add(s, sl, w) add a new transition of head s with empty body and weight w.
-    // s must be a registered state.
-    // return the index of this transition in the list of transition of head s.
+    // add(s, w) add a new transition with weight w for state s.
+    // if s is not registered, it is added to the table.
+    // return the index of this transition in the list of transitions of head s.
     size_t add(State, Weight);
-
+   
     // add(s, i, q) add the state q at the end of the body of the ith transition of head s.
-    // s must be a registered state
+    // s must be a registered state with at least i transitions.
     void add(State, size_t, State);
 
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // s must be a registered state
     // return the index of this transition in the list of transition of head s
     void add(State, vector<State>, Weight);
-    
     
     // begin(s) returns an iterator pointing to the first transition
     // with head state s.
@@ -170,9 +169,9 @@ protected:
    
     
     //vector<vector<Transition*>*> _table;
-    map<State,vector<Transition*>*> _table;
+    map<State,vector<Transition*>> _table;
     
-    vector<Transition*>* getTrs(State s);
+    //vector<Transition*>* getTrs(State s);
     
 };
 
