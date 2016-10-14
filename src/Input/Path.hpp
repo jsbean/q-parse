@@ -18,9 +18,9 @@
 
 #endif /* Path_hpp */
 
+
 // a path defines an interval of positions in [0..RES]
 // where RES is the resolution associated to the given schema
-
 class Path
 {
 public:
@@ -51,7 +51,6 @@ public:
     // of a division of this Path into n segments
     // the interval length must be divisible by n
     Path* sub(int, int);
-      
     
 protected:
     
@@ -61,25 +60,28 @@ protected:
     // length of interval (in samples)
     int _len;
     
-
     // _dur : inverse of duration defined by path
-
 };
 
 
 
 
-class PathInput: public Path
+// a Alignment defines the alignement of the points of an input segment
+// on a Path (interval)
+class Alignment: public Path
 {
 public:
-    // PathInput(r, s) = path associated to a input segment s and the interval [0..r].
-    // Initial (toplevel) path.
-    PathInput(const Segment* const);
+    // Alignment(s) = alignement of the input segment s to the interval [0..r]
+    // (initial (toplevel) path).
+    Alignment(const Segment* const);
     
-    // PathInput(r, s, b, l) = path = interval [b..b+l] subset [0,..,r] associated to a input segment s.
+    // Alignment(s, b, l) = alignement of the interval [b..b+l] subset [0,..,r]
+    // to the input segment s.
     // construction of recursive paths.
     // WARNING: must be aligned.
-    PathInput(const Segment* const, int, int);
+    Alignment(const Segment* const, int, int);
+    
+    ~Alignment();
     
     // input segment
     const Segment* const input() const { return _seg; }
@@ -104,7 +106,7 @@ public:
     // sub(k) return the list of subpaths obtained by
     // division of this Path into k segments.
     // the interval length must be divisible by k.
-    vector<PathInput*> subs(int);
+    vector<Alignment*> subs(int);
     
 private:
 

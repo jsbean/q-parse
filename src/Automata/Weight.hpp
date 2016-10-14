@@ -28,6 +28,8 @@ public:
     // the value is updated
     virtual void add(const Weight&); // =0;
     
+    //static Weight zero();
+    
     // multiply weight in parameter by this weight (modified in place)
     // use: this weight is the weight of a run, parameter is a weight in a transition
     // the value is updated

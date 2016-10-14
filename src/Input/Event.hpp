@@ -31,25 +31,36 @@ enum EventKind
 };
 
 
-
+// to be completed with pitch(s) etc
 class Event
 {
 public:
-    Event (EventKind k, double d):_type(k), _date(d) {}
+    
+    Event(EventKind k=NOTE):_type(k) {}
     
     EventKind kind() const { return _type; };
 
-    double timestamp() const { return _date; };
+    
+protected:
 
-    
-private:
-    
     EventKind _type;
     
-    double _date;
 };
 
 
+class TimestampedEvent: Event
+{
+public:
+    
+    // copy of given event
+    // with additional given timestamped (in seconds)
+    TimestampedEvent(TimestampedEvent&, double);
+    
+    double timestamp() const { return _date; };
+    
+private:
 
+    double _date;
+};
 
 

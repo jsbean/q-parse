@@ -52,7 +52,7 @@ Path* Path::sub(int n, int i)
 
 
 
-size_t PathInput::align(size_t b)
+size_t Alignment::align(size_t b)
 {
     size_t m = _seg->size();
     int mid = _len / 2;
@@ -120,7 +120,7 @@ size_t PathInput::align(size_t b)
 }
 
 
-PathInput::PathInput(const Segment* const s) :_seg(s)
+Alignment::Alignment(const Segment* const s) :_seg(s)
 {
     assert(s != NULL);
     _res = s->resolution();
@@ -130,7 +130,7 @@ PathInput::PathInput(const Segment* const s) :_seg(s)
 }
 
 
-PathInput::PathInput(const Segment* const s, int b, int l) :_seg(s)
+Alignment::Alignment(const Segment* const s, int b, int l) :_seg(s)
 {
     assert(s != NULL);
     assert (b >= 0);
@@ -142,7 +142,13 @@ PathInput::PathInput(const Segment* const s, int b, int l) :_seg(s)
 }
 
 
-//int PathInput::date(size_t i) const
+Alignment::~Alignment()
+{
+    // the passed segment is not deleted
+}
+
+
+//int Alignment::date(size_t i) const
 //{
 //    assert(i >= 0);
 //    assert(i < _seg->size());
@@ -150,24 +156,24 @@ PathInput::PathInput(const Segment* const s, int b, int l) :_seg(s)
 //}
 
 
-vector<PathInput*> PathInput::subs(int n)
+vector<Alignment*> Alignment::subs(int n)
 {
     assert (n > 0);
     assert ((_len % n) == 0); // this interval length must be divisible by n
     assert(_begin >= 0);
     assert(_begin < _res);
 
-    vector<PathInput*> v;
+    vector<Alignment*> v;
     int len = _len / n;
     int b = _begin;
     size_t j = _seg_lbeg;
     
     for (size_t i=0; i < n; i++)
     {
-        PathInput* p = new PathInput(_seg, b, len);
+        Alignment* p = new Alignment(_seg, b, len);
         v.push_back(p);
         b += len;
-        j = p->align(j); // align the newly created sub-PathInput
+        j = p->align(j); // align the newly created sub-Alignment
     }
     
     assert (v.size() == n);
@@ -177,7 +183,7 @@ vector<PathInput*> PathInput::subs(int n)
 
 
 
-//vector<PathInput*> PathInput::subs(int k)
+//vector<Alignment*> Alignment::subs(int k)
 //{
 //}
 

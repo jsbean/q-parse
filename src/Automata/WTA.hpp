@@ -5,25 +5,32 @@
 //  Created by Florent Jacquemard on 04/10/16.
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
-// WTA schema = stochastic CFG
+// WTA schema = weighted CFG
 //
-// label: int (terminals)
+// state (non-terminals): int
+//
+// transitions:
+// state -> state list | weight
+//   state: head state
+//   state list: body states if length ≥ 2
+//               label if length = 1
+//
+// in other terms transition rules have one of the forms
+// s -> (s1,...,sk) w where k > 1, s, s1, ..., sk are states and w weight
+// s -> (s1) w where s1 is an leaf label = int encoding
+//
+// leaf label (terminals):
 // number of note + grace notes at (left of) current node
 //  0 = continuation
 //  1 = 1 note | rest      (au + 1 note)
 //  2 = 1 grace notes + 1 note
 //  3 = 2 grace notes + 1 note
 // etc
+// see Label for the functions managing these labels
 //
-// state: int
-//
-// transitions (table):
-// state -> state list | weight:float
-//   state: head state
-//   state list: body states if length ≥ 2
-//               label if length = 1
-//   w: weight
-//
+// transition table:
+// head state -> vector of (state vector, weight)
+
 
 #ifndef WTA_hpp
 #define WTA_hpp
@@ -44,7 +51,7 @@
 
 using namespace std;
 
-typedef size_t State;
+typedef unsigned int State;
 
 //typedef struct _transition
 //{
@@ -58,6 +65,8 @@ class Transition
 public:
     // Transition(w) create a transition of weight w and empty body
     Transition(Weight);
+    
+    ~Transition();
     
     // add antecedent at the end of the obdy of this transition
     void add(State);
@@ -89,6 +98,7 @@ public:
     // read from file
     WTA(string);
     
+    ~WTA();
     
     // addState(s)
     // register the State s as new state if it is not present in the table, and returns pointer on its new (empty) transition vector
@@ -113,8 +123,23 @@ public:
     void add(State, vector<State>, Weight);
     
     
+    // begin(s) returns an iterator pointing to the first transition
+    // with head state s.
+    // s must be registered.
+    vector<Transition*>::iterator begin(State);
+
+    // begin(s) returns an iterator pointing to the past-the-end transition
+    // with head state s.
+    // s must be registered.
+    vector<Transition*>::iterator end(State);
+
+    
+    // size(s) return the number of transitions with head state s.
+    // s must be registered.
+    size_t size(State);
+    
     // at(s, i) return the ith transition of head state s.
-    // s must be registered
+    // s must be registered.
     Transition* at(State, size_t);
     
     // save to file

@@ -16,10 +16,11 @@
 
 #endif /* ComboWeight_hpp */
 
+class Weight;
+
+
 // complexity + alpha.distance
 // constructor(alpha)
-
-
 class ComboWeight : public Weight
 {
 public:
@@ -34,3 +35,4 @@ public:
 private:
     static double _alpha;
 };
+

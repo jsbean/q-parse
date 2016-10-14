@@ -39,7 +39,7 @@ public:
     int resolution() const { return _res; }   
     
     //add new timestamped event
-    void push(Event*);
+    void push(TimestampedEvent*);
     
     size_t size() const;
 
@@ -63,7 +63,7 @@ private:
     double _len;
     
     // event list
-    vector<Event*> _event;
+    vector<TimestampedEvent*> _event;
     
     // list of timestamps casted to [0.._res]
     vector<int> _date;

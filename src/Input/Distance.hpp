@@ -24,7 +24,7 @@ using namespace std;
 class Distance : public Weight
 {
 public:
-    Distance(const PathInput* const);
+    Distance(const Alignment* const);
     
     void add(const Distance&);
     

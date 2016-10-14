@@ -9,7 +9,7 @@
 #include "Distance.hpp"
 
 
-Distance::Distance(const PathInput* const p)
+Distance::Distance(const Alignment* const p)
 {
     assert (p != NULL);
     

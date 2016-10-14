@@ -9,6 +9,7 @@
 #include "ComboWeight.hpp"
 
 
+
 //default
 double ComboWeight::_alpha = 0.5;
 
@@ -29,4 +30,5 @@ void ComboWeight::mult(const ComboWeight& w)
 {
     _val *= w._val;
 }
+
 

@@ -10,6 +10,12 @@
 
 Transition::Transition(Weight w):_weight(w){}
 
+Transition::~Transition()
+{
+    _body.clear();
+}
+
+
 void Transition::add(State s)
 {
     _body.push_back(s);
@@ -31,6 +37,10 @@ State Transition::antecedent(size_t i)
     assert (i < _body.size());
     return (_body[i]);
 }
+
+
+
+
 
 
 WTA::WTA():_cpt_tr(0), _cpt_size(0)
@@ -86,6 +96,20 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
     file.close();
 }
 
+WTA::~WTA()
+{
+    for (std::map<State,vector<Transition*>*>::iterator i = _table.begin();
+         i != _table.end(); ++i)
+    {
+        vector<Transition*>* tv = i->second;
+        assert (tv);
+        for(size_t j = 0; j < tv->size(); j++)
+            delete tv->at(j);
+        tv->clear();
+        delete tv;
+    }
+    _table.clear();
+}
 
 void WTA::dump(ostream& o)
 {
@@ -219,10 +243,35 @@ void WTA::add(State s, vector<State> sl, Weight w)
     tv->push_back(t); // add transition to transitions of s
 }
 
-Transition* WTA::at(State s, size_t i) 
+vector<Transition*>::iterator WTA::begin(State s)
 {
     assert (registered(s));
     vector<Transition*>* tv = _table[s];
+    assert(tv);
+    return tv->begin();
+}
+
+vector<Transition*>::iterator WTA::end(State s)
+{
+    assert (registered(s));
+    vector<Transition*>* tv = _table[s];
+    assert(tv);
+    return tv->end();
+}
+
+size_t WTA::size(State s)
+{
+    assert (registered(s));
+    vector<Transition*>* tv = _table[s];
+    assert(tv);
+    return tv->size();
+}
+
+Transition* WTA::at(State s, size_t i)
+{
+    assert (registered(s));
+    vector<Transition*>* tv = _table[s];
+    assert(tv);
     assert(i < tv->size());
     return(tv->at(i));
 }

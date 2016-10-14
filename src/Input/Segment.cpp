@@ -19,7 +19,7 @@ Segment::Segment(double b, double e, int r):_begin(b),_end(e),_res(r)
     //_date = new vector<int>();
 }
 
-void Segment::push(Event* e)
+void Segment::push(TimestampedEvent* e)
 {
     assert(_res > 0);
     assert (e != NULL);

@@ -10,26 +10,14 @@
 
 #include "Label.hpp"
 
-
-
-Label::Label(int a): _ar(a), _event(NULL), _gn(0)
+Label::Label(int a): _ar(a)
 {
     assert (a >= 0);
     if(a > 0)
         _type = INNER;
     else
-    {
         _type = TIE;
-    }
 };
-
-Label::Label(Event* e, int g): _ar(0), _type(EVENT), _gn(g)
-{
-    assert (e != NULL);
-    assert (g >=0);
-//    assert ((g == 0) || (k == NOTE));
-}
-
 
 int Label::arity() const
 {
@@ -39,47 +27,84 @@ int Label::arity() const
 }
 
 
-int Label::nbGraceNotes() const
+int Label::nbGraceNotes(unsigned int n)
+{
+    if (n > 0)
+        return n - 1;
+    else return 0;  // 1 or 0 event
+}
+
+
+//bool Label::isRest() const
+//{
+//    if (_type == EVENT)
+//    {
+//        assert (_event);
+//        return (_event->kind() == REST);
+//    }
+//    else
+//        return false;
+//}
+//
+//bool Label::isNote() const
+//{
+//    if (_type == EVENT)
+//    {
+//        assert (_event != NULL);
+//        return (_event->kind() == REST);
+//    }
+//    else
+//        return false;
+//}
+//
+//bool Label::isTie() const
+//{
+//    assert (_ar >= 0);
+//    return ((_ar == 0) && (_type == TIE));
+//}
+
+
+InnerLabel::InnerLabel(int a)
+{
+    _type = INNER;
+    _ar = a;
+}
+
+
+EventLabel::EventLabel():_nbe(0)
+{
+    _type = TIE;
+    _ar = 0;
+}
+
+EventLabel::EventLabel(int n):_nbe(n)
+{
+    _ar = 0;
+    if (n == 0)
+        _type = TIE;
+    else
+        _type = EVENT;
+}
+
+int EventLabel::nbGraceNotes() const
 {
     assert(isLeaf());
-    return _gn;
+    return (Label::nbGraceNotes(_nbe));
 }
 
-
-bool Label::isRest() const
-{
-    if (_type == EVENT)
-    {
-        assert (_event != NULL);
-        return (_event->kind() == REST);
-    }
-    else
-        return false;
-}
-
-bool Label::isNote() const
-{
-    if (_type == EVENT)
-    {
-        assert (_event != NULL);
-        return (_event->kind() == REST);
-    }
-    else
-        return false;
-}
-
-bool Label::isTie() const
-{
-    assert (_ar >= 0);
-    return ((_ar == 0) && (_type == TIE));
-}
-
-
-void Label::addGraceNotes(int g)
+void EventLabel::addGraceNotes(int g)
 {
     assert (_type == EVENT);
     assert (g >=0);
-    _gn += g;
+    _nbe += g;
 }
+
+void EventLabel::pushEvent(Event* e)
+{
+    assert(e);
+    assert(_events.size() < _nbe);
+    _events.push_back(e);
+}
+
 
 
