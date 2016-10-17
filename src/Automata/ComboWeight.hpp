@@ -11,12 +11,13 @@
 
 #include <stdio.h>
 
-//#include "Weight.hpp"
 #include "Distance.hpp"
+//#include "Weight.hpp"
 
 #endif /* ComboWeight_hpp */
 
-class Weight;
+//class Weight;
+//class Distance;
 
 
 // complexity + alpha.distance

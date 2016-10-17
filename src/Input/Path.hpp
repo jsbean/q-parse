@@ -71,20 +71,22 @@ protected:
 class Alignment: public Path
 {
 public:
+    Alignment():_seg_llen(0),_seg_lbeg(0),_seg_rlen(0),_seg_rbeg(0) { _seg = new Segment(); }
+    
     // Alignment(s) = alignement of the input segment s to the interval [0..r]
     // (initial (toplevel) path).
-    Alignment(const Segment* const);
+    Alignment(Segment*);
     
     // Alignment(s, b, l) = alignement of the interval [b..b+l] subset [0,..,r]
     // to the input segment s.
     // construction of recursive paths.
     // WARNING: must be aligned.
-    Alignment(const Segment* const, int, int);
+    Alignment(Segment*, int, int);
     
     ~Alignment();
     
     // input segment
-    const Segment* const input() const { return _seg; }
+    Segment* input() const { return _seg; }
     
     // date in stored Segment
     //int date(size_t) const;
@@ -96,10 +98,10 @@ public:
     // out_of_range (= size of segment) id lsize() == 0
     size_t l_first() const { return _seg_lbeg; }
 
-    // number of points of segment in the fist half of this interval
+    // number of points of segment in the second half of this interval
     int r_size() const { return _seg_rlen; }
     
-    // index in segment of the first element of segment inside the fist half of this interval
+    // index in segment of the first element of segment inside the second half of this interval
     // out_of_range (= size of segment) id rsize() == 0
     size_t r_first() const { return _seg_rbeg; }
     
@@ -113,7 +115,7 @@ private:
     // resolution
     int _res;  // SUPPR (deja dans segment)
     
-    const Segment* const _seg;
+    Segment* _seg;
     
     // number of segment points in the first half of this path
     int _seg_llen;

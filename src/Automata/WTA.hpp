@@ -45,33 +45,26 @@
 #include <fstream>
 #include <unordered_map>
 
-#include "Weight.hpp"
-
 #endif /* WTA_hpp */
 
 using namespace std;
 
 typedef unsigned int State;
 
-//typedef struct _transition
-//{
-//    vector<State> tr_body;
-//    Weight tr_weight;
-//} Transition;
-
+class Weight;
 
 class Transition
 {
 public:
     // Transition(w) create a transition of weight w and empty body
-    Transition(Weight);
+    Transition(Weight*);
     
     ~Transition();
     
     // add antecedent at the end of the obdy of this transition
     void add(State);
 
-    void setWeight(Weight w);
+    void setWeight(Weight* w);
     
     // size of body
     size_t size() const;
@@ -79,12 +72,12 @@ public:
     // antecedent(i) returns the ith state in the body
     State antecedent(size_t);
     
-    Weight weight(){ return _weight; }
+    Weight* weight(){ return _weight; }
 
     
-private:
+protected:
     vector<State> _body;
-    Weight _weight;
+    Weight* _weight;
 };
 
 
@@ -111,7 +104,7 @@ public:
     // add(s, w) add a new transition with weight w for state s.
     // if s is not registered, it is added to the table.
     // return the index of this transition in the list of transitions of head s.
-    size_t add(State, Weight);
+    size_t add(State, Weight*);
    
     // add(s, i, q) add the state q at the end of the body of the ith transition of head s.
     // s must be a registered state with at least i transitions.
@@ -120,26 +113,24 @@ public:
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // s must be a registered state
     // return the index of this transition in the list of transition of head s
-    void add(State, vector<State>, Weight);
+    void add(State, vector<State>, Weight*);
     
-    // begin(s) returns an iterator pointing to the first transition
-    // with head state s.
+    // begin(s) returns an iterator pointing to the first transition with head state s.
     // s must be registered.
-    vector<Transition*>::iterator begin(State);
+    vector<Transition*>::const_iterator begin(State) const;
 
-    // begin(s) returns an iterator pointing to the past-the-end transition
-    // with head state s.
+    // begin(s) returns an iterator pointing to the past-the-end transition with head state s.
     // s must be registered.
-    vector<Transition*>::iterator end(State);
-
+    vector<Transition*>::const_iterator end(State) const;
     
     // size(s) return the number of transitions with head state s.
     // s must be registered.
-    size_t size(State);
+    size_t size(State) const;
     
     // at(s, i) return the ith transition of head state s.
     // s must be registered.
-    Transition* at(State, size_t);
+    // TODO REMOVE
+    Transition* at(State, size_t) const;
     
     // save to file
     void save(string);

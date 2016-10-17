@@ -30,11 +30,12 @@ using namespace std;
 class Segment
 {
 public:
+    
     // Segment(b,e,r) constructs an empty segment (no events) with
     // b: start date (in seconds)
     // e: end date (in seconds)
     // r: resolution
-    Segment(double, double, int);
+    Segment(double b=0, double e=0, int r=1);
     
     int resolution() const { return _res; }   
     

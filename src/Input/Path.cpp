@@ -36,9 +36,6 @@ bool Path::aligned(int p)
     return ((_begin <= p) && (p <= mid));
 }
 
-
-
-
 Path* Path::sub(int n, int i)
 {
     assert (n > 0);
@@ -49,6 +46,11 @@ Path* Path::sub(int n, int i)
     
     return new Path((_begin + ((i-1)* len)), len);
 }
+
+
+
+
+
 
 
 
@@ -120,7 +122,7 @@ size_t Alignment::align(size_t b)
 }
 
 
-Alignment::Alignment(const Segment* const s) :_seg(s)
+Alignment::Alignment(Segment* s) :_seg(s)
 {
     assert(s != NULL);
     _res = s->resolution();
@@ -130,7 +132,7 @@ Alignment::Alignment(const Segment* const s) :_seg(s)
 }
 
 
-Alignment::Alignment(const Segment* const s, int b, int l) :_seg(s)
+Alignment::Alignment(Segment* s, int b, int l) :_seg(s)
 {
     assert(s != NULL);
     assert (b >= 0);

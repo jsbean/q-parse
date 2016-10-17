@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <vector>
 
-#include "Event.hpp"
+//#include "Event.hpp"
 
 #define MAX_AR 13
 
@@ -31,6 +31,7 @@
 
 using namespace std;
 
+class Event;
 
 enum LabelKind
 {
