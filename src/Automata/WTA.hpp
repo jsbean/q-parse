@@ -74,7 +74,7 @@ public:
     
     // antecedent(i) returns the ith state in the body
     // i must be an index of the body
-    State at(size_t);
+    State at(int);
     
     Weight* weight(){ return _weight; }
 

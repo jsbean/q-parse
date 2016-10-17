@@ -141,3 +141,30 @@ cs_key const ComboState::key()
     return (_hash);
 }
 
+
+
+ComboWTA::ComboWTA(const Segment& seg, const WTA* schema)
+{
+    assert(schema);
+    _schema = schema;
+    
+    // FIFO of ComboStates to add
+    //queue<ComboState*> _csqueue;
+    
+    // map of ComboState into their index in ComboWTA
+    // tmp (only for constructor)
+    //map<ComboState, State> _statemap;
+    
+    
+    // initial ComboStates
+    
+    
+    
+    //    while (! _csqueue.empty())
+    //    {
+    //        ComboState* cs = _csqueue.front();
+    //        _csqueue.pop();
+    
+    
+}
+

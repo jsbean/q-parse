@@ -35,9 +35,9 @@ public:
     // b: start date (in seconds)
     // e: end date (in seconds)
     // r: resolution
-    Segment(double b=0, double e=0, int r=1);
+    Segment(double b=0, double e=0, unsigned int r=1);
     
-    int resolution() const { return _res; }   
+    unsigned int resolution() const { return _res; }
     
     //add new timestamped event
     void push(TimestampedEvent*);
@@ -45,14 +45,14 @@ public:
     size_t size() const;
 
     // date(i) is the date of the ith compenent of this segment, in [0,..,RES]
-    int date(size_t) const;
+    unsigned int date(size_t) const;
     
     // return the number of elements of this segment contained in the given Path
     // int count(const Path&);
 
 private:
     // resolution
-    int _res;
+    unsigned int _res;
 
     // start date (in seconds) of segment
     double _begin;
@@ -67,6 +67,6 @@ private:
     vector<TimestampedEvent*> _event;
     
     // list of timestamps casted to [0.._res]
-    vector<int> _date;
+    vector<unsigned int> _date;
     
 };

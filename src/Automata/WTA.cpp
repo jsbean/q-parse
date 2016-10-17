@@ -36,8 +36,9 @@ size_t Transition::size() const
 }
 
 
-State Transition::at(size_t i)
+State Transition::at(int i)
 {
+    assert (0 <= i);
     assert (i < _body.size());
     return (_body[i]);
 }

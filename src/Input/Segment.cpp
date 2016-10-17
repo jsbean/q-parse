@@ -10,7 +10,7 @@
 
 
 
-Segment::Segment(double b, double e, int r):_begin(b),_end(e),_res(r)
+Segment::Segment(double b, double e, unsigned int r):_begin(b),_end(e),_res(r)
 {
     assert(r >= 1);
     assert(_begin <= _end);
@@ -26,7 +26,7 @@ void Segment::push(TimestampedEvent* e)
     assert (e->timestamp() >= _begin);
     assert (e->timestamp() <= _end);
     _event.push_back(e);
-    int date = ((e->timestamp() - _begin)/_len) * _res;
+    double date = ((e->timestamp() - _begin)/_len) * _res;
     _date.push_back(date);
 }
 
@@ -35,7 +35,7 @@ size_t Segment::size() const
     return _date.size();
 }
 
-int Segment::date(size_t i) const
+unsigned int Segment::date(size_t i) const
 {
     assert(i < _date.size());
     return _date[i];

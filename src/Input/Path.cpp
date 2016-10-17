@@ -9,34 +9,34 @@
 #include "Path.hpp"
 
 
-int Path::begin() const
+unsigned int Path::begin() const
 {
     return _begin;
 }
 
-int Path::end() const
+unsigned int Path::end() const
 {
     assert(_len > 0);
     return _begin + _len;
 }
 
-int Path::length() const
+unsigned int Path::length() const
 {
     return _len;
 }
 
-bool Path::member(int p)
+bool Path::member(unsigned int p)
 {
     return ((_begin <= p) && (p < _begin+_len));
 }
 
-bool Path::aligned(int p)
+bool Path::aligned(unsigned int p)
 {
     double mid = _begin + (_len / 2);
     return ((_begin <= p) && (p <= mid));
 }
 
-Path* Path::sub(int n, int i)
+Path* Path::sub(unsigned int n, unsigned int i)
 {
     assert (n > 0);
     assert (i > 0);
@@ -51,16 +51,13 @@ Path* Path::sub(int n, int i)
 
 
 
-
-
-
-size_t Alignment::align(size_t b)
+unsigned int Alignment::align(unsigned int b)
 {
-    size_t m = _seg->size();
+    unsigned int m = _seg->size(); // cast size_t (unsigned long) into unsigned int
     int mid = _len / 2;
     int end = this->end();
     int c = 0;
-    size_t i;
+    unsigned int i;
 
     // pre-cond: the first point must be after the left bound of the interval
     assert ((b >= m) || _seg->date(b) >= _begin);
@@ -132,7 +129,7 @@ Alignment::Alignment(Segment* s) :_seg(s)
 }
 
 
-Alignment::Alignment(Segment* s, int b, int l) :_seg(s)
+Alignment::Alignment(Segment* s, unsigned int b, unsigned int l) :_seg(s)
 {
     assert(s != NULL);
     assert (b >= 0);
@@ -158,9 +155,9 @@ Alignment::~Alignment()
 //}
 
 
-vector<Alignment*> Alignment::subs(int n)
+vector<Alignment*> Alignment::subs(unsigned int n)
 {
-    assert (n > 0);
+    assert (n > 1);
     assert ((_len % n) == 0); // this interval length must be divisible by n
     assert(_begin >= 0);
     assert(_begin < _res);
@@ -168,9 +165,9 @@ vector<Alignment*> Alignment::subs(int n)
     vector<Alignment*> v;
     int len = _len / n;
     int b = _begin;
-    size_t j = _seg_lbeg;
+    unsigned int j = _seg_lbeg;
     
-    for (size_t i=0; i < n; i++)
+    for (unsigned int i=0; i < n; i++)
     {
         Alignment* p = new Alignment(_seg, b, len);
         v.push_back(p);
@@ -181,8 +178,6 @@ vector<Alignment*> Alignment::subs(int n)
     assert (v.size() == n);
     return v;
 }
-
-
 
 
 //vector<Alignment*> Alignment::subs(int k)
