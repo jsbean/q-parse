@@ -13,6 +13,11 @@
 #endif /* trash_h */
 
 
+
+//////////////
+//   WTA
+//////////////
+
 typedef struct _transition
 {
     vector<State> tr_body;
@@ -20,7 +25,51 @@ typedef struct _transition
 } Transition;
 
 
+vector<Transition*>* WTA::getTrs(State s)
+{
+    vector<Transition*>* tv = _table[s];
+    if (tv == NULL) // not found
+    {
+        tv = new vector<Transition*>;
+        _table[s] = tv;
+    }
+    return tv;
+}
 
+
+
+// add(s, i, q) add the state q at the end of the body of the ith transition of head s.
+// s must be a registered state with at least i transitions.
+// DO NOT USE.
+void WTA::add(State s, size_t i, State q)
+{
+    vector<Transition*>* tv = &_table[s];
+    assert (tv);
+    // if s was not registered it will fail because size _state[s] = 0
+    assert (i < _table.size());
+    Transition* t = tv->at(i);
+    assert (t);
+    _cpt_size++;
+    t->add(q);
+}
+
+
+Transition* WTA::at(State s, size_t i) const
+{
+    return _table[s][i]; //not const
+    //    vector<Transition*>* tv = &_table[s]; // not const
+    //    assert(tv);
+    //    assert(i < tv->size());
+    //    return(tv->at(i));
+}
+
+
+
+
+
+//////////////
+// ComboWTA
+//////////////
 
 //typedef struct _combostate
 //{

@@ -77,11 +77,6 @@ bool ComboState::operator<(const ComboState& s) const
 
 
 
-
-
-
-
-
 State ComboWTA::addState(ComboState* cs)
 {
     assert(cs);
@@ -101,21 +96,22 @@ State ComboWTA::addState(ComboState* cs)
     // enumerate the transitions to q in schema
     for (vector<Transition*>::const_iterator i = _schema->begin(q); i != _schema->end(q); ++i)
     {
-        Transition* t = *i;     // transition of schema
-        size_t a = t->size();   // transition arity
+        Transition* t = *i;      // transition of schema
+        size_t a = t->size();    // transition arity
         assert (a >= 1);
-        Weight* w = t->weight(); // trandition weight  // TODO ptr
+        Weight* w = t->weight(); // weight of schema transition
         // leaf transition
         if (a == 1)
         {
-            State label = t->antecedent(0);
+            State label = t->at(0);
             // the label coincide with the info in guess and path
             if ((Label::nbGraceNotes(label) ==
                 (cs->cs_rp + cs->cs_path->l_size() - 1)) &&
                 (cs->cs_rr == cs->cs_path->r_size()))
             {
-                // compute distance
+                // compute distance to input segment
                 Distance* dist = new Distance(cs->cs_path);
+                ComboWeight* cw = new ComboWeight(w, dist);
                 
                 // add terminal transition to (leaf) label
                 

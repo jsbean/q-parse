@@ -25,7 +25,12 @@
 class ComboWeight : public Weight
 {
 public:
+    // new weight combining (mult) a weight and a distance weight
     ComboWeight(const Weight* const, const Distance* const);
+ 
+    // default where distance is neutral elemet for mult
+    ComboWeight(const Weight* const);
+    
     
     void add(const ComboWeight&);
     

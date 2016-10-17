@@ -20,6 +20,12 @@ ComboWeight::ComboWeight(const Weight* const w, const Distance* const d)
 }
 
 
+ComboWeight::ComboWeight(const Weight* const w)
+{
+    _val = (1 - _alpha) * w->value();
+}
+
+
 void ComboWeight::add(const ComboWeight& w)
 {
     _val += w._val;

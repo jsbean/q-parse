@@ -36,7 +36,7 @@ size_t Transition::size() const
 }
 
 
-State Transition::antecedent(size_t i)
+State Transition::at(size_t i)
 {
     assert (i < _body.size());
     return (_body[i]);
@@ -63,7 +63,6 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         // skip initial spaces
         //for(i=0; (i < line.size()) && (line[i] = ' '); i++);
         //if ((i >= line.size()) || (!isdigit(line[i])))  break;
-
         
         // process 1 line of the form "s (s0 ... sn) w"
         
@@ -91,7 +90,16 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
             break;
         Weight* w = new Weight(val);
         // add transition to the table
-        add(s, body, w);
+        assert (w);
+        Transition* t = add(s, w);
+        assert(t);
+        // copy content of sl to body of new transition
+        for(int i=0; i < body.size(); i++)
+            t->add(body[i]);
+        _cpt_tr++;
+        _cpt_size += body.size();
+        cout << "add " << s << "( " << body.size() << " ) " << w->value();
+        cout << " size table = " << _table.size() << '\n';
     }
     file.close();
 }
@@ -104,8 +112,6 @@ WTA::~WTA()
         vector<Transition*> tv = i->second;
         for (vector<Transition*>::iterator j = tv.begin(); j != tv.end(); ++j)
             delete *j;
-//        for(size_t j = 0; j < tv.size(); j++)
-//            delete tv[j];
         tv.clear();
     }
     _table.clear();
@@ -124,7 +130,7 @@ void WTA::dump(ostream& o)
             assert (t);
             o << s << " ( ";
             for(size_t k = 0; k < t->size(); k++)
-                o << t->antecedent(k) << " ";
+                o << t->at(k) << " ";
             
             o << ") " << (t->weight())->value() << '\n';
         }
@@ -185,20 +191,7 @@ size_t WTA::countAll() const
 }
 
 
-//vector<Transition*>* WTA::getTrs(State s)
-//{
-//    vector<Transition*>* tv = _table[s];
-//    if (tv == NULL) // not found
-//    {
-//        tv = new vector<Transition*>;
-//        _table[s] = tv;
-//    }
-//    return tv;
-//}
-
-
-
-size_t WTA::add(State s, Weight* w)
+Transition* WTA::add(State s, Weight* w)
 {
     assert (w);
     // _table[s]: if there is no entry for s, one is created with empty vector of transition (see stl::map)
@@ -208,37 +201,23 @@ size_t WTA::add(State s, Weight* w)
     tv->push_back(t);
     _cpt_tr++;
     _cpt_size++; // for the target of transition
-    return(tv->size()-1);
+    return(t);
 }
 
-void WTA::add(State s, size_t i, State q)
-{
-    vector<Transition*>* tv = &_table[s];
-    assert (tv);
-    // if s was not registered it will fail because size _state[s] = 0
-    assert (i < _table.size());
-    Transition* t = tv->at(i);
-    assert (t);
-    _cpt_size++;
-    t->add(q);
-}
 
-void WTA::add(State s, vector<State> sl, Weight* w)
+Transition* WTA::add(State s, vector<State> sl, Weight* w)
 {
     assert (w);
     cout << "add " << s << "( " << sl.size() << " ) " << w->value();
     cout << " size table = " << _table.size() << '\n';
-    vector<Transition*>* tv = &_table[s];
-    assert(tv);
-    Transition* t = new Transition(w);
-    // copy content of sl to body of new transition
+    Transition* t = add(s, w);
     assert(t);
+    // copy content of sl to body of new transition
     for(int i=0; i < sl.size(); i++)
         t->add(sl[i]);
     _cpt_tr++;
     _cpt_size += sl.size();
-    assert(tv);
-    tv->push_back(t); // add transition to transitions of s
+    return (t);
 }
 
 vector<Transition*>::const_iterator WTA::begin(State s) const
@@ -271,10 +250,5 @@ Transition* WTA::at(State s, size_t i) const
     assert(it != _table.end());
     assert(i < it->second.size());
     return (it->second.at(i));
-// return _table[s][i]; //not const
-//    vector<Transition*>* tv = &_table[s]; // not const
-//    assert(tv);
-//    assert(i < tv->size());
-//    return(tv->at(i));
 }
 
