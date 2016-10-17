@@ -103,6 +103,7 @@ public:
     
     ComboState(State, Alignment*, int rp=0, int rr=0);
 
+    // NOT USED? TODO: REM
     ComboState(const ComboState&, int rp=0, int rr=0);
 
     ~ComboState();

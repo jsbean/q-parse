@@ -75,8 +75,6 @@ bool ComboState::operator<(const ComboState& s) const
 
 
 
-
-
 State ComboWTA::addState(ComboState* cs)
 {
     assert(cs);
@@ -139,27 +137,30 @@ State ComboWTA::addState(ComboState* cs)
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
             int rr = vp[a-1]->r_size(); // rr of the last element of vp
-            if (cs->cs_rr <= rr)        // must be smaller than the max possible rr for rightmost child
+            if (cs->cs_rr <= rr)        // is the max possible rr for rightmost child (propagated rr)
             {
-                // the weight of the ComboWTA transition depends only on the weight of the original schema transition
+                // the weight is the same for all the ComboWTA transitions (sharing)
+                // it depends only on the weight of the original schema transition
                 ComboWeight* cw = new ComboWeight(w);
                 assert(cw);
 
                 // this aux. vector will store all the possible values
                 // of the a-1 first rr of child ComboStates,
                 // between 0 and the max allowed rr value defined in vp (r_size)
-                std::vector<unsigned int> rrs;
+                unsigned int rrs[a-1];
                 // initialized to null vector
                 for (int i = 0; i < a-1; i++)
-                    rrs.push_back(0);
+                    rrs[i] = 0;
                 
-                bool flag = true;
-                while (flag)
+                // enumeration of all the possible rrs vectors (of length a-1)
+                // and addition of one transition for each one
+                bool cont = true;
+                while (cont)
                 {
-                    // construct and add a new transition defined by rrs and computed Alignment's
+                    // construct and add a new transition defined by the current rrs vector and computed Alignment's
                     Transition* newt = add(s, cw); // new transition for ComboWTA
                     assert(newt);
-                    unsigned int rp = cs->cs_rp; // propagation of rp from target to leftmost child
+                    unsigned int rp = cs->cs_rp; // propagation of rp from target cs to leftmost child
                     for(int i = 0; i < a-1; i++)
                     {
                         // ComboState i of transition
@@ -173,15 +174,15 @@ State ComboWTA::addState(ComboState* cs)
                     State news = addState(newcs); // recursive registration of last ComboState
                     newt->add(news);
 
-                    
+                    // construct next rrs vector (of length a-1)
                     for (int i = 0; ; )
                     {
                         rrs[i]++;
                         if (rrs[i] == vp[i]->r_size()) // we reach max value for rr[i]
                         {
-                            if (i+1 == a-1)   // last rrs possible
+                            if (i+1 == a-1)   // we have constructed all possible rrs
                             {
-                                flag = false; // break to outer for loop on schema transition
+                                cont = false; // break the while loop
                                 break;
                             }
                             else

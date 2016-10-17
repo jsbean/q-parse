@@ -15,60 +15,8 @@
 
 #include "ComboWTA.hpp"
 
-
-// just for the sample -- print the data sets
-std::ostream& operator<<(std::ostream& os, const std::vector<int>& vi)
-{
-    os << "( ";
-    std::copy(vi.begin(), vi.end(), std::ostream_iterator<int>(os, " "));
-    os << ")\n";
-    return os;
-}
-
-
-void product(std::vector<int> b, size_t len)
-{
-    std::vector<int> result;
-    
-    // initial result = null vector
-    for (int i = 0; i < len; i++)
-        result.push_back(0);
-    
-    while (true)
-    {
-        std::cout << result;
-
-        for (int i = 0; ; )
-        {
-            result[i]++;
-            if (result[i] == b[i]) // we reach max value for i
-            {
-                if (i+1 == len) // last digit
-                {
-                    return;
-                }
-                else
-                {
-                    result[i] = 0;
-                    i++;
-                }
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-}
-
-
 int main(int argc, const char * argv[])
 {
-
-    std::vector<int> bases = { 3, 3, 3 };
-    
-    product(bases, bases.size());
-    
     
 //    // test maps
 //    map<State,vector<Transition*>> _table;
