@@ -59,6 +59,9 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
     //read stream line by line
     for(string line; getline(file, line); )
     {
+        // skip empty line
+        if (line.size() == 0) continue;
+
         istringstream in(line);   //make a stream from the line
         
         // skip initial spaces
@@ -69,14 +72,12 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         
         // extract s
         State s;
-        if (!(in >> s))
-            break;
+        if (!(in >> s)) continue; // parse error: skip line
 
         // extractc '('
         string buf;
         in >> buf;
-        if (buf != "(")
-            break;
+        if (buf != "(") continue; // parse error: skip line
 
         // extract s0 ... sn into vector body
         getline(in, buf, ')');
@@ -87,22 +88,28 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
             body.push_back(q);
 
         float val;
-        if (!(in >> val))
-            break;
+        if (!(in >> val)) continue; // parse error: skip line
         Weight* w = new Weight(val);
         // add transition to the table
         assert (w);
         Transition* t = add(s, w);
         assert(t);
         // copy content of sl to body of new transition
-        for(int i=0; i < body.size(); i++)
-            t->add(body[i]);
+        size_t a = body.size();
+        for(int i=0; i < a; i++)
+        {
+            State si = body[i];
+            // register every read body state (harmless if already registered)
+            if (a > 1) add(si);
+            t->add(si);
+        }
         _cpt_tr++;
         _cpt_size += body.size();
         cout << "add " << s << "( " << body.size() << " ) " << w->value();
         cout << " size table = " << _table.size() << '\n';
     }
     file.close();
+    _init = { 0 };
 }
 
 WTA::~WTA()
@@ -161,17 +168,18 @@ void WTA::save(string filename)
 }
 
 
-//vector<Transition*> WTA::addState(State s)
-//{
-//    // returns new Transition vector if s is not a key in the table
-//    return (_table[s]); // new vector<Transition*>();
-//}
-
 
 bool WTA::registered(State s) const
 {
     return (_table.count(s));
 }
+
+
+bool WTA::initial(State s) const
+{
+    return (_init.count(s));
+}
+
 
 
 size_t WTA::countStates() const
@@ -189,6 +197,15 @@ size_t WTA::countTransitions() const
 size_t WTA::countAll() const
 {
     return _cpt_size;
+}
+
+
+vector<Transition*>::const_iterator WTA::add(State s)
+{
+    // _table[s]: if there is no entry for s, one is created with empty vector of transition (see stl::map)
+    vector<Transition*>* tv = &_table[s];
+    assert (tv);
+    return(tv->begin());
 }
 
 
@@ -251,5 +268,93 @@ Transition* WTA::at(State s, size_t i) const
     assert(it != _table.end());
     assert(i < it->second.size());
     return (it->second.at(i));
+}
+
+
+unsigned int gcd(unsigned int a, unsigned int b)
+{
+    if( b==0 )
+        return a;
+    return gcd(b, a%b);
+}
+
+
+unsigned int lcm(unsigned int a, unsigned int b)
+{
+    return a*b / gcd(a,b);
+}
+
+
+// over approx.
+// could be optimized
+unsigned int WTA::resolution() const
+{
+    // start with initial states
+    set<State>* from = new set<State>(_init);
+    // initialy empty
+    set<State>* reach = new set<State>();
+
+    unsigned int res = 1;
+
+    while (! from->empty())
+    {
+        unsigned int res1 = 1;
+        // for all state in reached set
+        for (set<State>::iterator is = from->begin();
+             is != from->end(); ++is)
+        {
+            State s = *is;
+//            cout << "state: " << s << '\n';
+            // for all transition headed by the current state
+            for (vector<Transition*>::const_iterator it = begin(s);
+                 it != end(s); ++it)
+            {
+                Transition* t = *it;
+                assert(t);
+                size_t a = t-> size();
+                if (a > 1) // exclude leaf transitions (to terminal symbol)
+                {
+                    res1 = lcm(res1, a);
+                    // add states in the body of the transition to reach set
+                    for (int i = 0; i < a; i++)
+                        reach->insert(t->at(i));
+                }
+            }
+        }
+        //cout << "res1 = " <<  res1 << "\n";
+        set<State>* aux = from;
+        from = reach;
+        reach = aux;
+        reach->clear();
+        res *= res1;
+    }
+    delete from;
+    delete reach;
+    return res;
+}
+
+
+set<State> WTA::step(set<State>& sin)
+{
+    set<State> sout; // empty set
+    assert (sout.empty());
+    // for all state in given set
+    for (set<State>::iterator is = sin.begin(); is != sin.end(); ++is)
+    {
+        State s = *is;
+        // for all transition headed by the current state
+        for (vector<Transition*>::const_iterator it = begin(s); it != end(s); ++it)
+        {
+            Transition* t = *it;
+            assert(t);
+            if (t->size() > 1) // exclude leaf transition (to terminal symbol)
+            {
+                // for all state in the body of the transition
+                for (int i = 0; i < t->size(); i++)
+                    sout.insert(t->at(i));
+            }
+        }
+    }
+    return sout;
 }
 

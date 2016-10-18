@@ -46,14 +46,16 @@ int main(int argc, const char * argv[])
     
     
     
-    // test WTA file IO
-//    assert (argc == 2);
-//    string filename = argv[1];
-//    std::cout << "Read " << filename << '\n';
-//
-//    WTA* ta = new WTA(filename);
-//    ta->print();
-//    delete ta;
+// test WTA file IO
+    assert (argc == 2);
+    string filename = argv[1];
+    std::cout << "\nRead " << filename << '\n';
+
+    WTA* ta = new WTA(filename);
+    ta->print();
+    unsigned int r = ta->resolution();
+    std::cout << "\nResolution = " << r << '\n';
+    delete ta;
     
     return 0;
 }

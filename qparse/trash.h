@@ -168,3 +168,16 @@ ComboWTA::ComboWTA(const Segment& seg, const WTA* schema)
     
 }
 
+// addState(s) returns a pointer to the transition vector of s.
+// if s is not present in the table register it as new state (with empty vector of transitions)
+// a pointer to the transition vector of s if it is registered
+vector<Transition*>* addState(State);
+
+
+vector<Transition*> WTA::addState(State s)
+{
+    // returns new Transition vector if s is not a key in the table
+    return (_table[s]); // new vector<Transition*>();
+}
+
+

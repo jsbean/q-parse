@@ -39,6 +39,7 @@
 #include <assert.h>
 #include <vector>
 #include <map>
+#include <set>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -93,17 +94,25 @@ public:
     WTA();
 
     // read WTA from file
+    // the initial state set is set to singleton { 0 }
     WTA(string);
     
     ~WTA();
     
-    // addState(s) returns a pointer to the transition vector of s.
-    // if s is not present in the table register it as new state (with empty vector of transitions)
-    // a pointer to the transition vector of s if it is registered
-    // vector<Transition*>* addState(State);
 
+    // the state is present in the automaton
     bool registered(State) const;
+    
+    // the state is an initial state
+    bool initial(State) const;
+    
+    unsigned int resolution() const;
 
+    
+    // add(s) register state s
+    // if s was already, return an iterator pointing to its transition list.
+    // otherwise, create state s with an empty transition list and returns an iterator to it.
+    vector<Transition*>::const_iterator add(State);
    
     // add(s, w) add a new transition with weight w for state s.
     // if s is not registered, it is added to the table.
@@ -122,6 +131,7 @@ public:
     
     // size(s) return the number of transitions with head state s.
     // s must be registered.
+    // TODO UNUSED?
     size_t size(State) const;
     
     // at(s, i) return the ith transition of head state s.
@@ -155,6 +165,8 @@ protected:
     // full size (number of occurences of states)
     size_t _cpt_size;
    
+    // set of initial states
+    set<State> _init;
     
     //vector<vector<Transition*>*> _table;
     map<State,vector<Transition*>> _table;
@@ -166,6 +178,10 @@ protected:
     // returns a pointer to the created transition.
     // TODO SUPPR.?
     Transition* add(State, vector<State>, Weight*);
+    
+    // step(s) returns the set of states reachable in one transition step by this WTA from the given state set s.
+    // all the states in the set s must be registered.
+    set<State> step(set<State>&);
     
 };
 
