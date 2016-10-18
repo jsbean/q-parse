@@ -144,12 +144,12 @@ class ComboWTA: public WTA
 public:
     
     // construction from input segment and WTA (base schema)
-    ComboWTA(const Segment&, const WTA*);
+    ComboWTA(const Segment&, const WTA&, unsigned int rp=0);
    
 private:
     // Global variables for the ComboWTA construction
     
-    const WTA* _schema;
+    WTA _schema;
     
     // counter for new ComboWTA states
     State _cpt;
@@ -167,6 +167,7 @@ private:
     //     s is added to the table
     //     the ComboWTA transitions with head s are computed and added to the table
     //     r is returned
-    State addState(ComboState*);
+    // moreover, the state is added to the initial state set of the ComboWTA if initial=true
+    State addComboState(ComboState*, bool initial=false);
 
 };

@@ -72,22 +72,22 @@ protected:
 class Alignment: public Path
 {
 public:
-    Alignment():_seg_llen(0),_seg_lbeg(0),_seg_rlen(0),_seg_rbeg(0) { _seg = new Segment(); }
+    Alignment();
     
     // Alignment(s) = alignement of the input segment s to the interval [0..r]
     // (initial (toplevel) path).
-    Alignment(Segment*);
+    Alignment(const Segment&);
     
     // Alignment(s, b, l) = alignement of the interval [b..b+l] subset [0,..,r]
     // to the input segment s.
     // construction of recursive paths.
     // WARNING: must be aligned.
-    Alignment(Segment*, unsigned int, unsigned int);
+    Alignment(const Segment&, unsigned int, unsigned int);
     
     ~Alignment();
     
     // input segment
-    Segment* input() const { return _seg; }
+    const Segment& input() const { return _seg; }
     
     // date in stored Segment
     //int date(size_t) const;
@@ -117,7 +117,7 @@ private:
     // resolution
     unsigned int _res;  // SUPPR (deja dans segment)
     
-    Segment* _seg;
+    Segment _seg;
     
     // number of segment points in the first half of this path
     unsigned int _seg_llen;

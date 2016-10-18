@@ -101,18 +101,19 @@ public:
     
 
     // the state is present in the automaton
-    bool registered(State) const;
+    bool isRegistered(State) const;
     
     // the state is an initial state
-    bool initial(State) const;
+    bool isInitial(State) const;
     
     unsigned int resolution() const;
 
     
-    // add(s) register state s
+    // add(s, i) register state s
     // if s was already, return an iterator pointing to its transition list.
     // otherwise, create state s with an empty transition list and returns an iterator to it.
-    vector<Transition*>::const_iterator add(State);
+    // moreover s is added to the initial state set iff i = true.
+    vector<Transition*>::const_iterator add(State, bool initial=false);
    
     // add(s, w) add a new transition with weight w for state s.
     // if s is not registered, it is added to the table.
@@ -157,6 +158,10 @@ public:
     // number of symbols (state occurences)
     size_t countAll() const;
     
+    // set of initial states
+    set<State> init;
+
+    
 protected:
 
     // number of transitions
@@ -164,14 +169,9 @@ protected:
 
     // full size (number of occurences of states)
     size_t _cpt_size;
-   
-    // set of initial states
-    set<State> _init;
     
     //vector<vector<Transition*>*> _table;
     map<State,vector<Transition*>> _table;
-    
-    //vector<Transition*>* getTrs(State s);
     
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // if s is not registered, it is added to the table.

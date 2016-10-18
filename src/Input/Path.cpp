@@ -53,16 +53,16 @@ Path* Path::sub(unsigned int n, unsigned int i)
 
 unsigned int Alignment::align(unsigned int b)
 {
-    unsigned int m = _seg->size(); // cast size_t (unsigned long) into unsigned int
+    unsigned int m = _seg.size(); // cast size_t (unsigned long) into unsigned int
     int mid = _len / 2;
     int end = this->end();
     int c = 0;
     unsigned int i;
 
     // pre-cond: the first point must be after the left bound of the interval
-    assert ((b >= m) || _seg->date(b) >= _begin);
+    assert ((b >= m) || _seg.date(b) >= _begin);
 
-    for(i = b; (i < m) && (_seg->date(i) <= mid); i++)
+    for(i = b; (i < m) && (_seg.date(i) <= mid); i++)
         c++;
 
     _seg_llen = c;
@@ -79,7 +79,7 @@ unsigned int Alignment::align(unsigned int b)
     else
     {
         _seg_rbeg = i;
-        for(c=0; (i < m) && (_seg->date(i) < end); i++)
+        for(c=0; (i < m) && (_seg.date(i) < end); i++)
             c++;
 
         _seg_rlen = c;
@@ -95,10 +95,10 @@ unsigned int Alignment::align(unsigned int b)
     assert ((_seg_llen >  0) || (_seg_lbeg >= m));
     assert ((_seg_llen == 0) || (_seg_lbeg < m));
     assert ((_seg_llen == 0) || (_seg_lbeg+_seg_llen-1 < m));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) >= _begin));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) <= mid));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_llen-1) >= _begin));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_llen-1) <= mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) >= _begin));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) <= mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_llen-1) >= _begin));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_llen-1) <= mid));
     
     assert (_seg_rlen >= 0);
     assert (_seg_rlen < m);
@@ -107,35 +107,39 @@ unsigned int Alignment::align(unsigned int b)
     assert ((_seg_rlen >  0) || (_seg_rbeg >= m));
     assert ((_seg_rlen == 0) || (_seg_rbeg < m));
     assert ((_seg_rlen == 0) || (_seg_rbeg+_seg_rlen-1 < m));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_rbeg) > mid));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg) < end));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_rbeg+_seg_rlen-1) > mid));
-    assert ((_seg_llen == 0) || (_seg->date(_seg_lbeg+_seg_rlen-1) < end));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg) > mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) < end));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg+_seg_rlen-1) > mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_rlen-1) < end));
 
     // i (next point) out of interval
-    assert ((i >= m) || (_seg->date(i) >= end));
+    assert ((i >= m) || (_seg.date(i) >= end));
     
     return i;
 }
 
 
-Alignment::Alignment(Segment* s) :_seg(s)
+Alignment::Alignment():_seg_llen(0),_seg_lbeg(0),_seg_rlen(0),_seg_rbeg(0)
 {
-    assert(s != NULL);
-    _res = s->resolution();
+    _seg = *(new Segment());
+}
+
+
+Alignment::Alignment(const Segment& s) :_seg(s)
+{
+    _res = s.resolution();
     _begin = 0;
     _len = _res;
     align(0);
 }
 
 
-Alignment::Alignment(Segment* s, unsigned int b, unsigned int l) :_seg(s)
+Alignment::Alignment(const Segment& s, unsigned int b, unsigned int l) :_seg(s)
 {
-    assert(s != NULL);
     assert (b >= 0);
     assert (l > 0);
     
-    _res = s->resolution();
+    _res = s.resolution();
     _begin = b;
     _len = l;
 }

@@ -44,6 +44,14 @@ State Transition::at(int i)
 }
 
 
+
+
+
+
+
+
+
+
 WTA::WTA():_cpt_tr(0), _cpt_size(0)
 { }
 
@@ -109,7 +117,7 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         cout << " size table = " << _table.size() << '\n';
     }
     file.close();
-    _init = { 0 };
+    init = { 0 };
 }
 
 WTA::~WTA()
@@ -169,16 +177,18 @@ void WTA::save(string filename)
 
 
 
-bool WTA::registered(State s) const
+bool WTA::isRegistered(State s) const
 {
     return (_table.count(s));
 }
 
 
-bool WTA::initial(State s) const
+bool WTA::isInitial(State s) const
 {
-    return (_init.count(s));
+    return (init.count(s));
 }
+
+
 
 
 
@@ -200,11 +210,12 @@ size_t WTA::countAll() const
 }
 
 
-vector<Transition*>::const_iterator WTA::add(State s)
+vector<Transition*>::const_iterator WTA::add(State s, bool initial)
 {
     // _table[s]: if there is no entry for s, one is created with empty vector of transition (see stl::map)
     vector<Transition*>* tv = &_table[s];
     assert (tv);
+    if (initial) init.insert(s);
     return(tv->begin());
 }
 
@@ -290,7 +301,7 @@ unsigned int lcm(unsigned int a, unsigned int b)
 unsigned int WTA::resolution() const
 {
     // start with initial states
-    set<State>* from = new set<State>(_init);
+    set<State>* from = new set<State>(init);
     // initialy empty
     set<State>* reach = new set<State>();
 

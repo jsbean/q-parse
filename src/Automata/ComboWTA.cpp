@@ -7,7 +7,6 @@
 //
 
 #include "ComboWTA.hpp"
-
 #include "ComboWeight.hpp"
 
 
@@ -75,7 +74,12 @@ bool ComboState::operator<(const ComboState& s) const
 
 
 
-State ComboWTA::addState(ComboState* cs)
+
+
+
+
+
+State ComboWTA::addComboState(ComboState* cs,bool initial)
 {
     assert(cs);
     map<ComboState, State>::const_iterator it = _statemap.find(*cs);
@@ -88,14 +92,17 @@ State ComboWTA::addState(ComboState* cs)
     State s = _cpt++;
     // add map of current ComboState to new State
     _statemap[*cs] = s;
-
+    //register state (will have empty vector of transitions)
+    add(s, initial);
+    
     // add transitions to new state s
 
     State q = cs->cs_state;      // current state in schema
     Alignment* p = cs->cs_path;  // current Path (Alignment)
 
     // enumerate the transitions to q in schema
-    for (vector<Transition*>::const_iterator it = _schema->begin(q); it != _schema->end(q); ++it)
+    for (vector<Transition*>::const_iterator it = _schema.begin(q);
+         it != _schema.end(q); ++it)
     {
         Transition* t = *it;         // transition of schema
         unsigned int a = t->size(); // transition arity
@@ -116,7 +123,7 @@ State ComboWTA::addState(ComboState* cs)
                 (cs->cs_rr == p->r_size()))
             {
                 // compute distance to input segment
-                Distance* dist = new Distance(cs->cs_path);
+                Distance* dist = new Distance(*(cs->cs_path));
                 ComboWeight* cw = new ComboWeight(w, dist);
                 assert(cw);
                 Transition* t = add(s, cw);
@@ -165,13 +172,13 @@ State ComboWTA::addState(ComboState* cs)
                     {
                         // ComboState i of transition
                         ComboState* newcs = new ComboState(t->at(i), vp[i], rp, rrs[i]);
-                        State news = addState(newcs); // recursive registration of new ComboState
+                        State news = addComboState(newcs); // recursive registration of new ComboState
                         newt->add(news);
                         rp = rr;
                     }
                     // last ComboState of transition
                     ComboState* newcs = new ComboState(t->at(a-1), vp[a-1], rp, rr);
-                    State news = addState(newcs); // recursive registration of last ComboState
+                    State news = addComboState(newcs); // recursive registration of last ComboState
                     newt->add(news);
 
                     // construct next rrs vector (of length a-1)
@@ -205,13 +212,37 @@ State ComboWTA::addState(ComboState* cs)
 }
 
 
-ComboWTA::ComboWTA(const Segment& seg, const WTA* schema)
+ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, unsigned int rp):_schema(schema)
 {
-    assert(schema);
-    _schema = schema;
+    _statemap.clear();
+    _cpt = 0;
+    Alignment* full = new Alignment(seg);
+
+    // construction of initial ComboState's
+    // with:
+    //   initial schema state
+    //   Alignment covering the whole segment
+    //   rr values between 0 and the number of points in second half of segment
+    //   rp given
+    for (set<State>::iterator it = schema.init.begin();
+         it != schema.init.end(); ++it)
+    {
+        State s = *it;
+        unsigned int max_rr = full->r_size();
+        for (unsigned int rr = 0; rr <= max_rr; rr++)
+        {
+            // arbitrarily
+            ComboState* cs = new ComboState(s, full, rp, rr);
+            addComboState(cs, true);
+            // the other ComboState's will be added recursively
+        }
+    }
     
-    
-    // initial ComboStates
-    // TODO
-    // addState(init_cs);
+    // free all ComboStates
+    for (map<ComboState, State>::iterator it = _statemap.begin();
+         it != _statemap.end(); ++it)
+    {
+        delete &(it->first);
+    }
+    _statemap.clear();
 }
