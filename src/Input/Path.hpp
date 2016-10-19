@@ -40,10 +40,10 @@ public:
     // return the length of the interval defined by this Path (in samples)
     unsigned int length() const;
 
-    // the position in param belongs to the interval defined by this Path
+    // the position given belongs to the interval defined by this Path
     bool member(unsigned int);
 
-    // the position in param belongs to the interval defined by this Path
+    // the position given belongs to the interval defined by this Path
     // and is closer to the left bound than to the right bound
     bool aligned(unsigned int);
     
@@ -105,6 +105,8 @@ public:
     // index in segment of the first element of segment inside the second half of this interval
     // out_of_range (= size of segment) id rsize() == 0
     unsigned int r_first() const { return _seg_rbeg; }
+    
+    bool habited() const { return ((_seg_llen + _seg_rlen) > 0); }
     
     // sub(k) return the list of subpaths obtained by
     // division of this Path into k segments.

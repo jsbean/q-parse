@@ -132,6 +132,8 @@ private:
     //cs_key _hash;
     unsigned int _hash[5];
     
+    static int const _hash_len = 5;
+    
     void rehash();
 };
 

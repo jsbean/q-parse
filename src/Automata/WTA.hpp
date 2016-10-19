@@ -160,6 +160,8 @@ public:
     
     // set of initial states
     set<State> init;
+    
+    // TODO ajouter clean (avec decision du vide)
 
     
 protected:

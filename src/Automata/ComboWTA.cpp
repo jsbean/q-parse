@@ -53,21 +53,21 @@ void ComboState::rehash()
 }
 
 bool ComboState::operator==(const ComboState& s) const
-{   for (int i = 0; i < 5; i++)
-{
-    if (_hash[i] != s._hash[i]) return false;
-}
+{   for (int i = 0; i < _hash_len; i++)
+    {
+        if (_hash[i] != s._hash[i]) return false;
+    }
     return true;
 }
 
 // lexicographic comparison on hash value (unsigned int[5])
 bool ComboState::operator<(const ComboState& s) const
 {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < _hash_len; i++)
     {
         if (_hash[i] > s._hash[i]) return false;
         else if (_hash[i] < s._hash[i]) return true;
-        //otherwise _hash[i] == s._hash[i]
+        //otherwise _hash[i] == s._hash[i] : continue
     }
     return false;   //they are equal
 }
@@ -136,7 +136,7 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
 
         // inner schema transition:
         // add zero or several transitions to ComboWTA (acc. to guesses for rr values)
-        else if (a > 1)
+        else if ((a > 1) && p->habited())  // do not descent if there are no point in Alignement
         {
             // compute vector of children alignements
             vector<Alignment*> vp = p->subs(a);
