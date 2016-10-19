@@ -181,3 +181,55 @@ vector<Transition*> WTA::addState(State s)
 }
 
 
+
+Transition* WTA::add(State s, Weight* w, bool initial)
+{
+    assert (w);
+    Transition* t = new Transition(w);
+    assert (t);
+    TransitionList* tv = add(s, t, initial);
+    _cpt_tr++;
+    _cpt_size++; // for the target of transition
+    return t;
+}
+
+
+Transition* WTA::add(State s, vector<State> sl, Weight* w)
+{
+    assert (w);
+    Transition* t = add(s, w);
+    assert(t);
+    // copy content of sl to body of new transition
+    for(int i=0; i < sl.size(); i++)
+        t->add(sl[i]);
+    _cpt_tr++;
+    _cpt_size += sl.size();
+    return (t);
+}
+
+
+// size(s) return a pair made of
+//   the number of transitions with head state s.
+//   the sum of sizes of transitions with head state s.
+std::pair<size_t,size_t> WTA::size(State s) const
+{
+    size_t nb = 0;
+    size_t sum = 0;
+    map<State,TransitionList>::const_iterator i = _table.find(s);
+    
+    // state not registered
+    if (i == _table.end()) return std::pair<size_t,size_t>(nb, sum);
+    
+    // otherwise, sum transitions sizes
+    for (TransitionList_const_iterator it = i->second.begin();
+         it != i->second.end(); ++it)
+    {
+        nb++;
+        sum += ((*it)->size()+1); // size body + target
+    }
+    return std::pair<size_t,size_t>(nb, sum);
+}
+
+
+
+

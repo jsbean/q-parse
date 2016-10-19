@@ -11,11 +11,16 @@
 #include "Weight.hpp"
 
 
-Transition::Transition(Weight* w):_weight(w){}
+Transition::Transition(State s, Weight* w):_weight(w)
+{
+    assert (_body.empty());
+    _body.push_back(s);
+}
 
 Transition::~Transition()
 {
     _body.clear();
+    delete _weight;   // TBC free weight?
 }
 
 
@@ -24,7 +29,7 @@ void Transition::add(State s)
     _body.push_back(s);
 }
 
-void Transition::setWeight(Weight* w)
+void Transition::set(Weight* w)
 {
     assert (w);
     _weight = w;
@@ -36,12 +41,133 @@ size_t Transition::size() const
 }
 
 
-State Transition::at(int i)
+State Transition::at(int i) const
 {
     assert (0 <= i);
     assert (i < _body.size());
     return (_body[i]);
 }
+
+
+bool Transition::member(State s) const
+{
+    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+        if (*i == s) return true;
+
+    return false;
+}
+
+
+bool Transition::allin(const std::set<State>& e) const
+{
+    if (_body.size() == 1) return false; //singleton body contains terminal symbol
+    
+    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+    {
+        if (e.count(*i) == 0) return false;
+    }
+    return true;
+}
+
+
+bool Transition::nonein(const std::set<State>& e) const
+{
+    if (_body.size() == 1) return true; //singleton body contains terminal symbol
+    
+    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+    {
+        if (e.count(*i) != 0) return false;
+    }
+    return true;
+}
+
+
+//void Transition::dump(ostream& o)
+//{
+//    o << " ( ";
+//    for(vector<State>::iterator i = _body.begin(); i != _body.end(); ++i)
+//        o << *i << " ";
+//    
+//    o << ") " << _weight->value() << '\n';
+//}
+
+
+std::ostream& operator<<(std::ostream& o, const Transition& t)
+{
+    o << " ( ";
+    for(Transition_const_iterator i = t._body.begin(); i != t._body.end(); ++i)
+        o << *i << " ";
+    
+    o << ") " << t._weight->value() << '\n';
+    return o;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TransitionList::~TransitionList()
+{
+    clear();
+}
+
+
+size_t TransitionList::size() const
+{
+    return _table.size();
+}
+
+
+void TransitionList::add(const Transition& t)
+{
+    _table.push_back(t);
+    _cpt_size += t.size() + 1;
+}
+
+
+void TransitionList::clear()
+{
+    //for(vector<Transition*>::iterator i = _table.begin(); i != _table.end(); ++i)
+    //    delete *i;
+    
+    _table.clear();
+}
+
+
+void TransitionList::remove(State s)
+{
+    for(vector<Transition>::iterator i = _table.begin(); i != _table.end(); ++i)
+    {
+        Transition& t = *i;
+        if (t.member(s))
+        {
+            _cpt_size -= (t.size() + 1);
+            _table.erase(i); // remove transition from vector (destructor called)
+        }
+    }
+}
+
+
+
+
+
+
+
 
 
 
@@ -100,58 +226,63 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         Weight* w = new Weight(val);
         // add transition to the table
         assert (w);
-        Transition* t = add(s, w);
-        assert(t);
-        // copy content of sl to body of new transition
-        size_t a = body.size();
-        for(int i=0; i < a; i++)
-        {
-            State si = body[i];
-            // register every read body state (harmless if already registered)
-            if (a > 1) add(si);
-            t->add(si);
-        }
+        add(s, Transition(body, w)); // copy content of vector body to new transition
+        
         _cpt_tr++;
         _cpt_size += body.size();
-        cout << "add " << s << "( " << body.size() << " ) " << w->value();
-        cout << " size table = " << _table.size() << '\n';
     }
     file.close();
-    init = { 0 };
+    initials = { 0 };
 }
 
 WTA::~WTA()
 {
-    for (std::map<State,vector<Transition*>>::iterator i = _table.begin();
+    for (std::map<State,TransitionList>::iterator i = _table.begin();
          i != _table.end(); ++i)
     {
-        vector<Transition*> tv = i->second;
-        for (vector<Transition*>::iterator j = tv.begin(); j != tv.end(); ++j)
-            delete *j;
+        TransitionList tv = i->second;
         tv.clear();
     }
+    // TBC destroy the TransitionList contents?
     _table.clear();
 }
 
-void WTA::dump(ostream& o)
+
+//void WTA::dump(ostream& o)
+//{
+//    for (std::map<State,TransitionList>::iterator i = _table.begin();
+//         i != _table.end(); ++i)
+//    {
+//        State s = i->first;
+//        TransitionList tv = i->second;
+//        o << s;
+//        
+//        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
+//        {
+//            Transition* t = *j;
+//            assert (t);
+//            t->dump(o);
+//            o << '\n';
+//        }
+//    }
+//}
+
+std::ostream& operator<<(std::ostream& o, const WTA& a)
 {
-    for (std::map<State,vector<Transition*>>::iterator i = _table.begin();
-         i != _table.end(); ++i)
+    for (std::map<State,TransitionList>::const_iterator i = a._table.begin();
+         i != a._table.end(); ++i)
     {
         State s = i->first;
-        vector<Transition*> tv = i->second;
-        for(size_t j = 0; j < tv.size(); j++)
+        TransitionList tv = i->second;
+        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
         {
-            Transition* t = tv[j];
-            assert (t);
-            o << s << " ( ";
-            for(size_t k = 0; k < t->size(); k++)
-                o << t->at(k) << " ";
-            
-            o << ") " << (t->weight())->value() << '\n';
+            const Transition& t = *j;
+            o << s << t << " \n";
         }
     }
+    return o;
 }
+
 
 void WTA::print()
 {
@@ -159,7 +290,7 @@ void WTA::print()
     cout << this->countStates() << " states\n";
     cout << this->countTransitions() << " transitions\n";
     cout << this->countAll() << " total symbols\n\n";
-    dump(cout);
+    cout << *this;
 }
                
 void WTA::save(string filename)
@@ -170,7 +301,7 @@ void WTA::save(string filename)
     if(!file.is_open())
         throw "cannot open file";
 
-    dump(file);
+    file << *this;
     
     file.close();
 }
@@ -179,17 +310,91 @@ void WTA::save(string filename)
 
 bool WTA::isRegistered(State s) const
 {
-    return (_table.count(s));
+    return (_table.count(s) > 0);
 }
 
 
 bool WTA::isInitial(State s) const
 {
-    return (init.count(s));
+    return (initials.count(s));
 }
 
 
+TransitionList& WTA::add(State s, bool initial)
+{
+    // _table[s]:
+    // if there is an entry for s, return it
+    // if there is no entry for s, one is created with empty vector of transition (see stl::map)a
+    TransitionList& tv = _table[s];
+    if (initial) initials.insert(s);
+    return(tv);
+}
 
+
+TransitionList& WTA::add(State s, const Transition& t, bool initial)
+{
+    TransitionList& tv = add(s, initial);
+    tv.add(t);
+    _cpt_tr++;
+    _cpt_size += (t.size() + 1);
+    return tv;
+}
+
+
+void WTA::remove(State s)
+{
+    size_t s_nb = 0;   // number of transitions headed to s
+    size_t s_size = 0; // sum of sizes of transitions headed to s
+    
+    // first traversal transition map:
+    // to remove transition with s occurring in body
+    // and to update size counters
+    for (map<State,TransitionList>::iterator i = _table.begin();
+         i != _table.end(); ++i)
+    {
+        State q = i->first;
+        TransitionList& tv = i->second;
+
+        // save the sizes of the TransitionList of s for later
+        if (q == s)
+        {
+            s_nb = tv.size();
+            s_size = tv.fullsize();
+        }
+        // deleted the transitions containing s in the TransitionList of q
+        else
+        {
+            _cpt_tr -= tv.size();
+            _cpt_size -= tv.fullsize();
+            tv.remove(s);
+            _cpt_tr += tv.size();
+            _cpt_size += tv.fullsize();
+        }
+    }
+
+    // the elements removed are destroyed,
+    // destructor of transition list of s is called
+    _table.erase(s);
+    _cpt_tr -= s_nb;
+    _cpt_size -= s_size;
+    
+    initials.erase(s);
+}
+
+
+TransitionList_const_iterator WTA::begin(State s) const
+{
+    map<State,TransitionList>::const_iterator i = _table.find(s);
+    assert(i != _table.end());
+    return i->second.begin();
+}
+
+TransitionList_const_iterator WTA::end(State s) const
+{
+    map<State,TransitionList>::const_iterator it = _table.find(s);
+    assert(it != _table.end());
+    return it->second.end();
+}
 
 
 size_t WTA::countStates() const
@@ -210,76 +415,14 @@ size_t WTA::countAll() const
 }
 
 
-vector<Transition*>::const_iterator WTA::add(State s, bool initial)
-{
-    // _table[s]: if there is no entry for s, one is created with empty vector of transition (see stl::map)
-    vector<Transition*>* tv = &_table[s];
-    assert (tv);
-    if (initial) init.insert(s);
-    return(tv->begin());
-}
 
-
-Transition* WTA::add(State s, Weight* w)
-{
-    assert (w);
-    // _table[s]: if there is no entry for s, one is created with empty vector of transition (see stl::map)
-    vector<Transition*>* tv = &_table[s];
-    assert (tv);
-    Transition* t = new Transition(w);
-    tv->push_back(t);
-    _cpt_tr++;
-    _cpt_size++; // for the target of transition
-    return(t);
-}
-
-
-Transition* WTA::add(State s, vector<State> sl, Weight* w)
-{
-    assert (w);
-    cout << "add " << s << "( " << sl.size() << " ) " << w->value();
-    cout << " size table = " << _table.size() << '\n';
-    Transition* t = add(s, w);
-    assert(t);
-    // copy content of sl to body of new transition
-    for(int i=0; i < sl.size(); i++)
-        t->add(sl[i]);
-    _cpt_tr++;
-    _cpt_size += sl.size();
-    return (t);
-}
-
-vector<Transition*>::const_iterator WTA::begin(State s) const
-{
-    map<State,vector<Transition*>>::const_iterator it = _table.find(s);
-    assert(it != _table.end());
-    return it->second.begin();
-    //return _table[s].begin(); // not const
-}
-
-vector<Transition*>::const_iterator WTA::end(State s) const
-{
-    map<State,vector<Transition*>>::const_iterator it = _table.find(s);
-    assert(it != _table.end());
-    return it->second.end();
-    //return _table[s].end(); // not const
-}
-
-size_t WTA::size(State s) const
-{
-    map<State,vector<Transition*>>::const_iterator it = _table.find(s);
-    assert(it != _table.end());
-    return it->second.size();
-    // return _table[s].size(); // not const
-}
-
-Transition* WTA::at(State s, size_t i) const
-{
-    map<State,vector<Transition*>>::const_iterator it = _table.find(s);
-    assert(it != _table.end());
-    assert(i < it->second.size());
-    return (it->second.at(i));
-}
+//Transition* WTA::at(State s, size_t i) const
+//{
+//    map<State,TransitionList>::const_iterator it = _table.find(s);
+//    assert(it != _table.end());
+//    assert(i < it->second.size());
+//    return (it->second.at(i));
+//}
 
 
 unsigned int gcd(unsigned int a, unsigned int b)
@@ -300,8 +443,8 @@ unsigned int lcm(unsigned int a, unsigned int b)
 // could be optimized
 unsigned int WTA::resolution() const
 {
-    // start with initial states
-    set<State>* from = new set<State>(init);
+    // start with copy of initial state set
+    set<State>* from = new set<State>(initials);
     // initialy empty
     set<State>* reach = new set<State>();
 
@@ -317,18 +460,17 @@ unsigned int WTA::resolution() const
             State s = *is;
 //            cout << "state: " << s << '\n';
             // for all transition headed by the current state
-            for (vector<Transition*>::const_iterator it = begin(s);
+            for (TransitionList_const_iterator it = begin(s);
                  it != end(s); ++it)
             {
-                Transition* t = *it;
-                assert(t);
-                size_t a = t-> size();
+                const Transition& t = *it;
+                size_t a = t.size();
                 if (a > 1) // exclude leaf transitions (to terminal symbol)
                 {
                     res1 = lcm(res1, a);
                     // add states in the body of the transition to reach set
-                    for (int i = 0; i < a; i++)
-                        reach->insert(t->at(i));
+                    for (Transition_const_iterator i = t.begin(); i != t.end(); i++)
+                        reach->insert(*i);
                 }
             }
         }
@@ -345,7 +487,7 @@ unsigned int WTA::resolution() const
 }
 
 
-set<State> WTA::step(set<State>& sin)
+set<State> WTA::step(const set<State>& sin)
 {
     set<State> sout; // empty set
     assert (sout.empty());
@@ -354,18 +496,60 @@ set<State> WTA::step(set<State>& sin)
     {
         State s = *is;
         // for all transition headed by the current state
-        for (vector<Transition*>::const_iterator it = begin(s); it != end(s); ++it)
+        for (TransitionList_const_iterator it = begin(s); it != end(s); ++it)
         {
-            Transition* t = *it;
-            assert(t);
-            if (t->size() > 1) // exclude leaf transition (to terminal symbol)
+            const Transition& t = *it;
+            if (t.size() > 1) // exclude leaf transition (to terminal symbol)
             {
                 // for all state in the body of the transition
-                for (int i = 0; i < t->size(); i++)
-                    sout.insert(t->at(i));
+                for (Transition_const_iterator i = t.begin(); i != t.end(); i++)
+                    sout.insert(*i);
             }
         }
     }
     return sout;
+}
+
+
+void WTA::clean()
+{
+    // first determine the set of empty states
+    set<State> empty;
+    for (map<State, TransitionList>::iterator i = _table.begin();
+         i != _table.end(); ++i)
+        empty.insert(i->first);
+    
+    bool change = true;
+    while(change)
+    {
+        change = false;
+        // for all state s
+        for (map<State,TransitionList>::iterator i = _table.begin();
+             i != _table.end(); ++i)
+        {
+            State s = i->first;
+            // the state is already marked nonempty
+            if (empty.count(s) == 0) continue;
+            // otherwise trye to mark s
+            // for all transition headed by s
+            for (TransitionList_const_iterator it = (i->second).begin();
+                 it != (i->second).end(); ++it)
+            {
+                const Transition& t = *it;
+                // transition from terminal symbol or from a body of all nonempty states
+                if (t.nonein(empty))
+                {
+                    empty.erase(s);
+                    change = true;
+                }
+            }
+        }
+    }
+
+    // next erase empty states
+    for (std::set<State>::iterator i = empty.begin();
+         i != empty.end(); ++i)
+        remove(*i);
+        
 }
 

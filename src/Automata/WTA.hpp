@@ -57,33 +57,115 @@ typedef vector<State>::iterator Transition_iterator;
 
 class Weight;
 
+// poor man's definition of iterators
+typedef vector<State>::iterator Transition_iterator;
+typedef vector<State>::const_iterator Transition_const_iterator;
+
 class Transition
 {
 public:
-    // Transition(w) create a transition of weight w and empty body
-    Transition(Weight*);
+    // Transition(w) creates a transition of weight w and empty body
+    Transition(Weight* w):_weight(w){}
     
+    // Transition(v, w) creates a transition of weight w and body a copy of v
+    Transition(vector<State> v, Weight* w):_weight(w),_body(v){}
+    
+    // Transition(s, w) creates a transition deom terminal symbol s of weight w
+    Transition(State, Weight*);
+
     ~Transition();
     
-    // add antecedent at the end of the obdy of this transition
+    // add given State at the end of the body of this transition
     void add(State);
 
-    void setWeight(Weight* w);
+    // change weight
+    void set(Weight* w);
     
     // size of body
     size_t size() const;
     
     // antecedent(i) returns the ith state in the body
     // i must be an index of the body
-    State at(int);
+    State at(int) const;
     
-    Weight* weight(){ return _weight; }
+    Weight* weight() const { return _weight; }
+    
+    // iterator pointing to the first state in the body of the transition
+    Transition_const_iterator begin() const { return _body.begin(); }
 
+    // iterator pointing to the end of the body of the transition
+    Transition_const_iterator end() const { return _body.end(); }
     
-protected:
+    // whether the given State belongs to the body of this transition
+    bool member(State) const;
+    
+    // every State of the body is in the given set
+    bool allin(const std::set<State>&) const;
+
+    // no State of the body is in the given set
+    bool nonein(const std::set<State>&) const;
+
+    // write content of body and weight to output stream
+    //void dump(ostream&);
+
+    // write content of body and weight to output stream
+    friend std::ostream& operator<<(std::ostream&, const Transition&);
+
+private:
     vector<State> _body;
     Weight* _weight;
 };
+
+
+
+
+
+
+typedef vector<Transition>::iterator TransitionList_iterator;
+typedef vector<Transition>::const_iterator TransitionList_const_iterator;
+
+
+class TransitionList
+{
+public:
+    TransitionList():_cpt_size(0) {}
+    
+    ~TransitionList();
+    
+    // number of transitions
+    size_t size() const;
+    
+    // total size of transition table (sum of transition sizes = number of occurences of states)
+    size_t fullsize() const { return _cpt_size; }
+    
+    TransitionList_const_iterator begin() const { return _table.begin(); }
+    
+    TransitionList_const_iterator end() const { return _table.end(); }
+
+    
+    // add(s, w) add a new transition with weight w.
+    // return a pointer to the created transition.
+    //Transition* add(Weight*);
+    
+    void add(const Transition&);
+
+    
+    // remove all transitions in the list containing the given state
+    void remove(State);
+    
+    void clear();
+    
+private:
+    // full size (number of occurences of states)
+    size_t _cpt_size;
+    
+    // transition list
+    vector<Transition> _table;
+    
+};
+
+
+
 
 
 class WTA
@@ -107,47 +189,47 @@ public:
     bool isInitial(State) const;
     
     unsigned int resolution() const;
-
     
     // add(s, i) register state s
-    // if s was already, return an iterator pointing to its transition list.
-    // otherwise, create state s with an empty transition list and returns an iterator to it.
-    // moreover s is added to the initial state set iff i = true.
-    vector<Transition*>::const_iterator add(State, bool initial=false);
-   
-    // add(s, w) add a new transition with weight w for state s.
-    // if s is not registered, it is added to the table.
-    // return a pointer to the created transition.
-    Transition* add(State, Weight*);
-      
+    // if s was already registered, return a reference to its transition list.
+    // otherwise, create state s with an empty transition list and returns a reference to it.
+    // moreover s is set as initial if i = true.
+    TransitionList& add(State, bool initial=false);
+    
+    // add(s, t) add a transition with head s and with body/weight described in t
+    // if s was not registered, it is registered
+    // the transition t is added to the transition list of s
+    // and a reference to this transition list is returned
+    // moreover s is set as initial if i = true.
+    TransitionList& add(State, const Transition&, bool initial=false);
+    
+    // remove the entry for given state s in the table of the table
+    // i.e. all transitions targeted to s,
+    // and all the transitions with s in their body.
+    // if s was in the initial set, it is also removed from this set.
+    // s must be registered.
+    void remove(State);
+    
     // begin(s) returns an iterator pointing to the first transition with head state s.
     // s must be registered.
     // not for modifying transition list of s. use add(...) methods for this.
-    vector<Transition*>::const_iterator begin(State) const;
+    TransitionList_const_iterator begin(State) const;
 
     // begin(s) returns an iterator pointing to the past-the-end transition with head state s.
     // s must be registered.
     // not for modifying transition list of s. use add(...) methods for this.
-    vector<Transition*>::const_iterator end(State) const;
-    
-    // size(s) return the number of transitions with head state s.
-    // s must be registered.
-    // TODO UNUSED?
-    size_t size(State) const;
+    TransitionList_const_iterator end(State) const;
     
     // at(s, i) return the ith transition of head state s.
     // s must be registered.
     // TODO REMOVE - REPL. by begin(State)
-    Transition* at(State, size_t) const;
+    //Transition* at(State, size_t) const;
+    
+    // remove states not inhabited and transitions containing these states
+    void clean();
     
     // save to file
     void save(string);
-    
-    // write table content to output stream
-    void dump(ostream&);
-    
-    // print sizes and table content to std output
-    void print();
     
     // number of states
     size_t countStates() const;
@@ -158,10 +240,19 @@ public:
     // number of symbols (state occurences)
     size_t countAll() const;
     
-    // set of initial states
-    set<State> init;
-    
     // TODO ajouter clean (avec decision du vide)
+
+    // write table content to output stream
+    //void dump(ostream&);
+    
+    // print sizes and table content to std output
+    void print();
+    
+    // write table content to output stream
+    friend std::ostream& operator<<(std::ostream&, const WTA&);
+    
+    // set of initial states
+    std::set<State> initials;
 
     
 protected:
@@ -171,19 +262,23 @@ protected:
 
     // full size (number of occurences of states)
     size_t _cpt_size;
-    
-    //vector<vector<Transition*>*> _table;
-    map<State,vector<Transition*>> _table;
+
+    // transition table
+    //map<State,vector<Transition*>> _table;
+    map<State, TransitionList> _table;
     
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // if s is not registered, it is added to the table.
     // returns a pointer to the created transition.
     // TODO SUPPR.?
-    Transition* add(State, vector<State>, Weight*);
+//    Transition* add(State, vector<State>, Weight*);
     
     // step(s) returns the set of states reachable in one transition step by this WTA from the given state set s.
     // all the states in the set s must be registered.
-    set<State> step(set<State>&);
+    std::set<State> step(const std::set<State>&);
+   
+    
+    
     
 };
 

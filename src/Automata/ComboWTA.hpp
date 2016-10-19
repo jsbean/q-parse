@@ -151,7 +151,7 @@ public:
 private:
     // Global variables for the ComboWTA construction
     
-    WTA _schema;
+    const WTA& _schema;
     
     // counter for new ComboWTA states
     State _cpt;
@@ -160,7 +160,6 @@ private:
     // tmp (only for constructor)
     //unordered_map<cs_key, State, container_hasher> _statemap;
     map<ComboState, State> _statemap;
-    
     
     // toState(cs) returns the ComboWTA state associated to the CoboState cs if there is one
     // otherwise:
