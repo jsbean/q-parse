@@ -10,18 +10,19 @@
 //#include "Distance.hpp"
 
 
-ComboState::ComboState():cs_state(0), cs_path(), cs_rp(0), cs_rr(0)
+ComboState::ComboState():cs_state(0), cs_rp(0), cs_rr(0)
 {
-//    cs_path = new Alignment();
+    cs_path = new AlignmentTree();
 }
 
 
-ComboState::ComboState(State s, const Alignment& p, int rp, int rr):
+ComboState::ComboState(State s, AlignmentTree* t, int rp, int rr):
 cs_state(s),
-cs_path(p),
+cs_path(t),
 cs_rp(rp),
 cs_rr(rr)
 {
+    assert(t);
     rehash();
 }
 
@@ -32,19 +33,22 @@ cs_path(cs.cs_path),
 cs_rp(rp),
 cs_rr(rr)
 {
+    assert(cs_path);
     rehash();
 }
 
 ComboState::~ComboState()
 {
-    // delete cs_path; // shared pointer problem
+    // cs_path deleted with _tree (avoid double delete)
+    // delete cs_path;
 }
 
 void ComboState::rehash()
 {
+    assert(cs_path);
     _hash[0] = cs_state;
-    _hash[1] = cs_path.begin();
-    _hash[2] = cs_path.length();
+    _hash[1] = cs_path->root->begin();
+    _hash[2] = cs_path->root->length();
     _hash[3] = cs_rp;
     _hash[4] = cs_rr;
 }
@@ -73,7 +77,8 @@ bool ComboState::operator<(const ComboState& s) const
 std::ostream& operator<<(std::ostream& o, const ComboState& cs)
 {
     o << "< " << cs.cs_state << " ";
-    o << "[" << cs.cs_path.begin() << "-" << cs.cs_path.end() << "] ";
+    o << "[" << cs.cs_path->root->begin() << "-";
+    o << cs.cs_path->root->end() << "] ";
     o << cs.cs_rp << " ";
     o << cs.cs_rr << ">";
     return o;
@@ -85,11 +90,10 @@ std::ostream& operator<<(std::ostream& o, const ComboState& cs)
 
 
 
-State ComboWTA::addComboState(ComboState* cs,bool initial)
+State ComboWTA::addComboState(const ComboState& cs, bool initial)
 {
-    assert(cs);
-    cout << "combo state: " << *cs << " ";
-    map<ComboState, State>::const_iterator it = _statemap.find(*cs);
+    cout << "combo state: " << cs << " ";
+    map<ComboState, State>::const_iterator it = _statemap.find(cs);
 
     // combo state found in map: combo state has been treated already
     if (it != _statemap.end())
@@ -103,14 +107,15 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
     cout << " = state " << s << "\n";
     
     // add map of current ComboState to new State
-    _statemap[*cs] = s;
+    _statemap[cs] = s;
     //register state
     TransitionList& tv = add(s, initial); // empty vector of Transitions
     
     // add transitions to new state s
 
-    State q = cs->cs_state;      // current state in schema
-    const Alignment& p = cs->cs_path;  // current Path (Alignment)
+    State q = cs.cs_state;            // current state in schema
+    AlignmentTree* tree = cs.cs_path; // current node in tree
+    Alignment* p = tree->root;          // current Path (Alignment)
 
     // enumerate the transitions to q in schema
     for (TransitionList_const_iterator it = _schema.begin(q);
@@ -131,11 +136,11 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
             // the info in guess (# grace notes)
             // and the info in current Path (# points aligned on right)
             if ((Label::nbGraceNotes(label) ==
-                (cs->cs_rp + p.l_size() - 1)) &&
-                (cs->cs_rr == p.r_size()))
+                (cs.cs_rp + p->l_size() - 1)) &&
+                (cs.cs_rr == p->r_size()))
             {
                 // compute distance to input segment
-                Distance dist = Distance(cs->cs_path);
+                Distance dist = Distance(*p);
                 dist.combine(w);
                 //ComboWeight* cw = new ComboWeight(w, dist);
                 // add terminal transition from (leaf) label to s
@@ -146,15 +151,17 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
 
         // inner schema transition:
         // add zero or several transitions to ComboWTA (acc. to guesses for rr values)
-        else if ((a > 1) && p.habited())  // do not descent if there are no point in Alignement
+        // do not descent if there are no point in Alignement
+        else if ((a > 1) && p->habited())
         {
             // compute vector of children alignements
-            vector<Alignment*> vp = p.subs(a);
-            assert (vp.size() == a);
+            const vector<AlignmentTree*>& vt = tree->children(a);
+            //vector<Alignment*> vp = p->subs(a);
+            assert (vt.size() == a);
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
-            int rr = vp[a-1]->r_size(); // rsize for the last element of vp
-            if (cs->cs_rr <= rr)        // is the max possible rr for rightmost child (propagated rr)
+            int rr = vt[a-1]->root->r_size(); // rsize for the last element of vp
+            if (cs.cs_rr <= rr)         // is the max possible rr for rightmost child (propagated rr)
             {
                 // the weight is a combination of null distance and the weight w of the original schema transition
                 // It is the same for all the ComboWTA transitions
@@ -177,17 +184,17 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
                 {
                     // construct and add a new transition defined by the current rrs vector and computed Alignment's
                     Transition newt = Transition(Distance(w)); // new transition for ComboWTA
-                    unsigned int rp = cs->cs_rp; // propagation of rp from target cs to leftmost child
+                    unsigned int rp = cs.cs_rp; // propagation of rp from target cs to leftmost child
                     for(int i = 0; i < a-1; i++)
                     {
                         // ComboState i of transition
-                        ComboState* newcs = new ComboState(t.at(i), *vp[i], rp, rrs[i]);
+                        ComboState newcs = ComboState(t.at(i), vt[i], rp, rrs[i]);
                         State news = addComboState(newcs); // recursive registration of new ComboState
                         newt.add(news);
                         rp = rrs[i]; // next rp is current rr
                     }
                     // last ComboState of transition
-                    ComboState* newcs = new ComboState(t.at(a-1), *vp[a-1], rp, rr);
+                    ComboState newcs = ComboState(t.at(a-1), vt[a-1], rp, rr);
                     State news = addComboState(newcs); // recursive registration of last ComboState
                     newt.add(news);
                     tv.add(newt);
@@ -196,7 +203,7 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
                     for (int i = 0; ; )
                     {
                         rrs[i]++;
-                        if (rrs[i] >= vp[i]->r_size()) // we reach max value for rr[i]
+                        if (rrs[i] >= vt[i]->root->r_size()) // we reach max value for rr[i]
                         {
                             if (i+1 == a-1)   // we have constructed all possible rrs
                             {
@@ -223,18 +230,20 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
 }
 
 
-ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, unsigned int rp):_schema(schema)
+ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, unsigned int rp):
+_schema(schema)
 {
     _statemap.clear();
     _cpt = 0;
     Alignment* full = new Alignment(seg);
-
+    _tree = new AlignmentTree(full);
+    
     // construction of initial ComboState's
     // with:
-    //   initial schema state
-    //   Alignment covering the whole segment
-    //   rr values between 0 and the number of points in second half of segment
-    //   rp given
+    // - initial schema state
+    // - Alignment covering the whole segment
+    // - rr values between 0 and the number of points in second half of segment
+    // - rp given
     for (set<State>::iterator it = schema.initials.begin();
          it != schema.initials.end(); ++it)
     {
@@ -243,13 +252,15 @@ ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, unsigned int rp):_sche
         for (unsigned int rr = 0; rr <= max_rr; rr++)
         {
             // arbitrarily
-            ComboState* cs = new ComboState(s, *full, rp, rr);
+            ComboState cs = ComboState(s, _tree, rp, rr);
             addComboState(cs, true);
             // the other ComboState's will be added recursively
         }
     }
 
     // end of construction
+    // destroy all Alignments (Paths)
+    delete _tree;
     // destroy all Combostates
     _statemap.clear();
 }

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
+#include <map>
 
 #include "segment.hpp"
 
@@ -71,7 +72,10 @@ protected:
 // on a Path (interval)
 class Alignment: public Path
 {
+    friend class AlignmentTree;
+    
 public:
+    
     Alignment();
     
     // Alignment(s) = alignement of the input segment s to the interval [0..r]
@@ -142,3 +146,34 @@ private:
     Alignment(const Segment&, unsigned int, unsigned int);
     
 };
+
+
+
+
+// a structure for optimizing the construction of ComboWTA
+// by avoiding recomputation of Alignmentsa
+class AlignmentTree
+{
+    friend class AlignmentTree;
+    
+public:
+    AlignmentTree();
+    
+    AlignmentTree(const Segment&);
+
+    AlignmentTree(Alignment* p):root(p){};
+
+    ~AlignmentTree();
+    
+    Alignment* root;
+
+    vector<AlignmentTree*> children(int);
+    
+private:
+    
+    // every entree in this map associate to
+    // an arity n a partition a1,...,an of the root Alignment
+    map<int, vector<AlignmentTree*>> _children;
+    
+};
+
