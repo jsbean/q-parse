@@ -40,7 +40,6 @@ public:
     
     EventKind kind() const { return _type; };
 
-    
 protected:
 
     EventKind _type;
@@ -54,7 +53,7 @@ public:
     
     // copy of given event
     // with additional given timestamped (in seconds)
-    TimestampedEvent(TimestampedEvent&, double);
+    TimestampedEvent(const Event&, double);
     
     double timestamp() const { return _date; };
     

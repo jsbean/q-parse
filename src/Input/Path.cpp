@@ -9,6 +9,12 @@
 #include "Path.hpp"
 
 
+Path::Path(unsigned int b, unsigned int l):_begin(b), _len(l)
+{
+    assert (b >= 0);
+    assert (l > 0);
+}
+
 unsigned int Path::begin() const
 {
     return _begin;
@@ -17,7 +23,7 @@ unsigned int Path::begin() const
 unsigned int Path::end() const
 {
     assert(_len > 0);
-    return _begin + _len;
+    return _begin + _len - 1;
 }
 
 unsigned int Path::length() const
@@ -54,22 +60,23 @@ Path* Path::sub(unsigned int n, unsigned int i)
 unsigned int Alignment::align(unsigned int b)
 {
     unsigned int m = _seg.size(); // cast size_t (unsigned long) into unsigned int
-    int mid = _len / 2;
-    int end = this->end();
+    int mid = _begin + (_len / 2);
+    int end = _begin + _len;
     int c = 0;
     unsigned int i;
 
     // pre-cond: the first point must be after the left bound of the interval
     assert ((b >= m) || _seg.date(b) >= _begin);
 
-    for(i = b; (i < m) && (_seg.date(i) <= mid); i++)
+    // count # segment points from b on in the first half of Alignment
+    for(i = b; (i < m) && (_seg.date(i) < mid); i++)
         c++;
 
     _seg_llen = c;
     if (_seg_llen == 0) // no segment points in first half of interval
         _seg_lbeg = m;  // out_of_range (should not be used)
     else
-        _seg_lbeg = b;  // _begin <= b <= mid
+        _seg_lbeg = b;  // _begin <= date(b) < mid
 
     if (i >= m)
     {
@@ -79,6 +86,7 @@ unsigned int Alignment::align(unsigned int b)
     else
     {
         _seg_rbeg = i;
+        // count # segment points from i on in the second half of Alignment
         for(c=0; (i < m) && (_seg.date(i) < end); i++)
             c++;
 
@@ -96,9 +104,9 @@ unsigned int Alignment::align(unsigned int b)
     assert ((_seg_llen == 0) || (_seg_lbeg < m));
     assert ((_seg_llen == 0) || (_seg_lbeg+_seg_llen-1 < m));
     assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) >= _begin));
-    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) <= mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) < mid));
     assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_llen-1) >= _begin));
-    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_llen-1) <= mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_llen-1) < mid));
     
     assert (_seg_rlen >= 0);
     assert (_seg_rlen < m);
@@ -107,9 +115,9 @@ unsigned int Alignment::align(unsigned int b)
     assert ((_seg_rlen >  0) || (_seg_rbeg >= m));
     assert ((_seg_rlen == 0) || (_seg_rbeg < m));
     assert ((_seg_rlen == 0) || (_seg_rbeg+_seg_rlen-1 < m));
-    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg) > mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg) >= mid));
     assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg) < end));
-    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg+_seg_rlen-1) > mid));
+    assert ((_seg_llen == 0) || (_seg.date(_seg_rbeg+_seg_rlen-1) >= mid));
     assert ((_seg_llen == 0) || (_seg.date(_seg_lbeg+_seg_rlen-1) < end));
 
     // i (next point) out of interval
@@ -134,14 +142,10 @@ Alignment::Alignment(const Segment& s) :_seg(s)
 }
 
 
-Alignment::Alignment(const Segment& s, unsigned int b, unsigned int l) :_seg(s)
+Alignment::Alignment(const Segment& s, unsigned int b, unsigned int l):Path(b,l),_seg(s)
 {
-    assert (b >= 0);
-    assert (l > 0);
-    
     _res = s.resolution();
-    _begin = b;
-    _len = l;
+    assert (b+l <= _res);
 }
 
 
@@ -165,6 +169,8 @@ vector<Alignment*> Alignment::subs(unsigned int n)
     assert ((_len % n) == 0); // this interval length must be divisible by n
     assert(_begin >= 0);
     assert(_begin < _res);
+    assert(_begin+_len <= _res);
+
 
     vector<Alignment*> v;
     int len = _len / n;
@@ -175,16 +181,12 @@ vector<Alignment*> Alignment::subs(unsigned int n)
     {
         Alignment* p = new Alignment(_seg, b, len);
         v.push_back(p);
-        b += len;
         j = p->align(j); // align the newly created sub-Alignment
+        b += len;
     }
     
     assert (v.size() == n);
     return v;
 }
 
-
-//vector<Alignment*> Alignment::subs(int k)
-//{
-//}
 

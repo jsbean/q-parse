@@ -45,6 +45,6 @@ public:
 protected:
     
     // store
-    mutable double _val;
+    double _val;
     
 };

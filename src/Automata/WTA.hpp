@@ -38,24 +38,22 @@
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
+#include <list>
 #include <map>
 #include <set>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <unordered_map>
+//#include <unordered_map>
+
+#include "Distance.hpp" // includes class Weight
 
 #endif /* WTA_hpp */
 
 using namespace std;
 
 typedef unsigned int State;
-
-typedef vector<State>::iterator Transition_iterator;
-
-
-class Weight;
 
 // poor man's definition of iterators
 typedef vector<State>::iterator Transition_iterator;
@@ -64,14 +62,15 @@ typedef vector<State>::const_iterator Transition_const_iterator;
 class Transition
 {
 public:
+
     // Transition(w) creates a transition of weight w and empty body
-    Transition(Weight* w):_weight(w){}
+    Transition(const Weight& w):_weight(w){}
     
     // Transition(v, w) creates a transition of weight w and body a copy of v
-    Transition(vector<State> v, Weight* w):_weight(w),_body(v){}
+    Transition(vector<State> v, const Weight& w):_weight(w),_body(v){}
     
-    // Transition(s, w) creates a transition deom terminal symbol s of weight w
-    Transition(State, Weight*);
+    // Transition(s, w) creates a transition of weight w from the terminal symbol s
+    Transition(State, const Weight&);
 
     ~Transition();
     
@@ -79,7 +78,7 @@ public:
     void add(State);
 
     // change weight
-    void set(Weight* w);
+    void set(const Weight& w);
     
     // size of body
     size_t size() const;
@@ -88,7 +87,7 @@ public:
     // i must be an index of the body
     State at(int) const;
     
-    Weight* weight() const { return _weight; }
+    Weight weight() const { return _weight; }
     
     // iterator pointing to the first state in the body of the transition
     Transition_const_iterator begin() const { return _body.begin(); }
@@ -113,20 +112,23 @@ public:
 
 private:
     vector<State> _body;
-    Weight* _weight;
+    Weight _weight;
 };
 
 
 
 
+class WTA;
 
-
-typedef vector<Transition>::iterator TransitionList_iterator;
-typedef vector<Transition>::const_iterator TransitionList_const_iterator;
+typedef list<Transition>::iterator TransitionList_iterator;
+typedef list<Transition>::const_iterator TransitionList_const_iterator;
 
 
 class TransitionList
 {
+    
+    friend class WTA;
+    
 public:
     TransitionList():_cpt_size(0) {}
     
@@ -142,11 +144,6 @@ public:
     
     TransitionList_const_iterator end() const { return _table.end(); }
 
-    
-    // add(s, w) add a new transition with weight w.
-    // return a pointer to the created transition.
-    //Transition* add(Weight*);
-    
     void add(const Transition&);
 
     
@@ -156,12 +153,18 @@ public:
     void clear();
     
 private:
+
     // full size (number of occurences of states)
     size_t _cpt_size;
     
     // transition list
-    vector<Transition> _table;
+    list<Transition> _table;
+
+    // container WTA
+    WTA* _parent;
     
+    //set of all states occuring in wta (in head or body)
+    set<State> allstates();
 };
 
 
@@ -170,6 +173,8 @@ private:
 
 class WTA
 {
+    friend class TransitionList;
+
 public:
     
     // empty automaton
@@ -245,11 +250,11 @@ public:
     // write table content to output stream
     //void dump(ostream&);
     
-    // print sizes and table content to std output
-    void print();
-    
     // write table content to output stream
     friend std::ostream& operator<<(std::ostream&, const WTA&);
+    
+    // print sizes and table content to std output
+    void print();
     
     // set of initial states
     std::set<State> initials;
@@ -277,8 +282,8 @@ protected:
     // all the states in the set s must be registered.
     std::set<State> step(const std::set<State>&);
    
-    
-    
+    // returns the set of all states occuring in wta (in head or body)
+    set<State> allstates();
     
 };
 

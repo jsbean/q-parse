@@ -9,4 +9,4 @@
 #include "Event.hpp"
 
 
-TimestampedEvent::TimestampedEvent(TimestampedEvent& e, double d):Event(e),_date(d) {}
+TimestampedEvent::TimestampedEvent(const Event& e, double d):Event(e),_date(d) {}

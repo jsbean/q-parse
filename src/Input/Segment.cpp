@@ -19,6 +19,52 @@ Segment::Segment(double b, double e, unsigned int r):_begin(b),_end(e),_res(r)
     //_date = new vector<int>();
 }
 
+
+Segment::Segment(string filename, unsigned int r):_res(r)
+{
+    assert(r >= 1);
+
+    ifstream file;
+    
+    file.open(filename, ios_base::in);
+    if(!file.is_open())
+        throw "cannot open file";
+    
+    vector<double> v;
+    
+    for(string line; getline(file, line); )
+    {
+        double d;
+
+        // skip empty line
+        if (line.size() == 0) continue;
+        
+        istringstream in(line);   //make a stream from the line
+        if (!(in >> d)) continue; // parse error: skip line
+        
+        v.push_back(d);
+    }
+    file.close();
+
+    assert (v.size() > 2);
+    size_t last = v.size()-1;
+    
+    _begin = v[0];
+    _end = v[last];
+    assert(_begin < _end);
+    _len = (_end - _begin);
+    
+    for (int i = 1; i < last; i++)
+    {
+        double d = v[i];
+        TimestampedEvent* e = new TimestampedEvent(Event(), d);
+        _event.push_back(e);
+        _date.push_back(((d - _begin)/_len) * _res);
+    }
+}
+
+
+
 void Segment::push(TimestampedEvent* e)
 {
     assert(_res > 0);

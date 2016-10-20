@@ -85,12 +85,8 @@
 using namespace std;
 
 
-class Weight;
-class Distance;
-class ComboWeight;
 class Alignment; // Path
 class Segment;
-class Label;
 
 
 // tmp state structure for construction of ComboWTA
@@ -126,6 +122,8 @@ public:
     
     // lexicographic comparison on hash value (array[5])
     bool operator<(const ComboState& s) const;
+    
+    friend std::ostream& operator<<(std::ostream&, const ComboState&);
     
     
 private:

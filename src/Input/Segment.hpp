@@ -19,6 +19,10 @@
 #include <stdio.h>
 #include <vector>
 #include <assert.h>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 #include "Event.hpp"
 
@@ -37,6 +41,13 @@ public:
     // r: resolution
     Segment(double b=0, double e=0, unsigned int r=1);
     
+    // read timestamped event from file
+    // the first line contains start date (float in seconds)
+    // the next lines contain TimestampedEvent's dates
+    // the last line contains end date
+    Segment(string, unsigned int r=1);
+    
+    
     unsigned int resolution() const { return _res; }
     
     //add new timestamped event
@@ -44,7 +55,7 @@ public:
     
     size_t size() const;
 
-    // date(i) is the date of the ith compenent of this segment, in [0,..,RES]
+    // date(i) is the date of the ith element of this segment, in [0,..,res]
     unsigned int date(size_t) const;
     
     // return the number of elements of this segment contained in the given Path

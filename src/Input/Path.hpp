@@ -26,7 +26,7 @@ class Path
 public:
     Path():_begin(0),_len(0){}
     
-    Path(int b, int l): _begin(b), _len(l) { assert (b >= 0); assert (l > 0); }
+    Path(unsigned int, unsigned int);
     
 
     // return the left bound of the interval defined by this Path (in samples)
@@ -77,12 +77,6 @@ public:
     // Alignment(s) = alignement of the input segment s to the interval [0..r]
     // (initial (toplevel) path).
     Alignment(const Segment&);
-    
-    // Alignment(s, b, l) = alignement of the interval [b..b+l] subset [0,..,r]
-    // to the input segment s.
-    // construction of recursive paths.
-    // WARNING: must be aligned.
-    Alignment(const Segment&, unsigned int, unsigned int);
     
     ~Alignment();
     
@@ -140,5 +134,11 @@ private:
     // and return the next index in segment to be processed
     // or the size of segment if end of segment is reached.
     unsigned int align(unsigned int);
+    
+    // Alignment(s, b, l) = alignement of the interval [b..b+l] subset [0,..,r]
+    // to the input segment s.
+    // WARNING: must be aligned afterwards.
+    // use only internaly construction of recursive paths.
+    Alignment(const Segment&, unsigned int, unsigned int);
     
 };

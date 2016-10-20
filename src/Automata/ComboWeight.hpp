@@ -5,6 +5,7 @@
 //  Created by Florent Jacquemard on 04/10/16.
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
+// OBSOLETE
 
 #ifndef ComboWeight_hpp
 #define ComboWeight_hpp
@@ -28,7 +29,7 @@ public:
     // new weight combining (mult) a weight and a distance weight
     ComboWeight(const Weight* const, const Distance* const);
  
-    // default where distance is neutral elemet for mult
+    // default where distance is neutral element for mult
     ComboWeight(const Weight* const);
     
     

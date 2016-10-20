@@ -21,17 +21,32 @@
 using namespace std;
 
 
-class Distance : public Weight
+class Distance: public Weight
 {
 public:
+    // weight which is the distance defined by alignment for input segment
     Distance(const Alignment&);
+
+    // copy of weight = combination of given weight and a null distance value.
+    Distance(const Weight&);
+
     
     void add(const Distance&);
     
     void mult(const Distance&);
+    
+    // linear combination of this distance value and the given weight
+    void combine(const Weight&);
 
     
+    static void setFactor(double a) { _alpha = a ;};
+    
 private:
+    
+    // factor for linear combinations weight - distance
+    static double _alpha;
+
+    
     // OLD version
     // A Distance is a Weight measure made of
     // - a vector of pointwise distances to an input onset vector
@@ -43,5 +58,4 @@ private:
     //int _dim;
     
     //vector<double> _dist;
-    
 };

@@ -8,10 +8,8 @@
 
 #include "WTA.hpp"
 
-#include "Weight.hpp"
 
-
-Transition::Transition(State s, Weight* w):_weight(w)
+Transition::Transition(State s, const Weight& w):_weight(w)
 {
     assert (_body.empty());
     _body.push_back(s);
@@ -20,7 +18,7 @@ Transition::Transition(State s, Weight* w):_weight(w)
 Transition::~Transition()
 {
     _body.clear();
-    delete _weight;   // TBC free weight?
+//    delete _weight;   // TBC free weight?
 }
 
 
@@ -29,9 +27,8 @@ void Transition::add(State s)
     _body.push_back(s);
 }
 
-void Transition::set(Weight* w)
+void Transition::set(const Weight& w)
 {
-    assert (w);
     _weight = w;
 }
 
@@ -51,8 +48,14 @@ State Transition::at(int i) const
 
 bool Transition::member(State s) const
 {
-    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
-        if (*i == s) return true;
+    if (_body.size() == 0)
+        return false;
+    
+    for (State i : _body)
+        if (i == s) return true;
+    
+//    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); i++)
+//        if (*i == s) return true;
 
     return false;
 }
@@ -98,7 +101,7 @@ std::ostream& operator<<(std::ostream& o, const Transition& t)
     for(Transition_const_iterator i = t._body.begin(); i != t._body.end(); ++i)
         o << *i << " ";
     
-    o << ") " << t._weight->value() << '\n';
+    o << ") " << t._weight.value();
     return o;
 }
 
@@ -137,6 +140,10 @@ void TransitionList::add(const Transition& t)
 {
     _table.push_back(t);
     _cpt_size += t.size() + 1;
+    
+    assert (_parent);
+    _parent->_cpt_tr++;
+    _parent->_cpt_size += (t.size() + 1);
 }
 
 
@@ -151,7 +158,7 @@ void TransitionList::clear()
 
 void TransitionList::remove(State s)
 {
-    for(vector<Transition>::iterator i = _table.begin(); i != _table.end(); ++i)
+    for(list<Transition>::iterator i = _table.begin(); i != _table.end(); i++)
     {
         Transition& t = *i;
         if (t.member(s))
@@ -161,9 +168,6 @@ void TransitionList::remove(State s)
         }
     }
 }
-
-
-
 
 
 
@@ -208,6 +212,7 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         State s;
         if (!(in >> s)) continue; // parse error: skip line
 
+        //cout << "state " << s << "\n";
         // extractc '('
         string buf;
         in >> buf;
@@ -223,17 +228,15 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
 
         float val;
         if (!(in >> val)) continue; // parse error: skip line
-        Weight* w = new Weight(val);
         // add transition to the table
-        assert (w);
-        add(s, Transition(body, w)); // copy content of vector body to new transition
-        
-        _cpt_tr++;
-        _cpt_size += body.size();
+        // copy content of vector body to new transition
+        add(s, Transition(body, Weight(val)));
+        //cout << " - add tr. " << s << Transition(body, Weight(val)) << "\n";
     }
     file.close();
     initials = { 0 };
 }
+
 
 WTA::~WTA()
 {
@@ -245,65 +248,6 @@ WTA::~WTA()
     }
     // TBC destroy the TransitionList contents?
     _table.clear();
-}
-
-
-//void WTA::dump(ostream& o)
-//{
-//    for (std::map<State,TransitionList>::iterator i = _table.begin();
-//         i != _table.end(); ++i)
-//    {
-//        State s = i->first;
-//        TransitionList tv = i->second;
-//        o << s;
-//        
-//        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
-//        {
-//            Transition* t = *j;
-//            assert (t);
-//            t->dump(o);
-//            o << '\n';
-//        }
-//    }
-//}
-
-std::ostream& operator<<(std::ostream& o, const WTA& a)
-{
-    for (std::map<State,TransitionList>::const_iterator i = a._table.begin();
-         i != a._table.end(); ++i)
-    {
-        State s = i->first;
-        TransitionList tv = i->second;
-        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
-        {
-            const Transition& t = *j;
-            o << s << t << " \n";
-        }
-    }
-    return o;
-}
-
-
-void WTA::print()
-{
-    cout << '\n';
-    cout << this->countStates() << " states\n";
-    cout << this->countTransitions() << " transitions\n";
-    cout << this->countAll() << " total symbols\n\n";
-    cout << *this;
-}
-               
-void WTA::save(string filename)
-{
-    ofstream file;
-    
-    file.open(filename, ios_base::out);
-    if(!file.is_open())
-        throw "cannot open file";
-
-    file << *this;
-    
-    file.close();
 }
 
 
@@ -326,6 +270,7 @@ TransitionList& WTA::add(State s, bool initial)
     // if there is an entry for s, return it
     // if there is no entry for s, one is created with empty vector of transition (see stl::map)a
     TransitionList& tv = _table[s];
+    tv._parent = this;
     if (initial) initials.insert(s);
     return(tv);
 }
@@ -510,14 +455,38 @@ set<State> WTA::step(const set<State>& sin)
     return sout;
 }
 
+//set of all states occuring in wta (in head or body)
+set<State> WTA::allstates()
+{
+    set<State> res;
+    
+    for (map<State, TransitionList>::iterator i = _table.begin();
+         i != _table.end(); ++i)
+    {
+        
+        res.insert(i->first);
+        for (TransitionList_const_iterator it = (i->second).begin();
+             it != (i->second).end(); ++it)
+        {
+            const Transition& t = *it;
+            if (t.size() > 1)
+            {
+                for (Transition_const_iterator is = t.begin();
+                     is != t.end(); is++)
+                    res.insert(*is);
+            }
+        }
+    }
+    return res;
+}
+
 
 void WTA::clean()
 {
     // first determine the set of empty states
-    set<State> empty;
-    for (map<State, TransitionList>::iterator i = _table.begin();
-         i != _table.end(); ++i)
-        empty.insert(i->first);
+
+    set<State> empty = allstates();
+
     
     bool change = true;
     while(change)
@@ -530,7 +499,7 @@ void WTA::clean()
             State s = i->first;
             // the state is already marked nonempty
             if (empty.count(s) == 0) continue;
-            // otherwise trye to mark s
+            // otherwise try to mark s
             // for all transition headed by s
             for (TransitionList_const_iterator it = (i->second).begin();
                  it != (i->second).end(); ++it)
@@ -547,9 +516,70 @@ void WTA::clean()
     }
 
     // next erase empty states
+    
     for (std::set<State>::iterator i = empty.begin();
          i != empty.end(); ++i)
         remove(*i);
         
 }
+
+
+//void WTA::dump(ostream& o)
+//{
+//    for (std::map<State,TransitionList>::iterator i = _table.begin();
+//         i != _table.end(); ++i)
+//    {
+//        State s = i->first;
+//        TransitionList tv = i->second;
+//        o << s;
+//
+//        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
+//        {
+//            Transition* t = *j;
+//            assert (t);
+//            t->dump(o);
+//            o << '\n';
+//        }
+//    }
+//}
+
+std::ostream& operator<<(std::ostream& o, const WTA& a)
+{
+    for (std::map<State,TransitionList>::const_iterator i = a._table.begin();
+         i != a._table.end(); ++i)
+    {
+        State s = i->first;
+        TransitionList tv = i->second;
+        for(TransitionList_const_iterator j = tv.begin(); j != tv.end(); j++)
+        {
+            const Transition& t = *j;
+            o << s << t << " \n";
+        }
+    }
+    return o;
+}
+
+
+void WTA::print()
+{
+    cout << '\n';
+    cout << this->countStates() << " states\n";
+    cout << this->countTransitions() << " transitions\n";
+    cout << this->countAll() << " total symbols\n\n";
+    cout << *this;
+}
+
+void WTA::save(string filename)
+{
+    ofstream file;
+    
+    file.open(filename, ios_base::out);
+    if(!file.is_open())
+        throw "cannot open file";
+    
+    file << *this;
+    
+    file.close();
+}
+
 

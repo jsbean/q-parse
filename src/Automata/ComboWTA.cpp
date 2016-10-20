@@ -7,7 +7,7 @@
 //
 
 #include "ComboWTA.hpp"
-#include "ComboWeight.hpp"
+//#include "Distance.hpp"
 
 
 ComboState::ComboState():cs_state(0), cs_rp(0), cs_rr(0)
@@ -73,6 +73,15 @@ bool ComboState::operator<(const ComboState& s) const
 }
 
 
+std::ostream& operator<<(std::ostream& o, const ComboState& cs)
+{
+    o << "< " << cs.cs_state << " ";
+    o << "[" << cs.cs_path->begin() << "-" << cs.cs_path->end() << "] ";
+    o << cs.cs_rp << " ";
+    o << cs.cs_rr << ">";
+    return o;
+}
+
 
 
 
@@ -82,6 +91,7 @@ bool ComboState::operator<(const ComboState& s) const
 State ComboWTA::addComboState(ComboState* cs,bool initial)
 {
     assert(cs);
+    cout << "combo state: " << *cs << " ";
     map<ComboState, State>::const_iterator it = _statemap.find(*cs);
 
     // combo state found in map: combo state has been treated already
@@ -90,6 +100,8 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
 
     // otherwise, create new State
     State s = _cpt++;
+    cout << " = state " << s << "\n";
+    
     // add map of current ComboState to new State
     _statemap[*cs] = s;
     //register state
@@ -107,7 +119,7 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
         const Transition& t = *it; // transition of schema
         size_t a = t.size();       // transition arity
         assert (a >= 1);
-        Weight* w = t.weight();    // weight of schema transition
+        const Weight& w = t.weight();    // weight of schema transition
 
         // leaf schema transition:
         // add at most one leaf transition to ComboWTA
@@ -123,11 +135,11 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
                 (cs->cs_rr == p->r_size()))
             {
                 // compute distance to input segment
-                Distance* dist = new Distance(*(cs->cs_path));
-                ComboWeight* cw = new ComboWeight(w, dist);
-                assert(cw);
+                Distance dist = Distance(*(cs->cs_path));
+                dist.combine(w);
+                //ComboWeight* cw = new ComboWeight(w, dist);
                 // add terminal transition from (leaf) label to s
-                tv.add(Transition(label, cw));
+                tv.add(Transition(label, dist));
             }
             // otherwise add no transition
         }
@@ -141,13 +153,13 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
             assert (vp.size() == a);
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
-            int rr = vp[a-1]->r_size(); // rr of the last element of vp
+            int rr = vp[a-1]->r_size(); // rsize for the last element of vp
             if (cs->cs_rr <= rr)        // is the max possible rr for rightmost child (propagated rr)
             {
-                // the weight is the same for all the ComboWTA transitions (sharing)
-                // it depends only on the weight of the original schema transition
-                ComboWeight* cw = new ComboWeight(w);
-                assert(cw);
+                // the weight is a combination of null distance and the weight w of the original schema transition
+                // It is the same for all the ComboWTA transitions
+                // -> TODO shared pointers?
+                //Distance cw = Distance(w);
 
                 // this aux. vector will store all the possible values
                 // of the a-1 first rr of child ComboStates,
@@ -163,7 +175,7 @@ State ComboWTA::addComboState(ComboState* cs,bool initial)
                 while (cont)
                 {
                     // construct and add a new transition defined by the current rrs vector and computed Alignment's
-                    Transition newt = Transition(cw); // new transition for ComboWTA
+                    Transition newt = Transition(Distance(w)); // new transition for ComboWTA
                     unsigned int rp = cs->cs_rp; // propagation of rp from target cs to leftmost child
                     for(int i = 0; i < a-1; i++)
                     {
