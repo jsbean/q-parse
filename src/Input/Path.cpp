@@ -163,7 +163,7 @@ Alignment::~Alignment()
 //}
 
 
-vector<Alignment*> Alignment::subs(unsigned int n)
+vector<Alignment*> Alignment::subs(unsigned int n) const
 {
     assert (n > 1);
     assert ((_len % n) == 0); // this interval length must be divisible by n

@@ -97,7 +97,7 @@ public:
 
     ComboState();
     
-    ComboState(State, Alignment*, int rp=0, int rr=0);
+    ComboState(State, const Alignment&, int rp=0, int rr=0);
 
     // NOT USED? TODO: REM
     ComboState(const ComboState&, int rp=0, int rr=0);
@@ -108,7 +108,9 @@ public:
     State cs_state;
 
     // current augmented path (interval of points + alignment of input segment)
-    Alignment* cs_path;
+    // TODO Alignment*
+    // because in addComboState many ComboState constructed with the same cs_path
+    Alignment cs_path;
     
     // guess number of points aligned to right of previous segment
     unsigned int cs_rp;

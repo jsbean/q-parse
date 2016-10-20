@@ -8,6 +8,7 @@
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
 
+#include <stdio.h>
 #include <iostream>
 #include <assert.h>
 #include <string>
@@ -15,9 +16,12 @@
 
 #include "ComboWTA.hpp"
 
+
+
+
 int main(int argc, const char * argv[])
 {
-   
+    
 // test WTA file IO
     assert (argc >= 2);
     std::cout << "\n Read schema WTA from " << argv[1] << '\n';

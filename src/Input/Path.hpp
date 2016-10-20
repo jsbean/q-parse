@@ -106,7 +106,7 @@ public:
     // division of this Path into k segments.
     // k must be > 1.
     // the interval length must be divisible by k.
-    vector<Alignment*> subs(unsigned int);
+    vector<Alignment*> subs(unsigned int) const;
     
 private:
 
