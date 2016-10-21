@@ -6,6 +6,9 @@
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
 
+
+#include <math.h> 
+
 #include "Segment.hpp"
 
 
@@ -64,8 +67,8 @@ Segment::Segment(string filename, unsigned int r):_res(r)
         prev = d;
         TimestampedEvent* e = new TimestampedEvent(Event(), d);
         _event.push_back(e);
-        _date.push_back(((d - _begin)/_len) * _res);
-        cout << "input[" << i << "] = " << d << "  -> " << (((d - _begin)/_len) * _res) << "\n";
+        _date.push_back(round(((d - _begin)/_len) * _res));
+        if (TRACE_ON) { cout << "input[" << i << "] = " << d << "  -> " << round(((d - _begin)/_len) * _res) << "\n"; }
     }
 }
 

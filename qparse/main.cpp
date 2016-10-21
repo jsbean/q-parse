@@ -8,6 +8,11 @@
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
 
+
+
+#define TRACE 1
+
+
 #include <stdio.h>
 #include <iostream>
 #include <assert.h>

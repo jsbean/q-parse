@@ -33,6 +33,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3234444A1DBA62E20066FBDC /* CONSTANT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CONSTANT.h; path = ../src/CONSTANT.h; sourceTree = "<group>"; };
 		323C42541DB40F960037D0B1 /* ComboWTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComboWTA.cpp; path = ../src/Automata/ComboWTA.cpp; sourceTree = "<group>"; };
 		323C42551DB40F960037D0B1 /* ComboWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWTA.hpp; path = ../src/Automata/ComboWTA.hpp; sourceTree = "<group>"; };
 		324E4EBB1D9FC3B100114F39 /* qparse */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qparse; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +89,7 @@
 		324E4EBD1D9FC3B100114F39 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3234444A1DBA62E20066FBDC /* CONSTANT.h */,
 				32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */,
 				32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */,
 				3251215B1DA40E4800D2C789 /* Distance.hpp */,

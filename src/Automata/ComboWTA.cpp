@@ -92,19 +92,20 @@ std::ostream& operator<<(std::ostream& o, const ComboState& cs)
 
 State ComboWTA::addComboState(const ComboState& cs, bool initial)
 {
-    cout << "combo state: " << cs << " ";
+    if (TRACE_ON) { cout << "combo state: " << cs << " "; }
+
     map<ComboState, State>::const_iterator it = _statemap.find(cs);
 
     // combo state found in map: combo state has been treated already
     if (it != _statemap.end())
     {
-        cout << " = state " << it->second << " (old)\n";
+        if (TRACE_ON) { cout << " = state " << it->second << " (old)\n"; }
         return it->second;
     }
 
     // otherwise, create new State
     State s = _cpt++;
-    cout << " = state " << s << "\n";
+    if (TRACE_ON)  { cout << " = state " << s << "\n"; }
     
     // add map of current ComboState to new State
     _statemap[cs] = s;
