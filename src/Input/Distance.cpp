@@ -27,6 +27,7 @@ Distance::Distance(const Alignment& p)
     if (ll > 0)
     {
         size_t j = p.l_first();
+        assert (j < s.size());
         for(int i = 0; i < ll; i++)
         {
             assert (s.date(j) >= b);
@@ -38,6 +39,7 @@ Distance::Distance(const Alignment& p)
     if (rl > 0)
     {
         size_t j = p.r_first();
+        assert (j < s.size());
         for(int i = 0; i < rl; i++)
         {
             assert (s.date(j) >= b);
