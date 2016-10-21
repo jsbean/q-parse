@@ -147,7 +147,9 @@ public:
     void add(const Transition&);
 
     
-    // remove all transitions in the list containing the given state
+    // remove all transitions of length > 1 in the list
+    // containing the given state
+    // do not remove length 1 transitions to terminal symbols
     void remove(State);
     
     void clear();

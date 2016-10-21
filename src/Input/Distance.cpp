@@ -41,7 +41,7 @@ Distance::Distance(const Alignment& p)
         for(int i = 0; i < rl; i++)
         {
             assert (s.date(j) >= b);
-            assert (s.date(j) < e);
+            assert (s.date(j) <= e);
             _val += (e - s.date(j++));
         }
     }

@@ -161,7 +161,8 @@ void TransitionList::remove(State s)
     for(list<Transition>::iterator i = _table.begin(); i != _table.end(); i++)
     {
         Transition& t = *i;
-        if (t.member(s))
+        // we do not remove transition to terminal symbols
+        if ((t.size() > 1) && (t.member(s)))
         {
             _cpt_size -= (t.size() + 1);
             _table.erase(i); // remove transition from vector (destructor called)
@@ -231,7 +232,7 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         // add transition to the table
         // copy content of vector body to new transition
         add(s, Transition(body, Weight(val)));
-        //cout << " - add tr. " << s << Transition(body, Weight(val)) << "\n";
+        cout << " - add tr. " << s << Transition(body, Weight(val)) << "\n";
     }
     file.close();
     initials = { 0 };
@@ -278,10 +279,8 @@ TransitionList& WTA::add(State s, bool initial)
 
 TransitionList& WTA::add(State s, const Transition& t, bool initial)
 {
-    TransitionList& tv = add(s, initial);
+    TransitionList& tv = add(s, initial); // updates the counters _cpt_tr and _cpt_size
     tv.add(t);
-    _cpt_tr++;
-    _cpt_size += (t.size() + 1);
     return tv;
 }
 
@@ -300,13 +299,13 @@ void WTA::remove(State s)
         State q = i->first;
         TransitionList& tv = i->second;
 
-        // save the sizes of the TransitionList of s for later
+        // save for later the sizes of the TransitionList with head s
         if (q == s)
         {
             s_nb = tv.size();
             s_size = tv.fullsize();
         }
-        // deleted the transitions containing s in the TransitionList of q
+        // delete the transitions containing s in the TransitionList of q
         else
         {
             _cpt_tr -= tv.size();
@@ -477,6 +476,7 @@ set<State> WTA::allstates()
             }
         }
     }
+
     return res;
 }
 
@@ -506,9 +506,9 @@ void WTA::clean()
             {
                 const Transition& t = *it;
                 // transition from terminal symbol or from a body of all nonempty states
-                if (t.nonein(empty))
+                if ((t.size() == 1) || (t.nonein(empty)))
                 {
-                    empty.erase(s);
+                    empty.erase(s); // in this case s is not empty
                     change = true;
                 }
             }
@@ -520,7 +520,6 @@ void WTA::clean()
     for (std::set<State>::iterator i = empty.begin();
          i != empty.end(); ++i)
         remove(*i);
-        
 }
 
 

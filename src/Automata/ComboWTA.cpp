@@ -135,8 +135,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
             // check that the label coincide with
             // the info in guess (# grace notes)
             // and the info in current Path (# points aligned on right)
-            if ((Label::nbGraceNotes(label) ==
-                (cs.cs_rp + p->l_size() - 1)) &&
+            if ((Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1)) &&
                 (cs.cs_rr == p->r_size()))
             {
                 // compute distance to input segment

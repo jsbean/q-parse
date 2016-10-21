@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "schema-01.txt"
+            argument = "schema-02.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
