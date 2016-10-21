@@ -53,13 +53,19 @@ Segment::Segment(string filename, unsigned int r):_res(r)
     _end = v[last];
     assert(_begin < _end);
     _len = (_end - _begin);
+    double prev = v[0];
     
+    assert (_event.size() == 0);
+    assert (_date.size() == 0);
     for (int i = 1; i < last; i++)
     {
         double d = v[i];
+        assert(d > prev);
+        prev = d;
         TimestampedEvent* e = new TimestampedEvent(Event(), d);
         _event.push_back(e);
         _date.push_back(((d - _begin)/_len) * _res);
+        cout << "input[" << i << "] = " << d << "  -> " << (((d - _begin)/_len) * _res) << "\n";
     }
 }
 
