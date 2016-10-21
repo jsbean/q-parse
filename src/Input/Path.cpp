@@ -193,9 +193,6 @@ vector<Alignment*> Alignment::subs(unsigned int n) const
 
 
 
-
-
-
 AlignmentTree::AlignmentTree()
 {
     root = new Alignment();
