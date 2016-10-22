@@ -31,9 +31,9 @@ public:
     Distance(const Weight&);
 
     
-    void add(const Distance&);
-    
-    void mult(const Distance&);
+//    void add(const Distance&);
+//    
+//    void mult(const Distance&);
     
     // linear combination of this distance value and the given weight
     void combine(const Weight&);

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		320D8B6A1DBAA81A00767573 /* Ktable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 320D8B681DBAA81A00767573 /* Ktable.cpp */; };
 		323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 323C42541DB40F960037D0B1 /* ComboWTA.cpp */; };
 		324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* main.cpp */; };
 		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
@@ -17,7 +18,6 @@
 		32D939661DA4F868004497D2 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32D939641DA4F867004497D2 /* Path.cpp */; };
 		32EB18A41DAD474500E0B0D1 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EB18A21DAD474500E0B0D1 /* Label.cpp */; };
 		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
-		32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +33,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		320D8B681DBAA81A00767573 /* Ktable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Ktable.cpp; path = src/Kbest/Ktable.cpp; sourceTree = SOURCE_ROOT; };
+		320D8B691DBAA81A00767573 /* Ktable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Ktable.hpp; path = src/Kbest/Ktable.hpp; sourceTree = SOURCE_ROOT; };
 		3234444A1DBA62E20066FBDC /* CONSTANT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CONSTANT.h; path = ../src/CONSTANT.h; sourceTree = "<group>"; };
 		323C42541DB40F960037D0B1 /* ComboWTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComboWTA.cpp; path = ../src/Automata/ComboWTA.cpp; sourceTree = "<group>"; };
 		323C42551DB40F960037D0B1 /* ComboWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWTA.hpp; path = ../src/Automata/ComboWTA.hpp; sourceTree = "<group>"; };
@@ -54,8 +56,6 @@
 		32EB18A31DAD474500E0B0D1 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
 		32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Weight.cpp; path = src/Automata/Weight.cpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Weight.hpp; path = src/Automata/Weight.hpp; sourceTree = SOURCE_ROOT; };
-		32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Complexity.cpp; path = src/Automata/Complexity.cpp; sourceTree = SOURCE_ROOT; };
-		32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Complexity.hpp; path = src/Automata/Complexity.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,8 +96,6 @@
 				3251215A1DA40E4800D2C789 /* Distance.cpp */,
 				3251215E1DA40E6400D2C789 /* ComboWeight.hpp */,
 				3251215D1DA40E6400D2C789 /* ComboWeight.cpp */,
-				32EBB0B71DA3B9FA00D2CBA8 /* Complexity.hpp */,
-				32EBB0B61DA3B9FA00D2CBA8 /* Complexity.cpp */,
 				325121551DA4065600D2C789 /* WTA.hpp */,
 				325121541DA4065600D2C789 /* WTA.cpp */,
 				323C42551DB40F960037D0B1 /* ComboWTA.hpp */,
@@ -106,6 +104,8 @@
 				32D939641DA4F867004497D2 /* Path.cpp */,
 				3262BBD91DA63E7200796318 /* Segment.hpp */,
 				3262BBD81DA63E7200796318 /* Segment.cpp */,
+				320D8B691DBAA81A00767573 /* Ktable.hpp */,
+				320D8B681DBAA81A00767573 /* Ktable.cpp */,
 				3262BBDF1DA6415900796318 /* Event.hpp */,
 				3262BBDE1DA6415900796318 /* Event.cpp */,
 				32EB18A31DAD474500E0B0D1 /* Label.hpp */,
@@ -173,7 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3251215F1DA40E6400D2C789 /* ComboWeight.cpp in Sources */,
-				32EBB0B81DA3B9FA00D2CBA8 /* Complexity.cpp in Sources */,
+				320D8B6A1DBAA81A00767573 /* Ktable.cpp in Sources */,
 				3262BBE01DA6415900796318 /* Event.cpp in Sources */,
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
 				323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */,

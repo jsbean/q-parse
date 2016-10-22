@@ -15,8 +15,28 @@
 
 
 //////////////
-//   WTA
+//   Weight
 //////////////
+
+
+
+// generic compare
+// returns
+// -1 if this weight is smaller than the weight given
+//  0 if this weight is equal to the weight given
+//  1 if this weight is larger than the weight given
+int Weight::compare(const Weight& w)
+{
+    if(_val < w._val)
+        return -1;
+    else if(_val == w._val)
+        return 0;
+    else return 1;
+}
+
+
+
+
 
 typedef struct _transition
 {

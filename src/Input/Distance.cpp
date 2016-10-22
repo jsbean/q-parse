@@ -62,20 +62,21 @@ Distance::Distance(const Weight& w)
 }
 
 
-void Distance::add(const Distance& d)
-{
-    _val += d._val;
-}
-
-
-void Distance::mult(const Distance& d)
-{
-    _val *= d._val;
-}
+//void Distance::add(const Distance& d)
+//{
+//    _val += d._val;
+//}
+//
+//
+//void Distance::mult(const Distance& d)
+//{
+//    _val *= d._val;
+//}
 
 
 void Distance::combine(const Weight& w)
 {
     _val = (1 - _alpha) * w.value() + _alpha * _val;
 }
+
 
