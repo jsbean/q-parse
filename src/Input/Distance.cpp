@@ -10,7 +10,7 @@
 
 
 //default
-double Distance::_alpha = 0.5;
+double Distance::_alpha = CST_ALPHA;
 
 
 Distance::Distance(const Alignment& p)

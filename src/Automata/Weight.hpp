@@ -10,8 +10,12 @@
 #define Weight_hpp
 
 #include <stdio.h>
+#include <iostream>
+
 
 #endif /* Weight_hpp */
+
+
 
 // class for weights in automata transitions
 // can be used for weights in file (serialized WTA)
@@ -20,7 +24,10 @@ class Weight
 public:
     
     Weight(double v=0):_val(v) {};
-        
+
+    // default?
+    Weight(const Weight& w):_val(w._val) {};
+
     inline double value() const { return _val; }
 
     inline double null() const { return (_val == 0); }
@@ -46,6 +53,8 @@ public:
         _val += rhs._val;
         return *this;
     }
+    
+    friend std::ostream& operator<<(std::ostream&, const Weight&);
 
 protected:
     
@@ -72,34 +81,6 @@ inline bool operator!=(const Weight& lhs, const Weight& rhs)
     return !operator==(lhs,rhs);
 }
 
-// comparison class
-// one ordering for k-best to compute the min weight
-struct WeightMin
-{
-    bool operator()(const Weight& lhs, const Weight& rhs) const
-    {
-        return lhs.value() < rhs.value();
-    }
-};
 
-// one ordering for k-best to compute the max weight
-// where 0 considered the highest value
-// 0 is the weight for initialization, computed weight is always > 0
-struct WeightMax
-{
-    bool operator()(const Weight& lhs, const Weight& rhs) const
-    {
-        if (lhs.null())
-        {
-            if (rhs.null()) return false;
-            else return true;
-        }
-        else
-        {
-            if (rhs.null()) return false;
-            else return lhs.value() > rhs.value();
-        }
-    }
-};
 
 

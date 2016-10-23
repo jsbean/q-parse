@@ -133,6 +133,8 @@ public:
     TransitionList():_cpt_size(0) {}
     
     ~TransitionList();
+
+    bool empty() const;
     
     // number of transitions
     size_t size() const;
@@ -227,11 +229,15 @@ public:
     // not for modifying transition list of s. use add(...) methods for this.
     TransitionList_const_iterator end(State) const;
     
+    // at(s) return the transition list of head state s.
+    // s must be registered.
+    TransitionList at(State) const;
+
     // at(s, i) return the ith transition of head state s.
     // s must be registered.
     // TODO REMOVE - REPL. by begin(State)
     //Transition* at(State, size_t) const;
-    
+
     // remove states not inhabited and transitions containing these states
     void clean();
     

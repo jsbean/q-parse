@@ -12,6 +12,10 @@
 
 #endif /* CONSTANT_h */
 
+
 const int TRACE_ON = 0;
+
+const double CST_ALPHA = 0.5;
+
 const char CMD_NAME[] = "qparse";
 

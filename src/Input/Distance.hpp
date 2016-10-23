@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 
+//#include "CONSTANT.h"
 #include "Weight.hpp"
 #include "Path.hpp"
 
@@ -36,8 +37,8 @@ public:
 //    void mult(const Distance&);
     
     // linear combination of this distance value and the given weight
+    // different from += (Weright&) car utilise le facteur alpha
     void combine(const Weight&);
-
     
     static void setFactor(double a) { _alpha = a ;};
     

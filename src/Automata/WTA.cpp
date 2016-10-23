@@ -32,6 +32,7 @@ void Transition::set(const Weight& w)
     _weight = w;
 }
 
+
 size_t Transition::size() const
 {
     return (_body.size());
@@ -127,6 +128,12 @@ std::ostream& operator<<(std::ostream& o, const Transition& t)
 TransitionList::~TransitionList()
 {
     clear();
+}
+
+
+bool TransitionList::empty() const
+{
+    return (_table.empty());
 }
 
 
@@ -359,6 +366,13 @@ size_t WTA::countAll() const
 }
 
 
+TransitionList WTA::at(State s) const
+{
+    map<State,TransitionList>::const_iterator it = _table.find(s);
+    assert(it != _table.end());
+    return (it->second);
+}
+
 
 //Transition* WTA::at(State s, size_t i) const
 //{
@@ -371,7 +385,7 @@ size_t WTA::countAll() const
 
 unsigned int gcd(unsigned int a, unsigned int b)
 {
-    if( b==0 )
+    if( b == 0 )
         return a;
     return gcd(b, a%b);
 }

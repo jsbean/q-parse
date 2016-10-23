@@ -9,6 +9,11 @@
 #include "Weight.hpp"
 
 
+std::ostream& operator<<(std::ostream& o, const Weight& w)
+{
+    o << w.value();
+    return o;
+}
 
 
 // default to min
