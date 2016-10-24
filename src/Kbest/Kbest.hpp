@@ -41,6 +41,7 @@ public:
     
     // construct the 1-best run for the given transition
     // with a zero (unknown) weight.
+    // for transition (s1,...,sn), the 1-best is ([s1,1],...,[sn,1])
     Run(const Transition*);
 
     // copy 
@@ -55,19 +56,34 @@ public:
     // at(i) returns the ith children of this run
     bpointer at(size_t) const;
 
-    // set(i, bp) sets the ith children of this run to bp
-    void set(size_t, bpointer);
+    // getState(i) returns the state component of the ith children
+    inline State getState(size_t i) const
+    {
+        assert (i < _children.size());
+        return (_children[i].bp_state);
+    }
+    
+    // getRank(i) returns the rank component of the ith children
+    inline size_t getRank(size_t i) const
+    {
+        assert (i < _children.size());
+        return (_children[i].bp_rank);
+    }
 
     // set(i, k) sets the rank of the ith children of this run to k
-    void setRank(size_t, size_t);
-
+    inline void setRank(size_t i, size_t k)
+    {
+        assert (i < _children.size());
+        _children[i].bp_rank = k;
+    }
+    
     const Transition* top;
     
     Weight weight;
-    
-private:
+
     vector<bpointer> _children;
     
+private:
     
 };
 
@@ -113,7 +129,16 @@ template <class Comp_t> class Ktable;
 template <class Comp_t> class Krecord
 {
 public:
+    
+    // should not be called
+    // we want _cand empty iff no more run can be constructedg
+    Krecord() { assert(false); }
+    
+    // fill the candidate list with the 1-best candidate for each transition
+    // for transition (s1,...,sn), the 1-best is ([s1,1],...,[sn,1])
     Krecord(const TransitionList&, Ktable<Comp_t>*);
+    
+    ~Krecord();
     
     // best(k)
     // fill the table of best runs up to (at most) k
@@ -128,14 +153,21 @@ private:
 
     std::vector<Run> _best;
 
-    // no more k-best can be added
-    bool _complete;
+    // it is empty iff no more k-best can be added
+    Ktable<Comp_t>* _parent;
     
+    // bool _complete; not needed
+
+    // eval(r) compute the weight of r emplace
+    // the weight of r must be 0
+    // the weight is left to 0 if new weight cannot be computed
+    // (one k-best missing)
     void eval(Run&);
     
+    // addNext(r) add candidates following r (lexico order for ranks)
+    // to the table of candidates
     void addNext(Run& run);
     
-    Ktable<Comp_t>* _parent;
 
 };
 

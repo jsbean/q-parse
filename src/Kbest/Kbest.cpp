@@ -25,10 +25,10 @@ weight(Weight()) // null weight
 // uses constructor of bpointer from State
 Run::Run(const Transition* t):
 top(t),
-_children(vector<bpointer>(t->begin(), t->end()))
+_children(vector<bpointer>(t->begin(), t->end())),
+weight(Weight())     // weight zero = unknown weight
 {
     assert(t);
-    weight = Weight(); // weight zero = unknown weight
 
     // children.resize(t->size());
     // mk 1-best for state *i
@@ -67,23 +67,9 @@ bpointer Run::at(size_t i) const
 }
 
 
-void Run::set(size_t i, bpointer bp)
-{
-    assert (i < _children.size());
-    _children[i] = bp;
-}
 
-
-void Run::setRank(size_t i, size_t k)
-{
-    assert (i < _children.size());
-    _children[i].bp_rank = k;
-}
-
-
-
-template <class Comp_t> Krecord<Comp_t>::Krecord(const TransitionList& tl, Ktable<Comp_t>* kt):
-_complete(false),
+template <class Comp_t> Krecord<Comp_t>::Krecord(const TransitionList& tl,
+                                                 Ktable<Comp_t>* kt):
 _parent(kt)
 {
     assert(kt);
@@ -94,27 +80,31 @@ _parent(kt)
     }
 }
 
+template <class Comp_t> Krecord<Comp_t>::~Krecord()
+{
+    // no clear() for priority_queues
+    _cand = std::priority_queue<Run, vector<Run>, Comp_t>();
+    _best.clear();
+}
 
 template <class Comp_t> void Krecord<Comp_t>::eval(Run& r)
 {
     assert (r.weight.null());
-    Weight w = Weight(r.top->weight());
+    r.weight = Weight(r.top->weight());
+    
     assert (r.arity() == r.top->size());
     for (int i = 0; i < r.arity(); i++)
     {
-        State s = r.at(i).bp_state;
-        size_t k = r.at(i).bp_rank;
-        Run& rsk = _parent->best(s, k);
+        Run& rsk = _parent->best(r.getState(i), r.getRank(i)); // best(s, k)
 
         // the k-best for s does not exists (less than k runs for s)
         if ( rsk.weight.null())
         {
-            assert (r.weight.null());
+            r.weight = Weight(); // reset weight to 0
             return;
         }
-        else w += rsk.weight;
+        else r.weight += rsk.weight;
     }
-    r.weight = w;
 }
 
 
@@ -124,10 +114,12 @@ template <class Comp_t> void Krecord<Comp_t>::addNext(Run& r)
     // add next candidates
     for (int i = 0; i < r.arity(); i++)
     {
-        assert (r.at(i).bp_state == r.top->at(i));
+        assert (r.getState(i) == r.top->at(i));
         // new run
         Run nextr = Run(r);
-        nextr.setRank(i, r.at(i).bp_rank + 1);
+        
+        //nextr._children[i].bp_rank = r.at(i).bp_rank + 1;
+        nextr.setRank(i, r.getRank(i) + 1);
         nextr.weight = Weight();
         _cand.push(nextr);
     }
@@ -137,16 +129,23 @@ template <class Comp_t> void Krecord<Comp_t>::addNext(Run& r)
 template <class Comp_t> Run Krecord<Comp_t>::best(size_t k)
 {
     assert (k > 0);
+    // k-best run already computed
     if (_best.size() >= k)
         return _best[k-1];
-    else if (_complete)
-        return Run(); // empty run
 
-    // otherwise, we construct next best runs
-    assert (! _cand.empty());
+    // otherwise, we construct the next best run
+
+    // cannot (all runs constructed in best table)
+    if (_cand.empty())
+    {
+        return Run(); // empty run
+    }
+    
+    // otherwise, process the best candidate
     Run r = _cand.top();
     _cand.pop();
 
+    // one candidate not evaluated
     if (r.weight.null())
     {
         eval(r);
@@ -159,7 +158,8 @@ template <class Comp_t> Run Krecord<Comp_t>::best(size_t k)
         // we do not push next because they can neither be evaluated
         best(k); //terminal recursive call to try to evaluate other cand
     }
-    else // in this case, all cand runs have been evaluated because weight 0 has priority
+    // all candidates have been evaluated (because weight 0 has priority)
+    else
     {
         addNext(r);
         _best.push_back(r); // add to best table
@@ -167,6 +167,8 @@ template <class Comp_t> Run Krecord<Comp_t>::best(size_t k)
     }
     
 }
+
+
 
 
 template <class Comp_t> Run Ktable<Comp_t>::best(State s, size_t k)
@@ -177,6 +179,7 @@ template <class Comp_t> Run Ktable<Comp_t>::best(State s, size_t k)
     {
         // create an entry for s in the table
         assert (_wta);
+
         // assume that s is registered in _wta
         const TransitionList& tl = _wta->at(s);
         std::pair<typename std::map<State, Krecord<Comp_t>>::iterator, bool> ret;
