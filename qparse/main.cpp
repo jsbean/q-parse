@@ -19,7 +19,8 @@
 #include <string>
 #include <vector>
 
-#include "ComboWTA.hpp"
+//#include "ComboWTA.hpp"
+#include "Kbest.hpp"
 
 
 int main(int argc, const char * argv[])
@@ -27,12 +28,12 @@ int main(int argc, const char * argv[])
     
 // test WTA file IO
     assert (argc >= 2);
-    std::cout << "\n Read schema WTA from " << argv[1] << '\n';
+    std::cout << "\n==== Read schema WTA from " << argv[1] << '\n';
 
     WTA* ta = new WTA(argv[1]);
 //    ta->print();  // cout << ta;
 
-    cout << "\n clean:\n";
+    cout << "\n==== Clean:\n";
     ta->clean();
     ta->print();  // cout << ta;
 
@@ -41,11 +42,11 @@ int main(int argc, const char * argv[])
 
 // test Combo construction
     if (argc == 2) return 0;
-    std::cout << "\n Read input segment from " << argv[2] << '\n';
+    std::cout << "\n==== Read input segment from " << argv[2] << '\n';
     Segment seg = Segment(argv[2], res);
     std::cout << " segment size " << seg.size() << '\n';
 
-    std::cout << "\n COnstruction COmbo\n";
+    std::cout << "\n==== COnstruction COmbo\n";
     ComboWTA* combo = new ComboWTA(seg, *ta, 0);
 
     delete ta;
@@ -53,10 +54,14 @@ int main(int argc, const char * argv[])
     cout << "\n Combo:\n";
     combo->print();
     
-    
-    
-    
-    
+// test k-best
+    cout << "\n==== 1-best\n";
+    Ktable<WeightMin> kt = Ktable<WeightMin>(combo);
+    std::set<State>::iterator it = combo->initials.begin();
+    State s = *it;
+    Run r = kt.best(s, 1);
+    cout << "weight 1-best = " << r.weight << "\n";
+   
     delete combo;
 
     return 0;
