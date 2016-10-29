@@ -61,10 +61,16 @@ int main(int argc, const char * argv[])
 // test k-best
     cout << "\n==== 1-best\n";
     Ktable<WeightMin> kt = Ktable<WeightMin>(combo);
-    //std::set<State>::iterator it = combo->initials.begin();
-    //State s = *it;
-    Run r = kt.best(1);
-    cout << "weight 1-best = " << r.weight << "\n";
+    for (set<State>::iterator i = combo->initials.begin();
+         i != combo->initials.end(); ++i)
+    {
+        State s = *i;
+        Run r = kt.best(s, 1);
+        cout << "weight 1-best[" << s << "] = " << r.weight << "\n";
+    }
+    
+//    Run r = kt.best(1);
+//    cout << "weight 1-best = " << r.weight << "\n";
    
     delete combo;
 

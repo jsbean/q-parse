@@ -10,7 +10,7 @@
 // state (and non-terminals): int
 //
 // transitions:
-// state -> state list | weight
+// state -> state list, weight
 //   state: head state
 //   state list: body states if length ≥ 2
 //               label if length = 1
@@ -61,21 +61,40 @@ typedef unsigned int State;
 typedef vector<State>::iterator Transition_iterator;
 typedef vector<State>::const_iterator Transition_const_iterator;
 
+
+// a Transition is defined by a sequence of antecedent states (body) and a weight.
+// a transition can be of two kinds:
+// - inner transition:
+//   the body has length > 1, the weight is not null.
+// - terminal (leaf) transition:
+//   the body has length 1 and contains a leaf label
+//   the weight is not null.
 class Transition
 {
 public:
 
     // Transition(w) creates a transition of weight w and empty body
-    Transition(const Weight& w):_weight(w){}
+    Transition(const Weight& w):_weight(w){ assert(_body.size() == 0); }
     
     // Transition(v, w) creates a transition of weight w and body a copy of v
-    Transition(vector<State> v, const Weight& w):_weight(w),_body(v){}
+    Transition(vector<State>, const Weight&);
     
     // Transition(s, w) creates a transition of weight w from the terminal symbol s
     // (body of size 1)
     Transition(State, const Weight&);
 
     ~Transition();
+    
+    
+    bool inner() const;
+
+    bool terminal() const;
+    
+    inline Weight weight() const { return _weight; }
+
+    // at(i) returns the ith state in the body
+    // i must be an index of the body
+    State at(int) const;
     
     // add given State at the end of the body of this transition
     void add(State);
@@ -86,11 +105,7 @@ public:
     // size of body
     size_t size() const;
     
-    // antecedent(i) returns the ith state in the body
-    // i must be an index of the body
-    State at(int) const;
     
-    Weight weight() const { return _weight; }
     
     // iterator pointing to the first state in the body of the transition
     Transition_const_iterator begin() const { return _body.begin(); }

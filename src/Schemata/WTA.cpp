@@ -8,6 +8,11 @@
 
 #include "WTA.hpp"
 
+Transition::Transition(vector<State> v, const Weight& w):_weight(w),_body(v)
+{
+    assert(v.size() > 0);
+    assert (! _body.empty());
+}
 
 Transition::Transition(State s, const Weight& w):_weight(w)
 {
@@ -22,14 +27,17 @@ Transition::~Transition()
 }
 
 
-void Transition::add(State s)
+bool Transition::inner() const
 {
-    _body.push_back(s);
+    return ((_body.size() > 1) &&
+            (! _weight.null()));
 }
 
-void Transition::set(const Weight& w)
+
+bool Transition::terminal() const
 {
-    _weight = w;
+    return ((_body.size() == 1) &&
+            (! _weight.null()));
 }
 
 
@@ -47,10 +55,26 @@ State Transition::at(int i) const
 }
 
 
+void Transition::add(State s)
+{
+    _body.push_back(s);
+}
+
+
+void Transition::set(const Weight& w)
+{
+    assert(! w.null());
+    _weight = w;
+}
+
+
+
 bool Transition::member(State s) const
 {
-    if (_body.size() == 0)
+    if (terminal())
         return false;
+
+    assert (inner());
     
     for (State i : _body)
         if (i == s) return true;
@@ -64,11 +88,14 @@ bool Transition::member(State s) const
 
 bool Transition::allin(const std::set<State>& e) const
 {
-    if (_body.size() == 1) return false; //singleton body contains terminal symbol
-    
-    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+    //the singleton body of terminal transition contains terminal symbol
+    if (terminal()) return false;
+    assert (inner());
+
+//    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+    for (State i : _body)
     {
-        if (e.count(*i) == 0) return false;
+        if (e.count(i) == 0) return false;
     }
     return true;
 }
@@ -76,11 +103,14 @@ bool Transition::allin(const std::set<State>& e) const
 
 bool Transition::nonein(const std::set<State>& e) const
 {
-    if (_body.size() == 1) return true; //singleton body contains terminal symbol
+    //the singleton body of terminal transition contains terminal symbol
+    if (terminal()) return true;
+    assert (inner());
     
-    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+//    for (vector<State>::const_iterator i = _body.begin(); i != _body.end(); ++i)
+    for (State i : _body)
     {
-        if (e.count(*i) != 0) return false;
+        if (e.count(i) != 0) return false;
     }
     return true;
 }
@@ -145,6 +175,7 @@ size_t TransitionList::size() const
 
 void TransitionList::add(const Transition& t)
 {
+    assert(t.inner() || t.terminal());
     _table.push_back(t);
     _cpt_size += t.size() + 1;
     
@@ -169,7 +200,7 @@ void TransitionList::remove(State s)
     {
         Transition& t = *i;
         // we do not remove transition to terminal symbols
-        if ((t.size() > 1) && (t.member(s)))
+        if (t.inner() && (t.member(s)))
         {
             _cpt_size -= (t.size() + 1);
             _table.erase(i); // remove transition from vector (destructor called)
@@ -238,7 +269,9 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         if (!(in >> val)) continue; // parse error: skip line
         // add transition to the table
         // copy content of vector body to new transition
-        add(s, Transition(body, Weight(val)));
+        Transition t = Transition(body, Weight(val));
+        assert(t.inner() || t.terminal());
+        add(s, t);
         cout << " - add tr. " << s << Transition(body, Weight(val)) << "\n";
     }
     file.close();
@@ -286,6 +319,7 @@ TransitionList& WTA::add(State s, bool initial)
 
 TransitionList& WTA::add(State s, const Transition& t, bool initial)
 {
+    assert(t.inner() || t.terminal());
     TransitionList& tv = add(s, initial); // updates the counters _cpt_tr and _cpt_size
     tv.add(t);
     return tv;
@@ -423,7 +457,7 @@ unsigned int WTA::resolution() const
             {
                 const Transition& t = *it;
                 size_t a = t.size();
-                if (a > 1) // exclude leaf transitions (to terminal symbol)
+                if (t.inner()) // exclude leaf transitions (to terminal symbol)
                 {
                     res1 = lcm(res1, a);
                     // add states in the body of the transition to reach set
@@ -450,14 +484,15 @@ set<State> WTA::step(const set<State>& sin)
     set<State> sout; // empty set
     assert (sout.empty());
     // for all state in given set
-    for (set<State>::iterator is = sin.begin(); is != sin.end(); ++is)
+    for (State s : sin)
+    //for (set<State>::iterator is = sin.begin(); is != sin.end(); ++is)
     {
-        State s = *is;
+        //State s = *is;
         // for all transition headed by the current state
         for (TransitionList_const_iterator it = begin(s); it != end(s); ++it)
         {
             const Transition& t = *it;
-            if (t.size() > 1) // exclude leaf transition (to terminal symbol)
+            if (t.inner()) // exclude leaf transition (to terminal symbol)
             {
                 // for all state in the body of the transition
                 for (Transition_const_iterator i = t.begin(); i != t.end(); i++)
@@ -468,7 +503,9 @@ set<State> WTA::step(const set<State>& sin)
     return sout;
 }
 
+
 //set of all states occuring in wta (in head or body)
+//exclude terminal symcols of terminal (leaf) transitions
 set<State> WTA::allstates()
 {
     set<State> res;
@@ -482,7 +519,7 @@ set<State> WTA::allstates()
              it != (i->second).end(); ++it)
         {
             const Transition& t = *it;
-            if (t.size() > 1)
+            if (t.inner())
             {
                 for (Transition_const_iterator is = t.begin();
                      is != t.end(); is++)
@@ -520,7 +557,7 @@ void WTA::clean()
             {
                 const Transition& t = *it;
                 // transition from terminal symbol or from a body of all nonempty states
-                if ((t.size() == 1) || (t.nonein(empty)))
+                if ((t.terminal()) || (t.nonein(empty)))
                 {
                     empty.erase(s); // in this case s is not empty
                     change = true;
@@ -530,10 +567,11 @@ void WTA::clean()
     }
 
     // next erase empty states
-    
-    for (std::set<State>::iterator i = empty.begin();
-         i != empty.end(); ++i)
-        remove(*i);
+    for (State s : empty)
+        remove(s);
+//    for (std::set<State>::iterator i = empty.begin();
+//         i != empty.end(); ++i)
+//        remove(*i);
 }
 
 

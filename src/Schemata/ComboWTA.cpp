@@ -128,13 +128,14 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
          it != _schema.end(q); ++it)
     {
         const Transition& t = *it; // transition of schema
+        assert(t.inner() || t.terminal());
         size_t a = t.size();       // transition arity
         assert (a >= 1);
         const Weight& w = t.weight();    // weight of schema transition
 
         // leaf schema transition:
         // add at most one leaf transition to ComboWTA
-        if (a == 1)
+        if (a == 1) //if (t.terminal())
         {
             State label = t.at(0); // for such transition, the body is a singleton containing a label
 
@@ -163,7 +164,9 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 Distance dist = Distance(*p);  //ComboWeight* cw = new ComboWeight(w, dist);
                 dist.combine(w);
                 // add terminal transition from (leaf) label to s
-                tv.add(Transition(label, dist));
+                Transition newt = Transition(label, dist);
+                assert(newt.terminal());
+                tv.add(newt);
             }
             // otherwise add no transition
             else {  if (TRACE_ON) { cout << "NO" << "\n"; } }
@@ -172,7 +175,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
         // inner schema transition:
         // add zero or several transitions to ComboWTA (acc. to guesses for rr values)
         // do not descent if there are no point in Alignement
-        else if ((a > 1) && p->habited())
+        else if ((a > 1) && p->habited()) //if (t.inner() && p->habited())
         {
             // compute vector of children alignements
             const vector<AlignmentTree*>& vt = tree->children(a);
@@ -216,6 +219,8 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                     // recursive registration of last ComboState of transition
                     State news = addComboState(ComboState(t.at(a-1), vt[a-1], rp, rr));
                     newt.add(news);
+                    assert(newt.inner());
+                    assert(newt.size() == a);
                     tv.add(newt);
 
                     // construct next rrs vector (of length a-1)
@@ -263,10 +268,11 @@ _schema(schema)
     // - Alignment covering the whole segment
     // - rr values between 0 and the number of points in second half of segment
     // - rp given
-    for (set<State>::iterator it = schema.initials.begin();
-         it != schema.initials.end(); ++it)
+//    for (set<State>::iterator it = schema.initials.begin();
+//         it != schema.initials.end(); ++it)
+    for (State s : schema.initials)
     {
-        State s = *it;
+//        State s = *it;
         unsigned int max_rr = full->r_size();
         for (unsigned int rr = 0; rr <= max_rr; rr++)
         {
