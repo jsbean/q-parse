@@ -146,20 +146,22 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 cout << "cs.rr=" << cs.cs_rr << " ";
                 cout << "seg_rlen=" << p->r_size() << "  ";
             }
-            if (// continuation (for empty segment)
-                (Label::continuation(label) && (! p->habited())) ||
-                // note and grance notes:
-                // check that the label coincide with
+            if (// continuation (tie): no point is aligned to the left (of this Path)
+                (Label::continuation(label) &&
+                 (cs.cs_rp == 0) &&  // no point of previous Path aligned to left
+                 (p->l_size() == 0)) // no point of this Path aligned to left
+                ||
+                // note and grace notes:
+                // check that the label coincides with
                 // the info in guess (# grace notes)
-                // and the info in current Path (# points aligned on right)
                 ((Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1)) &&
+                // and the info in current Path (# points aligned on right)
                 (cs.cs_rr == p->r_size())))
             {
                 if (TRACE_ON) { cout << "YES" << "\n"; }
                 // compute distance to input segment
-                Distance dist = Distance(*p);
+                Distance dist = Distance(*p);  //ComboWeight* cw = new ComboWeight(w, dist);
                 dist.combine(w);
-                //ComboWeight* cw = new ComboWeight(w, dist);
                 // add terminal transition from (leaf) label to s
                 tv.add(Transition(label, dist));
             }
