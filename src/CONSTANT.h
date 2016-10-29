@@ -13,7 +13,7 @@
 #endif /* CONSTANT_h */
 
 
-const int TRACE_ON = 0;
+const int TRACE_ON = 1;
 
 const double CST_ALPHA = 0.5;
 

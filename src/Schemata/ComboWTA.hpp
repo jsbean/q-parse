@@ -160,7 +160,7 @@ private:
     //unordered_map<cs_key, State, container_hasher> _statemap;
     map<ComboState, State> _statemap;
     
-    // toState(cs) returns the ComboWTA state associated to the CoboState cs if there is one
+    // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs if there is one
     // otherwise:
     //     a new ComboWTA state s is created,
     //     s is associated to cs,

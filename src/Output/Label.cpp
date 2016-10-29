@@ -34,6 +34,11 @@ int Label::nbGraceNotes(unsigned int n)
     else return 0;  // 1 or 0 event
 }
 
+bool Label::continuation(unsigned int n)
+{
+    return (n == 0);
+}
+
 
 //bool Label::isRest() const
 //{

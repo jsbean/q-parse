@@ -220,6 +220,7 @@ AlignmentTree::~AlignmentTree()
     delete root;
 }
 
+
 vector<AlignmentTree*> AlignmentTree::children(int a)
 {
     assert (a > 1);

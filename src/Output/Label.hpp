@@ -58,20 +58,22 @@ public:
     
     LabelKind kind() const { return _type; };
     
-    // return true if this node is a leaf and a rest
-    //bool isRest() const;
-
-    // return true if this node is a leaf and a note
-    //bool isNote() const;
-
-    // return true if this node is a leaf and a chord
-    //virtual bool isChord() const;
-
-    // return true if this node is a leaf and a tie
-    //virtual bool isTie() const { return false; }
-    
     // return the number of grace node encoded in given leaf label
     static int nbGraceNotes(unsigned int);
+    
+    static bool continuation(unsigned int);
+
+    // return true if this node is a leaf and a rest
+    //bool isRest() const;
+    
+    // return true if this node is a leaf and a note
+    //bool isNote() const;
+    
+    // return true if this node is a leaf and a chord
+    //virtual bool isChord() const;
+    
+    // return true if this node is a leaf and a tie
+    //virtual bool isTie() const { return false; }
     
 protected:
     

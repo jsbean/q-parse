@@ -94,9 +94,8 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 {
     if (TRACE_ON) { cout << "combo state: " << cs << " "; }
 
-    map<ComboState, State>::const_iterator it = _statemap.find(cs);
-
     // combo state found in map: combo state has been treated already
+    map<ComboState, State>::const_iterator it = _statemap.find(cs);
     if (it != _statemap.end())
     {
         if (TRACE_ON) { cout << " = state " << it->second << " (old)\n"; }
@@ -105,7 +104,11 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 
     // otherwise, create new State
     State s = _cpt++;
-    if (TRACE_ON)  { cout << " = state " << s << "\n"; }
+    if (TRACE_ON)
+    {
+        cout << " = state " << s;
+        if (initial) { cout << "*"; }
+    }
     
     // add map of current ComboState to new State
     _statemap[cs] = s;
@@ -114,9 +117,11 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     
     // add transitions to new state s
 
-    State q = cs.cs_state;            // current state in schema
-    AlignmentTree* tree = cs.cs_path; // current node in tree
+    State q = cs.cs_state;              // current state in schema
+    AlignmentTree* tree = cs.cs_path;   // current node in tree
     Alignment* p = tree->root;          // current Path (Alignment)
+
+    if (TRACE_ON) { if (p->habited()) cout << " (hab)\n"; else cout << " (nhab)\n"; }
 
     // enumerate the transitions to q in schema
     for (TransitionList_const_iterator it = _schema.begin(q);
@@ -133,12 +138,24 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
         {
             State label = t.at(0); // for such transition, the body is a singleton containing a label
 
-            // check that the label coincide with
-            // the info in guess (# grace notes)
-            // and the info in current Path (# points aligned on right)
-            if ((Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1)) &&
-                (cs.cs_rr == p->r_size()))
+            if (TRACE_ON)
             {
+                cout << "# g.n.=" << Label::nbGraceNotes(label) << " ";
+                cout << "cs.rp=" << cs.cs_rp << " ";
+                cout << "seg_llen=" << p->l_size() << " ";
+                cout << "cs.rr=" << cs.cs_rr << " ";
+                cout << "seg_rlen=" << p->r_size() << "  ";
+            }
+            if (// continuation (for empty segment)
+                (Label::continuation(label) && (! p->habited())) ||
+                // note and grance notes:
+                // check that the label coincide with
+                // the info in guess (# grace notes)
+                // and the info in current Path (# points aligned on right)
+                ((Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1)) &&
+                (cs.cs_rr == p->r_size())))
+            {
+                if (TRACE_ON) { cout << "YES" << "\n"; }
                 // compute distance to input segment
                 Distance dist = Distance(*p);
                 dist.combine(w);
@@ -147,6 +164,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 tv.add(Transition(label, dist));
             }
             // otherwise add no transition
+            else {  if (TRACE_ON) { cout << "NO" << "\n"; } }
         }
 
         // inner schema transition:
@@ -161,7 +179,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
             int rr = vt[a-1]->root->r_size(); // rsize for the last element of vp
-            if (cs.cs_rr <= rr)         // is the max possible rr for rightmost child (propagated rr)
+            if (cs.cs_rr <= rr) // is the max possible rr for rightmost child (propagated rr)
             {
                 // the weight is a combination of null distance and the weight w of the original schema transition
                 // It is the same for all the ComboWTA transitions
@@ -187,15 +205,14 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                     unsigned int rp = cs.cs_rp; // propagation of rp from target cs to leftmost child
                     for(int i = 0; i < a-1; i++)
                     {
-                        // ComboState i of transition
-                        ComboState newcs = ComboState(t.at(i), vt[i], rp, rrs[i]);
-                        State news = addComboState(newcs); // recursive registration of new ComboState
+                        // recursive registration of new ComboState i of transition
+                        // cannot be initial (TODO AV)
+                        State news = addComboState(ComboState(t.at(i), vt[i], rp, rrs[i]));
                         newt.add(news);
                         rp = rrs[i]; // next rp is current rr
                     }
-                    // last ComboState of transition
-                    ComboState newcs = ComboState(t.at(a-1), vt[a-1], rp, rr);
-                    State news = addComboState(newcs); // recursive registration of last ComboState
+                    // recursive registration of last ComboState of transition
+                    State news = addComboState(ComboState(t.at(a-1), vt[a-1], rp, rr));
                     newt.add(news);
                     tv.add(newt);
 

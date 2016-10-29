@@ -10,7 +10,6 @@
 
 
 
-#define TRACE 1
 
 
 #include <stdio.h>
@@ -33,7 +32,7 @@ int main(int argc, const char * argv[])
     WTA* ta = new WTA(argv[1]);
 //    ta->print();  // cout << ta;
 
-    cout << "\n==== Clean:\n";
+    cout << "\n==== Clean schema:\n";
     ta->clean();
     ta->print();  // cout << ta;
 
@@ -54,12 +53,17 @@ int main(int argc, const char * argv[])
     cout << "\n Combo:\n";
     combo->print();
     
+    cout << "\n==== Clean Combo:\n";
+    combo->clean();
+    combo->print();  // cout << ta;
+
+    
 // test k-best
     cout << "\n==== 1-best\n";
     Ktable<WeightMin> kt = Ktable<WeightMin>(combo);
-    std::set<State>::iterator it = combo->initials.begin();
-    State s = *it;
-    Run r = kt.best(s, 1);
+    //std::set<State>::iterator it = combo->initials.begin();
+    //State s = *it;
+    Run r = kt.best(1);
     cout << "weight 1-best = " << r.weight << "\n";
    
     delete combo;

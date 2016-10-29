@@ -72,6 +72,7 @@ public:
     Transition(vector<State> v, const Weight& w):_weight(w),_body(v){}
     
     // Transition(s, w) creates a transition of weight w from the terminal symbol s
+    // (body of size 1)
     Transition(State, const Weight&);
 
     ~Transition();

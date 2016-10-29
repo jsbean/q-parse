@@ -171,7 +171,7 @@ public:
     
 private:
     
-    // every entree in this map associate to
+    // every entry in this map associate to
     // an arity n a partition a1,...,an of the root Alignment
     map<int, vector<AlignmentTree*>> _children;
     

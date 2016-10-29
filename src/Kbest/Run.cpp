@@ -46,6 +46,7 @@ top(r.top),
 _children(r._children),
 weight(r.weight)
 {
+    assert(r.top);
 }
 
 
@@ -66,5 +67,15 @@ bpointer Run::at(size_t i) const
     assert (i < _children.size());
     return (_children[i]);
 }
+
+
+
+iRun::iRun(const Run& r, State s, size_t k):
+Run(r),
+head(s),
+rank(k)
+{ assert (k > 0); }
+
+
 
 
