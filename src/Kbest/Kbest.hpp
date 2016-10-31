@@ -249,8 +249,9 @@ public:
     
     
     // best(k)
-    // returns the kth best for an initial state.
-    // return an empty run of weight 0 when less than k best can be constructed.
+    // returns the kth best for all initial states.
+    // return an empty run of weight 0 when there exists less than k best
+    // for initial states.
     Run best(size_t k)
     {
         assert (k > 0);
@@ -258,37 +259,42 @@ public:
         // initialization
         if (! _init)
         {
-            for (set<State>::iterator i = _wta->initials.begin();
-                 i != _wta->initials.end(); ++i)
+            //            for (set<State>::iterator i = _wta->initials.begin();
+            //                 i != _wta->initials.end(); ++i)
+            for (State s : _wta->initials)
             {
-                pushinit(*i, 1);
+                pushinit(s, 1);
             }
            _init = true;
         }
         
+        while (_ibest.size() < k)
+        {   // we try to construct the next best run
+        
+            // cannot (not enough runs to construct)
+            if (_icand.empty())
+            {
+                return Run(); // empty run
+            }
+        
+            // otherwise, get the next best candidate at the top of heap
+            iRun r = _icand.top();
+            _icand.pop();
+            assert(! r.unknown());
+            // add it to the best-init table
+            _ibest.push_back(r);
+            // try to compute and push the next best for the same state
+            // not lazy. on demand computation need more variables...
+            pushinit(r.head, r.rank+1);
+        }
         
         // k-best run already computed
         if (_ibest.size() >= k)
             return _ibest[k-1];  //return Run(_ibest[k-1]);
-        // otherwise, we try to construct the next best run
-        
-        // cannot (all runs constructed in best table)
-        if (_icand.empty())
-        {
-            return Run(); // empty run
-        }
-        
-        // otherwise, get the best candidate at the top of heap
-        iRun r = _icand.top();
-        _icand.pop();
-        assert(! r.weight.null());
-        // add it to the best-init table
-        _ibest.push_back(r);
-        // try to compute and push the next best for the same state
-        // not lazy. on demand computation need more variables...
-        pushinit(r.head, r.rank+1);
-        
-        return best(k); //tail recursive call in case there is more than one best to construct
+        else
+            return Run();
+        // ALT: tail recursive call return best(k)
+        // in case there is more than one best to construct
     }
 
 private:
@@ -311,11 +317,11 @@ private:
     void pushinit(State s, size_t k)
     {
         Run r = best(s, k);
-        if (! r.weight.null())
+        if (! r.unknown())
         {
             _icand.push(iRun(r, s, k));
         }
-        // do not add to vector if weight is null
+        // do not add to candidate stack if weight is null
     }
 
 };

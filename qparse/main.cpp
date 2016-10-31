@@ -69,14 +69,14 @@ int main(int argc, const char * argv[])
     
     cout << "\n==== Clean Combo:\n";
     time_start = clock();
-    combo->clean();
+//    combo->clean();
     cout << "time to clean ComboWTA : ";
     cout << duration(time_start) << "ms \n";
     combo->print();  // cout << ta;
 
     
 // test k-best
-    cout << "\n==== 1-best (" << combo->initials.size() << " initials)\n";
+    cout << "\n==== 1-best for each of " << combo->initials.size() << " initials\n";
     time_start = clock();
     Ktable<WeightMin> kt = Ktable<WeightMin>(combo);
     for (set<State>::iterator i = combo->initials.begin();
@@ -89,8 +89,16 @@ int main(int argc, const char * argv[])
     cout << "time to compute best for initial states ComboWTA : ";
     cout << duration(time_start) << "ms \n";
     
-//    Run r = kt.best(1);
-//    cout << "weight 1-best = " << r.weight << "\n";
+    // test k-best
+    cout << "\n==== 1-best for " << combo->initials.size() << " initials altogether\n";
+    time_start = clock();
+    for (int i = 40; i > 0; i--)
+    {
+        Run r = kt.best(i);
+        cout << "weight " << i << "-best = " << r.weight << "\n";
+    }
+    cout << "time to 40-best for all initial states ComboWTA : ";
+    cout << duration(time_start) << "ms \n";
    
     delete combo;
 
