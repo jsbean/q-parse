@@ -92,19 +92,19 @@ std::ostream& operator<<(std::ostream& o, const ComboState& cs)
 
 State ComboWTA::addComboState(const ComboState& cs, bool initial)
 {
-    if (TRACE_ON) { cout << "combo state: " << cs << " "; }
+    if (TRACE_LEVEL > 1) { cout << "combo state: " << cs << " "; }
 
     // combo state found in map: combo state has been treated already
     map<ComboState, State>::const_iterator it = _statemap.find(cs);
     if (it != _statemap.end())
     {
-        if (TRACE_ON) { cout << " = state " << it->second << " (old)\n"; }
+        if (TRACE_LEVEL > 1) { cout << " = state " << it->second << " (old)\n"; }
         return it->second;
     }
 
     // otherwise, create new State
     State s = _cpt++;
-    if (TRACE_ON)
+    if (TRACE_LEVEL > 1)
     {
         cout << " = state " << s;
         if (initial) { cout << "*"; }
@@ -121,7 +121,11 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     AlignmentTree* tree = cs.cs_path;   // current node in tree
     Alignment* p = tree->root;          // current Path (Alignment)
 
-    if (TRACE_ON) { if (p->habited()) cout << " (hab)\n"; else cout << " (nhab)\n"; }
+    if (TRACE_LEVEL > 1)
+    {
+        if (p->habited()) cout << " (hab)\n";
+        else cout << " (nhab)\n";
+    }
 
     // enumerate the transitions to q in schema
     for (TransitionList_const_iterator it = _schema.begin(q);
@@ -139,7 +143,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
         {
             State label = t.at(0); // for such transition, the body is a singleton containing a label
 
-            if (TRACE_ON)
+            if (TRACE_LEVEL > 1)
             {
                 cout << "# g.n.=" << Label::nbGraceNotes(label) << " ";
                 cout << "cs.rp=" << cs.cs_rp << " ";
@@ -159,7 +163,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 // and the info in current Path (# points aligned on right)
                 (cs.cs_rr == p->r_size())))
             {
-                if (TRACE_ON) { cout << "YES" << "\n"; }
+                if (TRACE_LEVEL > 1) { cout << "YES" << "\n"; }
                 // compute distance to input segment
                 Distance dist = Distance(*p);  //ComboWeight* cw = new ComboWeight(w, dist);
                 dist.combine(w);
@@ -169,7 +173,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 tv.add(newt);
             }
             // otherwise add no transition
-            else {  if (TRACE_ON) { cout << "NO" << "\n"; } }
+            else {  if (TRACE_LEVEL > 1) { cout << "NO" << "\n"; } }
         }
 
         // inner schema transition:

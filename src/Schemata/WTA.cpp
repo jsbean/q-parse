@@ -272,7 +272,11 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
         Transition t = Transition(body, Weight(val));
         assert(t.inner() || t.terminal());
         add(s, t);
-        cout << " - add tr. " << s << Transition(body, Weight(val)) << "\n";
+        if (TRACE_LEVEL > 1)
+        {
+            cout << " - add tr. " << s;
+            cout << Transition(body, Weight(val)) << "\n";
+        }
     }
     file.close();
     initials = { 0 };
@@ -617,7 +621,7 @@ void WTA::print()
     cout << this->countStates() << " states\n";
     cout << this->countTransitions() << " transitions\n";
     cout << this->countAll() << " total symbols\n\n";
-    cout << *this;
+    //cout << *this;
 }
 
 void WTA::save(string filename)

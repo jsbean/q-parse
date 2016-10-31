@@ -83,7 +83,9 @@ public:
         assert(kt);
         for (TransitionList_const_iterator i = tl.begin(); i != tl.end(); ++i)
         {
-            _cand.push(Run(&(*i))); // 1-best for transition
+            // 1-best run associated to transition
+            //_cand.push(Run(*i));
+            _cand.emplace(*i);
         }
     }
 
@@ -118,29 +120,32 @@ public:
         
         // otherwise, process the best candidate
         Run r = _cand.top();
+        assert (r.inner() || r.terminal()); // no null run candidate
         _cand.pop();
         
-        // one candidate not evaluated
-        if (r.weight.null())
+        // one candidate's weight not evaluated
+        if (r.unknown())
         {
-            assert(r.arity() > 1);
+            assert(r.inner());
             eval(r);
-            if (! r.weight.null())
-            {
-                _cand.push(r); // push back with weight evaluated
-            }
-            // if the evaluated weight is null, it means than it cannot be evaluated
+            // evaluation succeeded:
+            // push back with weight evaluated
+            if (! r.unknown()) { _cand.push(r); }
+            // if the evaluated weight is null,
+            // it means than it cannot be evaluated
             // we do not push it back to cand
-            // we do not push next because they can neither be evaluated
+            // we do not push next runs because they can neither be evaluated
+
             return best(k); //tail recursive call to try to evaluate other cand
         }
         // all candidates have been evaluated (because weight 0 has priority)
         else
         {
             // compute next candidate if run is not terminal (leaf)
-            if (r.arity() > 0) { assert(r.arity() > 1); addNext(r); }
+            if (r.inner()) { addNext(r); }
             _best.push_back(r); // add to best table
-            return best(k); //tail recursive call in case there is more than one best to construct
+            return best(k);     //tail recursive call
+                                // in case there is more than one best to construct
         }
     }
 
@@ -163,24 +168,25 @@ private:
     // (one k-best missing)
     void eval(Run& r)
     {
-        assert (r.weight.null());
-        r.weight = Weight(r.top->weight());
+        // null runs should not be evaluated
+        // terminal runs are evaluated at creation
+        assert (r.inner());
+        assert (r.unknown());
+
+        r.weight = r.tweight;
         size_t a = r.arity();
-        assert (a >= 1);
-        assert (a == r.top->size());
+        assert (a > 1);
         
-        // leaf run (terminal transition)
-        if (a == 1)
-            return;
         // composed run (depth > 0)
         for (int i = 0; i < a; i++)
         {
             Run rsk = _parent->best(r.getState(i), r.getRank(i)); // best(s, k)
-            
-            // the k-best for s does not exists (less than k runs for s)
-            if ( rsk.weight.null())
+            assert (rsk.null() || rsk.inner() || rsk.terminal());
+            // the k-best for s does not exists
+            // because there are less than k runs for s
+            if ( rsk.unknown())
             {
-                r.weight = Weight(); // reset weight to 0
+                r.resetWeight(); // reset weight to 0
                 return;
             }
             else r.weight += rsk.weight;
@@ -192,18 +198,16 @@ private:
     // to the table of candidates
     void addNext(Run& r)
     {
-        assert(r.arity() > 1);
-        assert (r.arity() == r.top->size());
+        assert(r.inner());
         // add next candidates
         for (int i = 0; i < r.arity(); i++)
         {
-            assert (r.getState(i) == r.top->at(i));
-            // new run
-            Run nextr = Run(r);
-            
+            // new run (copy) set to unknown (0 weight)
+            Run nextr = Run(r); //Run nextr(r);
+            assert(nextr.inner());
             //nextr._children[i].bp_rank = r.at(i).bp_rank + 1;
             nextr.setRank(i, r.getRank(i) + 1);
-            nextr.weight = Weight();
+            nextr.resetWeight();
             _cand.push(nextr);
         }
     }

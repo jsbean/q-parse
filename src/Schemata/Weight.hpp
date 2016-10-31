@@ -55,6 +55,9 @@ public:
     }
     
     friend std::ostream& operator<<(std::ostream&, const Weight&);
+    
+    friend inline bool operator==(const Weight&, const Weight&);
+    friend inline bool operator!=(const Weight&, const Weight&);
 
 protected:
     
@@ -72,7 +75,8 @@ inline Weight operator+(Weight lhs, const Weight& rhs)
 
 inline bool operator==(const Weight& lhs, const Weight& rhs)
 {
-    return (lhs.value() == rhs.value());
+//    return (lhs.value() == rhs.value());
+    return (lhs._val == rhs._val);
     // it is the default -> TODO SUPPR.
 }
 

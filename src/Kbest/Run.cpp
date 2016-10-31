@@ -15,8 +15,8 @@
 
 
 Run::Run():
-top(NULL),
-weight(Weight()) // null weight
+tweight(Weight()), // null parent weight
+weight(Weight())   // null current weight
 {
     assert (this->null());
 }
@@ -25,15 +25,15 @@ weight(Weight()) // null weight
 // initialization of children from iterators to transition:
 // uses constructor of bpointer from State
 Run::Run(const Transition& t):
-top(&t)
+tweight(t.weight())
 {
     // leaf transition
     if (t.terminal())
     {
         weight = t.weight();
         // children is empty vector
-        assert(this->terminal());
         assert(_children.size() == 0);
+        assert(this->terminal());
     }
     // inner transition: fill _children with pointers to 1-bests
     else if (t.inner())
@@ -45,55 +45,24 @@ top(&t)
         // for (Transition_const_iterator i = t->begin(); i != t->end(); ++i)
         //     children.push_back(bpointer(*i));
         _children = vector<bpointer>(t.begin(), t.end());
-        assert(this->inner());
-        assert(_children.size() == t.size());
         weight = Weight(); // weight zero = unknown weight
+        assert(_children.size() == t.size());
+        assert(this->inner());
     }
     else { assert(false); } //should not happen
 }
 
 
-// = default?
+// = default
 Run::Run(const Run& r):
-top(r.top),
-_children(r._children),
-weight(r.weight)
+tweight(r.tweight),
+weight(r.weight),
+_children(r._children)
 {
     assert (r.null() || r.terminal() || r.inner());
-//    assert(r.top || (r.weight.null()));
-//    assert((r.top == NULL) ||
-//           ((((_children.size() == 0) && top->size() == 1)) ||
-//           (_children.size() == top->size())));
     assert (this->null() || this->terminal() || this->inner());
 }
 
-
-bool Run::null() const
-{
-    return ((top == NULL) && _children.empty() && weight.null());
-}
-
-
-bool Run::terminal() const
-{
-    return ((top != NULL) &&
-            (top->size() == 1) &&
-            (! weight.null()) &&
-            _children.empty());
-}
-
-bool Run::inner() const
-{
-    return ((top != NULL) &&
-            (top->size() > 1) &&
-            (_children.size() == top->size()));
-}
-
-
-size_t Run::arity()
-{
-    return (_children.size());
-}
 
 
 bpointer Run::at(size_t i) const

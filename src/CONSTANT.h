@@ -9,13 +9,20 @@
 #ifndef CONSTANT_h
 #define CONSTANT_h
 
+#include <stdio.h>
+//#include <iostream>
+#include <string>
+
 
 #endif /* CONSTANT_h */
 
 
-const int TRACE_ON = 1;
+const int TRACE_LEVEL = 1;
 
 const double CST_ALPHA = 0.5;
 
 const char CMD_NAME[] = "qparse";
+
+
+
 

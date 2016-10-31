@@ -68,7 +68,7 @@ Segment::Segment(string filename, unsigned int r):_res(r)
         TimestampedEvent* e = new TimestampedEvent(Event(), d);
         _event.push_back(e);
         _date.push_back(round(((d - _begin)/_len) * _res));
-        if (TRACE_ON) { cout << "input[" << i-1 << "] = " << d << "  -> " << round(((d - _begin)/_len) * _res) << "\n"; }
+        if (TRACE_LEVEL > 0) { cout << "input[" << i-1 << "] = " << d << "  -> " << round(((d - _begin)/_len) * _res) << "\n"; }
     }
 }
 

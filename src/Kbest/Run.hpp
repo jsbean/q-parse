@@ -26,17 +26,20 @@ struct bpointer
     bpointer(State s, size_t k=1):bp_state(s),bp_rank(k) {}
 };
 
-// a run is associated to a parent transition (top),
-// it has a weight, and a list of children represented by bpointers.
+// a run is created from a transition,
+// it stores the weith of the parent transition (parent weight),
+// a list of children represented by bpointers.
+// a current evaluated weight.
 //
 // a run can be of 3 kinds:
 // - null run:
-//   null parent transition, weight = 0, no children
-// - terminal (leaf) run:
-//   terminal (length 1) parent transition, weight > 0, no children
-// - inner run:
-//   inner (length > 1) parent transition,  weight == 0 (unknown) or
-//   weight > 0 (evaluated), # children = length parent transition
+//   null parent weight, null current weight, no children
+// - terminal (leaf) run, created from terminal (length 1) parent transition:
+//   parent weight = current weight > 0, no children
+// - inner run, crated from inner (length > 1) parent transition:
+//   parent weight > 0,
+//   current weight == 0 (unknown) or current weight > 0 (evaluated)
+//   # children = length parent transition
 class Run
 {
     
@@ -50,56 +53,61 @@ public:
     // for transition (s1,...,sn), the 1-best is ([s1,1],...,[sn,1])
     Run(const Transition& t);
     
-    // copy
+    // copy: USELESS (= default, assert redundant)
     Run(const Run&);
     
     // null run - constructed with Run()
-    bool null() const;
+    inline bool null() const { return (tweight.null() &&
+                                       weight.null() &&
+                                       _children.empty()); }
     
     // terminal (leaf) run
-    bool terminal() const;
+    inline bool terminal() const { return ((! tweight.null()) &&
+                                           (tweight == weight) &&
+                                           _children.empty()); }
 
     // inner run
-    bool inner() const;
+    inline bool inner() const { return ((! tweight.null()) &&
+                                        (_children.size() > 1)); }
 
-    // inner run with unknown weight
-    bool unknown() const;
+
+    // inner run with unevaluated weight
+    inline bool unknown() const { return weight.null(); }
     
     // return the number of children of this Run
-    size_t arity();
-    
-    // at(i) returns the ith children of this run
-    bpointer at(size_t) const;
+    inline size_t arity() { return (_children.size()); }
+
     
     // getState(i) returns the state component of the ith children
-    inline State getState(size_t i) const
-    {
-        assert (i < _children.size());
-        return (_children[i].bp_state);
-    }
+    inline State getState(size_t i) const { assert (i < _children.size());
+                                            return (_children[i].bp_state); }
     
     // getRank(i) returns the rank component of the ith children
-    inline size_t getRank(size_t i) const
-    {
-        assert (i < _children.size());
-        return (_children[i].bp_rank);
-    }
+    inline size_t getRank(size_t i) const { assert (i < _children.size());
+                                            return (_children[i].bp_rank); }
     
     // set(i, k) sets the rank of the ith children of this run to k
-    inline void setRank(size_t i, size_t k)
-    {
-        assert (i < _children.size());
-        _children[i].bp_rank = k;
-    }
+    inline void setRank(size_t i, size_t k) { assert (i < _children.size());
+                                              _children[i].bp_rank = k; }
     
-    const Transition* top;
+    inline void resetWeight() { weight = Weight(); }
     
+    // weight of the parent (creator) transition
+    Weight tweight;
+    
+    // current weight
     Weight weight;
+    
+    // to replace the criteria weight == 0?
+    //bool evaluated;
 
     
 private:
     vector<bpointer> _children;
-
+    
+    // at(i) returns the ith children of this run
+    bpointer at(size_t) const;
+    
 };
 
 
