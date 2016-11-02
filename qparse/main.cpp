@@ -29,23 +29,6 @@ int main(int argc, const char * argv[])
     clock_t time_start;
     clock_t time_end;
     
-    
-// test DurationList
-    DurationList l1;
-    DurationList l2;
-    l1.add(Rational(0));
-    l1.add(Rational(1));
-    l2.addcont(Rational(1));
-    l2.add(Rational(1));
-    l2.add(Rational(2));
-    cout << "l1=" << l1 << "\n";
-    cout << "l2=" << l2 << "\n";
-    l1 += l2;
-    cout << "l1=" << l1 << "\n";
-    cout << "l2=" << l2 << "\n";
-      
-    //return 0;
-    
 // test WTA file IO
     assert (argc >= 2);
     std::cout << "\n==== Read schema WTA from " << argv[1] << '\n';

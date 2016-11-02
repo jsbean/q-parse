@@ -15,8 +15,9 @@
 
 
 Run::Run():
-tweight(Weight()), // null parent weight
-weight(Weight())   // null current weight
+tweight(), // null parent weight
+weight(),  // null current weight
+duration() // empty current duration
 {
     assert (this->null());
 }
@@ -72,6 +73,7 @@ duration()
 Run::Run(const Run& r):
 tweight(r.tweight),
 weight(r.weight),
+duration(r.duration),
 _children(r._children)
 {
     assert (r.null() || r.terminal() || r.inner());
