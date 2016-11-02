@@ -25,12 +25,27 @@ weight(Weight())   // null current weight
 // initialization of children from iterators to transition:
 // uses constructor of bpointer from State
 Run::Run(const Transition& t):
-tweight(t.weight())
+tweight(t.weight()),
+duration()
 {
     // leaf transition
     if (t.terminal())
     {
         weight = t.weight();
+
+        State label = t.label();
+        if (Label::continuation(label))
+        {
+            duration.addcont(Rational(1)); // relative duration of leaf is 1
+        }
+        else // leaf contains 0 or several grace notes and one event
+        {
+            for (int i = 0; i < Label::nbGraceNotes(label); i++)
+            {
+                duration.add(Rational(0)); // every grace note has duration 0
+            }
+            duration.add(Rational(1)); // the event in leaf has relative duration 1
+        }
         // children is empty vector
         assert(_children.size() == 0);
         assert(this->terminal());
@@ -63,6 +78,11 @@ _children(r._children)
     assert (this->null() || this->terminal() || this->inner());
 }
 
+void Run::reset()
+{
+    weight = Weight();
+    duration = DurationList();
+}
 
 
 bpointer Run::at(size_t i) const

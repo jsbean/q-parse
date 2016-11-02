@@ -33,6 +33,8 @@ public:
     long numerator(void) const { return num; }
     long denominator(void) const { return den; }
     
+    bool null(void) const { return (num == 0); }
+    
     // assignment operators
     Rational& operator=(const Rational& rhs);
     Rational& operator=(long rhs);

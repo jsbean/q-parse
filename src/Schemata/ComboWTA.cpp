@@ -139,9 +139,10 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 
         // leaf schema transition:
         // add at most one leaf transition to ComboWTA
-        if (a == 1) //if (t.terminal())
+        if (t.terminal())
         {
-            State label = t.at(0); // for such transition, the body is a singleton containing a label
+            assert (a == 1);
+            State label = t.label(); // for such transition, the body is a singleton containing a label
 
             if (TRACE_LEVEL > 1)
             {
@@ -179,8 +180,9 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
         // inner schema transition:
         // add zero or several transitions to ComboWTA (acc. to guesses for rr values)
         // do not descent if there are no point in Alignement
-        else if ((a > 1) && p->habited()) //if (t.inner() && p->habited())
+        else if (t.inner() && p->habited())
         {
+            assert (a > 1);
             // compute vector of children alignements
             const vector<AlignmentTree*>& vt = tree->children(a);
             //vector<Alignment*> vp = p->subs(a);

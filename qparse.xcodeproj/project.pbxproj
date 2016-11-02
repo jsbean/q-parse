@@ -17,6 +17,7 @@
 		3262BBE01DA6415900796318 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBDE1DA6415900796318 /* Event.cpp */; };
 		3291851E1DBE1DD2008FFE31 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3291851C1DBE1DD2008FFE31 /* Label.cpp */; };
 		32D939661DA4F868004497D2 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32D939641DA4F867004497D2 /* Path.cpp */; };
+		32E1F2E71DCA47BE00A1782C /* DurationList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32E1F2E51DCA47BE00A1782C /* DurationList.cpp */; };
 		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,8 @@
 		3291851D1DBE1DD2008FFE31 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
 		32D939641DA4F867004497D2 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Path.cpp; path = src/Input/Path.cpp; sourceTree = SOURCE_ROOT; };
 		32D939651DA4F868004497D2 /* Path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Path.hpp; path = src/Input/Path.hpp; sourceTree = SOURCE_ROOT; };
+		32E1F2E51DCA47BE00A1782C /* DurationList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DurationList.cpp; path = src/Kbest/DurationList.cpp; sourceTree = SOURCE_ROOT; };
+		32E1F2E61DCA47BE00A1782C /* DurationList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DurationList.hpp; path = src/Kbest/DurationList.hpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Weight.cpp; path = src/Schemata/Weight.cpp; sourceTree = SOURCE_ROOT; };
 		32EBB0AE1DA3B36F00D2CBA8 /* Weight.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Weight.hpp; path = src/Schemata/Weight.hpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -104,6 +107,8 @@
 				3262BBD91DA63E7200796318 /* Segment.hpp */,
 				3262BBD81DA63E7200796318 /* Segment.cpp */,
 				320D8B691DBAA81A00767573 /* Kbest.hpp */,
+				32E1F2E61DCA47BE00A1782C /* DurationList.hpp */,
+				32E1F2E51DCA47BE00A1782C /* DurationList.cpp */,
 				3215A7A11DBE5CCC00C2D868 /* Run.hpp */,
 				3215A7A01DBE5CCC00C2D868 /* Run.cpp */,
 				3262BBDF1DA6415900796318 /* Event.hpp */,
@@ -177,6 +182,7 @@
 				320085B31DC9FBC500CF04C4 /* Rational.cpp in Sources */,
 				3291851E1DBE1DD2008FFE31 /* Label.cpp in Sources */,
 				3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */,
+				32E1F2E71DCA47BE00A1782C /* DurationList.cpp in Sources */,
 				3262BBE01DA6415900796318 /* Event.cpp in Sources */,
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
 				323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */,

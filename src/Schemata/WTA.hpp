@@ -85,10 +85,12 @@ public:
 
     ~Transition();
     
-    
     bool inner() const;
 
     bool terminal() const;
+    
+    // this transition must be terminal
+    State label() const;
     
     inline Weight weight() const { return _weight; }
 

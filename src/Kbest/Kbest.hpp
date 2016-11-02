@@ -66,6 +66,8 @@ struct WeightMax
 
 template <typename Comp_t> class Ktable;
 
+
+
 // comp is one of the above orderings
 template <typename Comp_t> class Krecord
 {
@@ -144,8 +146,7 @@ public:
             // compute next candidate if run is not terminal (leaf)
             if (r.inner()) { addNext(r); }
             _best.push_back(r); // add to best table
-            return best(k);     //tail recursive call
-                                // in case there is more than one best to construct
+            return best(k);     // tail recursive call for the case there is more than one best to construct
         }
     }
 
@@ -184,13 +185,24 @@ private:
             assert (rsk.null() || rsk.inner() || rsk.terminal());
             // the k-best for s does not exists
             // because there are less than k runs for s
-            if ( rsk.unknown())
+            if (rsk.unknown())
             {
-                r.resetWeight(); // reset weight to 0
+                r.reset(); // reset weight to 0
                 return;
             }
-            else r.weight += rsk.weight;
+            else
+            {
+                assert (! rsk.weight.null());
+ //               assert (! rsk.duration.empty());
+                r.weight += rsk.weight;
+                if (_parent->_eval_durations)
+                {
+                    // concatenation
+                    r.duration += rsk.duration;
+                }
+            }
         }
+        r.duration.mult(Rational(1, a));
     }
     
     
@@ -207,7 +219,8 @@ private:
             assert(nextr.inner());
             //nextr._children[i].bp_rank = r.at(i).bp_rank + 1;
             nextr.setRank(i, r.getRank(i) + 1);
-            nextr.resetWeight();
+            nextr.reset();
+            assert(nextr.unknown());
             _cand.push(nextr);
         }
     }
@@ -216,9 +229,17 @@ private:
 
 template <typename Comp_t> class Ktable
 {
+    friend class Krecord<Comp_t>;
+    
 public:
     
-    Ktable(const WTA* ta):_wta(ta),_init(false) { assert(ta); };
+    Ktable(const WTA* ta, bool dur=true):
+    _wta(ta),
+    _init(false),
+    _eval_durations(dur)
+    {
+        assert(ta);
+    };
     
     // best(s, k)
     // returns the kth best for state s.
@@ -232,7 +253,7 @@ public:
             // create an entry for s in the table
             assert (_wta);
             // assume that s is registered in _wta
-            const TransitionList& tl = _wta->at(s);
+            const TransitionList& tl = _wta->at(s); // TODO: double search for s: in Ktable then in WTA
             Krecord<Comp_t> kr = Krecord<Comp_t>(tl, this);
 
             std::pair<typename std::map<State, Krecord<Comp_t>>::iterator, bool> ret;
@@ -296,6 +317,7 @@ public:
         // ALT: tail recursive call return best(k)
         // in case there is more than one best to construct
     }
+    
 
 private:
     const WTA* _wta;
@@ -313,6 +335,9 @@ private:
     // flag for initialization of table for initial states
     bool _init;
     
+    // flag for computation of duration lists of runs
+    bool _eval_durations;
+    
     
     void pushinit(State s, size_t k)
     {
@@ -323,7 +348,6 @@ private:
         }
         // do not add to candidate stack if weight is null
     }
-
+    
 };
-
 

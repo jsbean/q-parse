@@ -40,6 +40,12 @@ bool Transition::terminal() const
             (! _weight.null()));
 }
 
+State Transition::label() const
+{
+    assert (terminal());
+    return (_body[0]);
+}
+
 
 size_t Transition::size() const
 {

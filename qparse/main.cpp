@@ -29,6 +29,23 @@ int main(int argc, const char * argv[])
     clock_t time_start;
     clock_t time_end;
     
+    
+// test DurationList
+    DurationList l1;
+    DurationList l2;
+    l1.add(Rational(0));
+    l1.add(Rational(1));
+    l2.addcont(Rational(1));
+    l2.add(Rational(1));
+    l2.add(Rational(2));
+    cout << "l1=" << l1 << "\n";
+    cout << "l2=" << l2 << "\n";
+    l1 += l2;
+    cout << "l1=" << l1 << "\n";
+    cout << "l2=" << l2 << "\n";
+      
+    //return 0;
+    
 // test WTA file IO
     assert (argc >= 2);
     std::cout << "\n==== Read schema WTA from " << argv[1] << '\n';
@@ -84,7 +101,8 @@ int main(int argc, const char * argv[])
     {
         State s = *i;
         Run r = kt.best(s, 1);
-        cout << "weight 1-best[" << s << "] = " << r.weight << "\n";
+        cout << "weight 1-best[" << s << "] = " << r.weight << " ";
+        cout << r.duration << "\n";
     }
     cout << "time to compute 1-best for every initial state ComboWTA : ";
     cout << duration(time_start) << "ms \n";
@@ -100,7 +118,8 @@ int main(int argc, const char * argv[])
         if (! r.unknown())
         {
             cout << "weight " << i << "-best = " << r.weight;
-            cout << " (" << r.rank << "-best for state " << r.head << ")\n";
+            cout << " (" << r.rank << "-best for state " << r.head << ") ";
+            cout << r.duration << "\n";
         }
     }
     cout << "time to " << k << "-best for all initial states ComboWTA : ";

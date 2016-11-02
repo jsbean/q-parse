@@ -31,7 +31,7 @@ int Label::nbGraceNotes(unsigned int n)
 {
     if (n > 0)
         return n - 1;
-    else return 0;  // 1 or 0 event
+    else return 0;  // 1 event or 0 event (continuation)
 }
 
 bool Label::continuation(unsigned int n)
