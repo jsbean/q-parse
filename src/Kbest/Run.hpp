@@ -119,6 +119,12 @@ private:
 class iRun: public Run
 {
 public:
+    // null iRun,
+    // = null Run
+    // + target state = 0
+    // + rank = 0
+    iRun();
+    
     iRun(const Run&, State, size_t);
 
     State head;

@@ -86,18 +86,24 @@ int main(int argc, const char * argv[])
         Run r = kt.best(s, 1);
         cout << "weight 1-best[" << s << "] = " << r.weight << "\n";
     }
-    cout << "time to compute best for initial states ComboWTA : ";
+    cout << "time to compute 1-best for every initial state ComboWTA : ";
     cout << duration(time_start) << "ms \n";
     
-    // test k-best
-    cout << "\n==== 1-best for " << combo->initials.size() << " initials altogether\n";
+// test k-best for initials
+    int k = 50;
+    cout << "\n==== " << k << "-best for " << combo->initials.size() << " initials altogether\n";
     time_start = clock();
-    for (int i = 40; i > 0; i--)
+    Ktable<WeightMin> kkt = Ktable<WeightMin>(combo);
+    for (int i = k; i > 0; i--)
     {
-        Run r = kt.best(i);
-        cout << "weight " << i << "-best = " << r.weight << "\n";
+        iRun r = kkt.best(i);
+        if (! r.unknown())
+        {
+            cout << "weight " << i << "-best = " << r.weight;
+            cout << " (" << r.rank << "-best for state " << r.head << ")\n";
+        }
     }
-    cout << "time to 40-best for all initial states ComboWTA : ";
+    cout << "time to " << k << "-best for all initial states ComboWTA : ";
     cout << duration(time_start) << "ms \n";
    
     delete combo;

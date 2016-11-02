@@ -252,7 +252,7 @@ public:
     // returns the kth best for all initial states.
     // return an empty run of weight 0 when there exists less than k best
     // for initial states.
-    Run best(size_t k)
+    iRun best(size_t k)
     {
         assert (k > 0);
         
@@ -274,7 +274,7 @@ public:
             // cannot (not enough runs to construct)
             if (_icand.empty())
             {
-                return Run(); // empty run
+                return iRun(); // empty run
             }
         
             // otherwise, get the next best candidate at the top of heap
@@ -292,7 +292,7 @@ public:
         if (_ibest.size() >= k)
             return _ibest[k-1];  //return Run(_ibest[k-1]);
         else
-            return Run();
+            return iRun();
         // ALT: tail recursive call return best(k)
         // in case there is more than one best to construct
     }

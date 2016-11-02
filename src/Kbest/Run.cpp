@@ -72,13 +72,15 @@ bpointer Run::at(size_t i) const
 }
 
 
+iRun::iRun():
+Run(),
+head(0),
+rank(0)
+{}
 
 iRun::iRun(const Run& r, State s, size_t k):
 Run(r),
 head(s),
 rank(k)
 { assert (k > 0); }
-
-
-
 
