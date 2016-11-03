@@ -42,7 +42,8 @@ int main(int argc, const char * argv[])
     //time_end = clock();
     cout << "time to clean WTA : ";
     cout << duration(time_start) << "ms \n";
-    ta->print();  // cout << ta;
+    ta->print();
+    cout << *ta;
 
     time_start = clock();
     unsigned int res = ta->resolution();
@@ -72,7 +73,8 @@ int main(int argc, const char * argv[])
 //    combo->clean();
     cout << "time to clean ComboWTA : ";
     cout << duration(time_start) << "ms \n";
-    combo->print();  // cout << ta;
+    combo->print();
+    cout << *combo;
 
     
 // test k-best

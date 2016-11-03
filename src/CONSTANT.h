@@ -17,7 +17,7 @@
 #endif /* CONSTANT_h */
 
 
-const int TRACE_LEVEL = 1;
+const int TRACE_LEVEL = 2;
 
 const double CST_ALPHA = 0.5;
 

@@ -193,13 +193,10 @@ private:
             else
             {
                 assert (! rsk.weight.null());
- //               assert (! rsk.duration.empty());
+                assert (! rsk.duration.empty());
                 r.weight += rsk.weight;
-                if (_parent->_eval_durations)
-                {
-                    // concatenation
-                    r.duration += rsk.duration;
-                }
+                // concatenation dur
+                if (_parent->_eval_durations) { r.duration += rsk.duration; }
             }
         }
         r.duration.mult(Rational(1, a));

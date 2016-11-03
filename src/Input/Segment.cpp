@@ -63,7 +63,8 @@ Segment::Segment(string filename, unsigned int r):_res(r)
     for (int i = 1; i < last; i++)
     {
         double d = v[i];
-        assert(d > prev);
+        assert((i > 1) || (d >= prev)); // the first point can be at segment beggining
+        assert((i <= 1) || (d > prev)); // the next points must be distinct
         prev = d;
         TimestampedEvent* e = new TimestampedEvent(Event(), d);
         _event.push_back(e);
