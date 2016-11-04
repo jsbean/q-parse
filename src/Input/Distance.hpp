@@ -26,7 +26,7 @@ class Distance: public Weight
 {
 public:
     // weight which is the distance defined by alignment for input segment
-    Distance(const Alignment&);
+    Distance(Alignment*);
 
     // copy of weight = combination of given weight and a null distance value.
     Distance(const Weight&);

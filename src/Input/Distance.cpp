@@ -13,20 +13,20 @@
 double Distance::_alpha = CST_ALPHA;
 
 
-Distance::Distance(const Alignment& p)
+Distance::Distance(Alignment* p)
 {
-    const Segment& s = p.input();
+    const Segment& s = p->input();
 //    const size_t m = p.input()->size();
-    const size_t b = p.begin();
-    const size_t e = p.end();
-    const size_t ll = p.l_size();
-    const size_t rl = p.r_size();
+    const size_t b = p->begin();
+    const size_t e = p->end();
+    const size_t ll = p->l_size();
+    const size_t rl = p->r_size();
     
     _val = 0;
 
     if (ll > 0)
     {
-        size_t j = p.l_first();
+        size_t j = p->l_first();
         assert (j < s.size());
         for(int i = 0; i < ll; i++)
         {
@@ -38,7 +38,7 @@ Distance::Distance(const Alignment& p)
 
     if (rl > 0)
     {
-        size_t j = p.r_first();
+        size_t j = p->r_first();
         assert (j < s.size());
         for(int i = 0; i < rl; i++)
         {
@@ -49,8 +49,8 @@ Distance::Distance(const Alignment& p)
     }
     
     //normalization
-    const size_t r = p.input().resolution();
-    const size_t d = p.input().size();
+    const size_t r = p->input().resolution();
+    const size_t d = p->input().size();
 
     _val *= (2 / (d*r)); // TBC
 }

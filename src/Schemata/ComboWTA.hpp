@@ -97,7 +97,7 @@ public:
 
     ComboState();
     
-    ComboState(State, AlignmentTree*, size_t rp=0, size_t rr=0);
+    ComboState(State, Alignment*, size_t rp=0, size_t rr=0);
 
     // NOT USED? TODO: REM
     ComboState(const ComboState&, size_t rp=0, size_t rr=0);
@@ -109,7 +109,7 @@ public:
 
     // current augmented path (interval of points + alignment of input segment)
     // share: in addComboState many ComboState constructed with the same cs_path
-    AlignmentTree* cs_path;
+    Alignment* cs_path;
     
     // guess number of points aligned to right of previous segment
     size_t cs_rp;
@@ -163,7 +163,7 @@ private:
     // tree of Alignments (Path with info on alignment to input segment)
     // organized hierarchically by sub-alignments
     // the ComboStates use th epointers stored in this tree
-    AlignmentTree* _tree;
+    Alignment* _tree;
     
     // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs if there is one
     // otherwise:

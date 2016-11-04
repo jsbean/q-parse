@@ -26,6 +26,7 @@ double duration(clock_t start)
 
 int main(int argc, const char * argv[])
 {
+
     clock_t time_start;
     //clock_t time_end;
     

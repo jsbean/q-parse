@@ -27,7 +27,15 @@ class Path
 public:
     Path():_begin(0),_len(0){}
     
+    // Path(b, l) begin an interval starting at b (samples) and of length l.
     Path(size_t, size_t);
+    
+    
+    // Path(p, n, i) construct a new interval defined as the ith subsegment
+    // of a division of interval p into n segments
+    // the interval length must be divisible by n
+    // UNUSED? TODO REM.
+    Path(const Path&, size_t, size_t);
     
 
     // return the left bound of the interval defined by this Path (in samples)
@@ -48,11 +56,6 @@ public:
     // and is closer to the left bound than to the right bound
     bool aligned(size_t);
     
-    // sub(n, i) return a new path defined as the ith subsegment
-    // of a division of this Path into n segments
-    // the interval length must be divisible by n
-    // UNUSED? TODO REM.
-    Path* sub(size_t, size_t);
     
 protected:
     
@@ -106,11 +109,12 @@ public:
     
     bool habited() const { return ((_seg_llen + _seg_rlen) > 0); }
     
-    // sub(k) return the list of subpaths obtained by
-    // division of this Path into k segments.
-    // k must be > 1.
-    // the interval length must be divisible by k.
-    vector<Alignment*> subs(size_t) const;
+    // sub(a, i) returns a alignement for the i-1th subpath (interval)
+    // of the division of this alignement's interval in n equal parts.
+    // a must be > 1
+    // i must be smaller than a
+    // the interval length must be divisible by a
+    Alignment* sub(size_t, size_t);
     
 private:
 
@@ -133,7 +137,11 @@ private:
     // or out_of_bound (segment size) is there are none
     size_t _seg_rbeg;
     
-    
+    // every entry in this map associate to
+    // an arity n a partition a1,...,an of the root Alignment
+    // TODO change to    vector<vector<AlignmentTree*>> _children;
+    map<size_t, vector<Alignment*>> _children;
+   
     // align(b) set the above values, starting from index b
     // and return the next index in segment to be processed
     // or the size of segment if end of segment is reached.
@@ -147,33 +155,4 @@ private:
     
 };
 
-
-
-
-// a structure for optimizing the construction of ComboWTA
-// by avoiding recomputation of Alignments
-class AlignmentTree
-{
-    friend class AlignmentTree;
-    
-public:
-    AlignmentTree();
-    
-    AlignmentTree(const Segment&);
-
-    AlignmentTree(Alignment* p):root(p){};
-
-    ~AlignmentTree();
-    
-    Alignment* root;
-
-    vector<AlignmentTree*> children(size_t);
-    
-private:
-    
-    // every entry in this map associate to
-    // an arity n a partition a1,...,an of the root Alignment
-    map<size_t, vector<AlignmentTree*>> _children;
-    
-};
 

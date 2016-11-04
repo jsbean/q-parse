@@ -15,6 +15,17 @@ Path::Path(size_t b, size_t l):_begin(b), _len(l)
     assert (l > 0);
 }
 
+Path::Path(const Path& p, size_t n, size_t i)
+{
+    assert (n > 0);
+    assert (i > 0);
+    // the interval length must be divisible by n
+    assert ((p._len % n) == 0);
+    _len = p._len / n;
+    _begin = p._begin + ((i-1)*_len);
+}
+
+
 size_t Path::begin() const
 {
     return _begin;
@@ -41,20 +52,6 @@ bool Path::aligned(size_t p)
     double mid = _begin + (_len / 2);
     return ((_begin <= p) && (p <= mid));
 }
-
-Path* Path::sub(size_t n, size_t i)
-{
-    assert (n > 0);
-    assert (i > 0);
-    // the interval length must be divisible by n
-    assert ((_len % n) == 0);
-    size_t len = _len / n;
-    
-    return new Path((_begin + ((i-1)* len)), len);
-}
-
-
-
 
 
 size_t Alignment::align(size_t b)
@@ -151,6 +148,16 @@ Alignment::Alignment(const Segment& s, size_t b, size_t l):Path(b,l),_seg(s)
 
 Alignment::~Alignment()
 {
+    // recursive destruction
+    for (map<size_t, vector<Alignment*>>::iterator i = _children.begin();
+         i != _children.end(); ++i)
+    {
+        vector<Alignment*> v = i->second;
+        for (vector<Alignment*>::iterator j = v.begin();
+             j != v.end(); ++j)
+            delete *j;
+    }
+    _children.clear(); //destroy the content
     // the passed segment is not deleted
 }
 
@@ -163,95 +170,41 @@ Alignment::~Alignment()
 //}
 
 
-vector<Alignment*> Alignment::subs(size_t n) const
-{
-    assert (n > 1);
-    assert ((_len % n) == 0); // this interval length must be divisible by n
-    assert(_begin >= 0);
-    assert(_begin < _res);
-    assert(_begin+_len <= _res);
-
-
-    vector<Alignment*> v;
-    size_t len = _len / n;
-    size_t b = _begin;
-    size_t j = _seg_lbeg;
-    
-    for (size_t i=0; i < n; i++)
-    {
-        Alignment* p = new Alignment(_seg, b, len);
-        v.push_back(p);
-        j = p->align(j); // align the newly created sub-Alignment
-        b += len;
-    }
-    
-    assert (v.size() == n);
-    return v;
-}
-
-
-AlignmentTree::AlignmentTree()
-{
-    root = new Alignment();
-}
-
-
-AlignmentTree::AlignmentTree(const Segment& s)
-{
-    root = new Alignment(s);
-}
-
-
-AlignmentTree::~AlignmentTree()
-{
-    // recursive destruction
-    for (map<size_t, vector<AlignmentTree*>>::iterator i = _children.begin();
-         i != _children.end(); ++i)
-    {
-        vector<AlignmentTree*> v = i->second;
-        for (vector<AlignmentTree*>::iterator j = v.begin();
-             j != v.end(); ++j)
-            delete *j;
-    }
-    _children.clear(); //destroy the content
-    delete root;
-}
-
-
-vector<AlignmentTree*> AlignmentTree::children(size_t a)
+Alignment* Alignment::sub(size_t a, size_t n)
 {
     assert (a > 1);
-    // create an empty vector if it is not found
-    vector<AlignmentTree*> tv = _children[a];
+    assert (n < a);
+
+    // creates an empty vector if it is not found
+    vector<Alignment*> v = _children[a];
     
-    if (tv.size() == 0)
+    if (v.size() == 0) // newly created, fill it
     {
-        assert (a > 1);
-        assert ((root->_len % a) == 0); // this interval length must be divisible by n
-        assert(root->_begin >= 0);
-        assert(root->_begin < root->_res);
-        assert(root->_begin + root->_len <= root->_res);
+        assert ((_len % a) == 0); // this interval length must be divisible by n
+        assert(_begin >= 0);
+        assert(_begin < _res);
+        assert(_begin + _len <= _res);
         
-        size_t len = root->_len / a;
-        size_t b = root->_begin;
-        size_t j = root->_seg_lbeg;
+        size_t len = _len / a;
+        size_t b = _begin;
+        size_t j = _seg_lbeg;
         
         for (int i = 0; i < a; i++)
         {
             // create sub-Alignment starting at b
-            Alignment* p = new Alignment(root->_seg, b, len);
+            Alignment* p = new Alignment(_seg, b, len);
             // create child ATree and insets it at the end of tv
             //tv.emplace(tv.end(), p);
-            AlignmentTree* t = new AlignmentTree(p);
-            tv.push_back(t);
+            v.push_back(p);
             j = p->align(j); // align the newly created sub-Alignment
             b += len;
         }
-        
     }
-    assert (tv.size() == a);
+    assert (v.size() == a);
     
-    return tv;
+    return v[n];
 }
+
+
 
 
