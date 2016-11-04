@@ -68,8 +68,8 @@ protected:
 
 
 
-// a Alignment defines the alignement of the points of an input segment
-// on a Path (interval)
+// a Alignment defines the alignement on a Path (interval)
+// of the points of an input segment
 class Alignment: public Path
 {
     friend class AlignmentTree;
@@ -151,7 +151,7 @@ private:
 
 
 // a structure for optimizing the construction of ComboWTA
-// by avoiding recomputation of Alignmentsa
+// by avoiding recomputation of Alignments
 class AlignmentTree
 {
     friend class AlignmentTree;

@@ -35,7 +35,7 @@ class Segment
 {
 public:
     
-    // Segment(b,e,r) constructs an empty segment (no events) with
+    // Segment(b, e, r) constructs an empty segment (no events) with
     // b: start date (in seconds)
     // e: end date (in seconds)
     // r: resolution

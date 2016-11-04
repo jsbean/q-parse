@@ -55,7 +55,7 @@ int main(int argc, const char * argv[])
     if (argc == 2) return 0;
     std::cout << "\n==== Read input segment from " << argv[2] << '\n';
     Segment seg = Segment(argv[2], res);
-    std::cout << " segment size " << seg.size() << '\n';
+    std::cout << "segment size " << seg.size() << '\n';
 
     std::cout << "\n==== COnstruction COmbo\n";
     time_start = clock();
@@ -67,10 +67,11 @@ int main(int argc, const char * argv[])
 
     cout << "\nCombo:\n";
     combo->print();
+    cout << *combo;
     
     cout << "\n==== Clean Combo:\n";
     time_start = clock();
-//    combo->clean();
+    combo->clean();
     cout << "time to clean ComboWTA : ";
     cout << duration(time_start) << "ms \n";
     combo->print();

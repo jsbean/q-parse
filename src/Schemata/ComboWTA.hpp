@@ -160,6 +160,11 @@ private:
     //unordered_map<cs_key, State, container_hasher> _statemap;
     map<ComboState, State> _statemap;
     
+    // tree of Alignments (Path with info on alignment to input segment)
+    // organized hierarchically by sub-alignments
+    // the ComboStates use th epointers stored in this tree
+    AlignmentTree* _tree;
+    
     // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs if there is one
     // otherwise:
     //     a new ComboWTA state s is created,
@@ -169,10 +174,7 @@ private:
     //     r is returned
     // moreover, the state is added to the initial state set of the ComboWTA if initial=true
     State addComboState(const ComboState&, bool initial=false);
-
-    // tree of Alignments (Path with info on alignment to input segment)
-    // organized hierarchically by sub-alignments
-    // the ComboStates use th epointers stored in this tree
-    AlignmentTree* _tree;
+    
+    bool compatible(State label, const ComboState& cs, const Alignment* p);
     
 };

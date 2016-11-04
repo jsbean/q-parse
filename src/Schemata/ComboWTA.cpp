@@ -86,8 +86,30 @@ std::ostream& operator<<(std::ostream& o, const ComboState& cs)
 
 
 
-
-
+bool ComboWTA::compatible(State label, const ComboState& cs, const Alignment* p)
+{
+    return(
+    (
+     (
+      // if it is a continuation (tie): there must be no point aligned to the left (of this Path)
+      Label::continuation(label) &&
+      (cs.cs_rp == 0) &&   // no point of previous Path aligned to left
+      (p->l_size() == 0)  // no point of this Path aligned to left
+     )
+     ||
+      // if it contains note and grace notes (no continuation):
+      // the label must be consistent with
+      // the info in guess (# grace notes)
+     (
+      (! Label::continuation(label)) &&
+      (Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1))
+     )
+    )
+    &&
+    // and check the info in current Path (# points aligned on right)
+    // (must be true in both cases (continuation or not)
+    (cs.cs_rr == p->r_size()));
+}
 
 
 State ComboWTA::addComboState(const ComboState& cs, bool initial)
@@ -118,8 +140,8 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     // add transitions to new state s
 
     State q = cs.cs_state;              // current state in schema
-    AlignmentTree* tree = cs.cs_path;   // current node in tree
-    Alignment* p = tree->root;          // current Path (Alignment)
+                                        // cs.cs_path is current node in tree
+    Alignment* p = cs.cs_path->root;    // current Path (Alignment)
 
     if (TRACE_LEVEL > 1)
     {
@@ -131,11 +153,11 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     for (TransitionList_const_iterator it = _schema.begin(q);
          it != _schema.end(q); ++it)
     {
-        const Transition& t = *it; // transition of schema
+        const Transition& t = *it;    // transition of schema
         assert(t.inner() || t.terminal());
-        size_t a = t.size();       // transition arity
+        size_t a = t.size();          //  arity of schema transition
         assert (a >= 1);
-        const Weight& w = t.weight();    // weight of schema transition
+        const Weight& w = t.weight(); // weight of schema transition
 
         // leaf schema transition:
         // add at most one leaf transition to ComboWTA
@@ -146,23 +168,14 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 
             if (TRACE_LEVEL > 1)
             {
-                cout << "# g.n.=" << Label::nbGraceNotes(label) << " ";
+                cout << "lab=" << label << " ";
+                cout << "#gn=" << Label::nbGraceNotes(label) << " ";
                 cout << "cs.rp=" << cs.cs_rp << " ";
                 cout << "seg_llen=" << p->l_size() << " ";
                 cout << "cs.rr=" << cs.cs_rr << " ";
                 cout << "seg_rlen=" << p->r_size() << "  ";
             }
-            if (// continuation (tie): no point is aligned to the left (of this Path)
-                (Label::continuation(label) &&
-                 (cs.cs_rp == 0) &&  // no point of previous Path aligned to left
-                 (p->l_size() == 0)) // no point of this Path aligned to left
-                ||
-                // note and grace notes:
-                // check that the label coincides with
-                // the info in guess (# grace notes)
-                ((Label::nbGraceNotes(label) == (cs.cs_rp + p->l_size() - 1)) &&
-                // and the info in current Path (# points aligned on right)
-                (cs.cs_rr == p->r_size())))
+            if (compatible(label, cs, p))
             {
                 if (TRACE_LEVEL > 1) { cout << "YES" << "\n"; }
                 // compute distance to input segment
@@ -184,13 +197,12 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
         {
             assert (a > 1);
             // compute vector of children alignements
-            const vector<AlignmentTree*>& vt = tree->children(a);
-            //vector<Alignment*> vp = p->subs(a);
-            assert (vt.size() == a);
+            const vector<AlignmentTree*>& vp = cs.cs_path->children(a);             //vector<Alignment*> vp = p->subs(a);
+            assert (vp.size() == a);
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
-            int rr = vt[a-1]->root->r_size(); // rsize for the last element of vp
-            if (cs.cs_rr <= rr) // is the max possible rr for rightmost child (propagated rr)
+            int maxrr = vp[a-1]->root->r_size(); // rsize for the last element of vp
+            if (cs.cs_rr <= maxrr) // is the max possible rr for rightmost child (propagated rr)
             {
                 // the weight is a combination of null distance and the weight w of the original schema transition
                 // It is the same for all the ComboWTA transitions
@@ -218,12 +230,12 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                     {
                         // recursive registration of new ComboState i of transition
                         // cannot be initial (TODO AV)
-                        State news = addComboState(ComboState(t.at(i), vt[i], rp, rrs[i]));
+                        State news = addComboState(ComboState(t.at(i), vp[i], rp, rrs[i]));
                         newt.add(news);
                         rp = rrs[i]; // next rp is current rr
                     }
                     // recursive registration of last ComboState of transition
-                    State news = addComboState(ComboState(t.at(a-1), vt[a-1], rp, rr));
+                    State news = addComboState(ComboState(t.at(a-1), vp[a-1], rp, cs.cs_rr));
                     newt.add(news);
                     assert(newt.inner());
                     assert(newt.size() == a);
@@ -233,7 +245,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                     for (int i = 0; ; )
                     {
                         rrs[i]++;
-                        if (rrs[i] >= vt[i]->root->r_size()) // we reach max value for rr[i]
+                        if (rrs[i] > vp[i]->root->r_size()) // we reach max value for rr[i]
                         {
                             if (i+1 == a-1)   // we have constructed all possible rrs
                             {
