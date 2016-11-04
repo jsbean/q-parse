@@ -9,46 +9,46 @@
 #include "Path.hpp"
 
 
-Path::Path(unsigned int b, unsigned int l):_begin(b), _len(l)
+Path::Path(size_t b, size_t l):_begin(b), _len(l)
 {
     assert (b >= 0);
     assert (l > 0);
 }
 
-unsigned int Path::begin() const
+size_t Path::begin() const
 {
     return _begin;
 }
 
-unsigned int Path::end() const
+size_t Path::end() const
 {
     assert(_len > 0);
     return _begin + _len - 1;
 }
 
-unsigned int Path::length() const
+size_t Path::length() const
 {
     return _len;
 }
 
-bool Path::member(unsigned int p)
+bool Path::member(size_t p)
 {
     return ((_begin <= p) && (p < _begin+_len));
 }
 
-bool Path::aligned(unsigned int p)
+bool Path::aligned(size_t p)
 {
     double mid = _begin + (_len / 2);
     return ((_begin <= p) && (p <= mid));
 }
 
-Path* Path::sub(unsigned int n, unsigned int i)
+Path* Path::sub(size_t n, size_t i)
 {
     assert (n > 0);
     assert (i > 0);
     // the interval length must be divisible by n
     assert ((_len % n) == 0);
-    int len = _len / n;
+    size_t len = _len / n;
     
     return new Path((_begin + ((i-1)* len)), len);
 }
@@ -57,13 +57,13 @@ Path* Path::sub(unsigned int n, unsigned int i)
 
 
 
-unsigned int Alignment::align(unsigned int b)
+size_t Alignment::align(size_t b)
 {
-    size_t m = _seg.size(); // cast size_t (unsigned long) into unsigned int
-    int mid = _begin + (_len / 2);
-    int end = _begin + _len;
+    size_t m = _seg.size(); // cast size_t (unsigned long) into size_t
+    size_t mid = _begin + (_len / 2);
+    size_t end = _begin + _len;
     int c = 0;
-    unsigned int i;
+    size_t i;
 
     // pre-cond: the first point must be after the left bound of the interval
     assert ((b >= m) || _seg.date(b) >= _begin);
@@ -142,7 +142,7 @@ Alignment::Alignment(const Segment& s) :_seg(s)
 }
 
 
-Alignment::Alignment(const Segment& s, unsigned int b, unsigned int l):Path(b,l),_seg(s)
+Alignment::Alignment(const Segment& s, size_t b, size_t l):Path(b,l),_seg(s)
 {
     _res = s.resolution();
     assert (b+l <= _res);
@@ -163,7 +163,7 @@ Alignment::~Alignment()
 //}
 
 
-vector<Alignment*> Alignment::subs(unsigned int n) const
+vector<Alignment*> Alignment::subs(size_t n) const
 {
     assert (n > 1);
     assert ((_len % n) == 0); // this interval length must be divisible by n
@@ -173,11 +173,11 @@ vector<Alignment*> Alignment::subs(unsigned int n) const
 
 
     vector<Alignment*> v;
-    int len = _len / n;
-    int b = _begin;
-    unsigned int j = _seg_lbeg;
+    size_t len = _len / n;
+    size_t b = _begin;
+    size_t j = _seg_lbeg;
     
-    for (unsigned int i=0; i < n; i++)
+    for (size_t i=0; i < n; i++)
     {
         Alignment* p = new Alignment(_seg, b, len);
         v.push_back(p);
@@ -188,9 +188,6 @@ vector<Alignment*> Alignment::subs(unsigned int n) const
     assert (v.size() == n);
     return v;
 }
-
-
-
 
 
 AlignmentTree::AlignmentTree()
@@ -208,7 +205,7 @@ AlignmentTree::AlignmentTree(const Segment& s)
 AlignmentTree::~AlignmentTree()
 {
     // recursive destruction
-    for (map<int, vector<AlignmentTree*>>::iterator i = _children.begin();
+    for (map<size_t, vector<AlignmentTree*>>::iterator i = _children.begin();
          i != _children.end(); ++i)
     {
         vector<AlignmentTree*> v = i->second;
@@ -221,7 +218,7 @@ AlignmentTree::~AlignmentTree()
 }
 
 
-vector<AlignmentTree*> AlignmentTree::children(int a)
+vector<AlignmentTree*> AlignmentTree::children(size_t a)
 {
     assert (a > 1);
     // create an empty vector if it is not found
@@ -235,11 +232,11 @@ vector<AlignmentTree*> AlignmentTree::children(int a)
         assert(root->_begin < root->_res);
         assert(root->_begin + root->_len <= root->_res);
         
-        int len = root->_len / a;
-        int b = root->_begin;
-        unsigned int j = root->_seg_lbeg;
+        size_t len = root->_len / a;
+        size_t b = root->_begin;
+        size_t j = root->_seg_lbeg;
         
-        for (unsigned int i = 0; i < a; i++)
+        for (int i = 0; i < a; i++)
         {
             // create sub-Alignment starting at b
             Alignment* p = new Alignment(root->_seg, b, len);

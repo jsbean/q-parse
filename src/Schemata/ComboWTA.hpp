@@ -90,17 +90,17 @@ class Segment;
 
 
 // tmp state structure for construction of ComboWTA
-// casted into unsigned int (state index)
+// casted into size_t (state index)
 class ComboState
 {
 public:
 
     ComboState();
     
-    ComboState(State, AlignmentTree*, int rp=0, int rr=0);
+    ComboState(State, AlignmentTree*, size_t rp=0, size_t rr=0);
 
     // NOT USED? TODO: REM
-    ComboState(const ComboState&, int rp=0, int rr=0);
+    ComboState(const ComboState&, size_t rp=0, size_t rr=0);
 
     ~ComboState();
     
@@ -112,10 +112,10 @@ public:
     AlignmentTree* cs_path;
     
     // guess number of points aligned to right of previous segment
-    unsigned int cs_rp;
+    size_t cs_rp;
     
     // guess number of points aligned to right of current segment
-    unsigned int cs_rr;
+    size_t cs_rr;
     
     // cs_key const key();
     
@@ -129,7 +129,7 @@ public:
     
 private:
     //cs_key _hash;
-    unsigned int _hash[5];
+    size_t _hash[5];
     
     static int const _hash_len = 5;
     
@@ -145,7 +145,7 @@ class ComboWTA: public WTA
 public:
     
     // construction from input segment and WTA (base schema)
-    ComboWTA(const Segment&, const WTA&, unsigned int rp=0);
+    ComboWTA(const Segment&, const WTA&, size_t rp=0);
    
 private:
     // Global variables for the ComboWTA construction

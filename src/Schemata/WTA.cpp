@@ -53,7 +53,7 @@ size_t Transition::size() const
 }
 
 
-State Transition::at(int i) const
+State Transition::at(size_t i) const
 {
     assert (0 <= i);
     assert (i < _body.size());
@@ -427,7 +427,7 @@ TransitionList WTA::at(State s) const
 //}
 
 
-unsigned int gcd(unsigned int a, unsigned int b)
+size_t gcd(size_t a, size_t b)
 {
     if( b == 0 )
         return a;
@@ -435,7 +435,7 @@ unsigned int gcd(unsigned int a, unsigned int b)
 }
 
 
-unsigned int lcm(unsigned int a, unsigned int b)
+size_t lcm(size_t a, size_t b)
 {
     return a*b / gcd(a,b);
 }
@@ -443,18 +443,18 @@ unsigned int lcm(unsigned int a, unsigned int b)
 
 // over approx.
 // could be optimized
-unsigned int WTA::resolution() const
+size_t WTA::resolution() const
 {
     // start with copy of initial state set
     set<State>* from = new set<State>(initials);
     // initialy empty
     set<State>* reach = new set<State>();
 
-    unsigned int res = 1;
+    size_t res = 1;
 
     while (! from->empty())
     {
-        unsigned int res1 = 1;
+        size_t res1 = 1;
         // for all state in reached set
         for (set<State>::iterator is = from->begin();
              is != from->end(); ++is)

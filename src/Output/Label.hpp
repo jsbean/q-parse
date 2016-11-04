@@ -59,9 +59,9 @@ public:
     LabelKind kind() const { return _type; };
     
     // return the number of grace node encoded in given leaf label
-    static int nbGraceNotes(unsigned int);
+    static size_t nbGraceNotes(size_t);
     
-    static bool continuation(unsigned int);
+    static bool continuation(size_t);
 
     // return true if this node is a leaf and a rest
     //bool isRest() const;
@@ -110,11 +110,11 @@ public:
     EventLabel(int n=0);
     
     // to be called only on a leaf
-    int nbGraceNotes() const;
+    size_t nbGraceNotes() const;
 
     // add number of grace notes given in param
     // the type of this Label must be NOTE
-    void addGraceNotes(int);
+    void addGraceNotes(size_t);
     
     void pushEvent(Event*);
 
@@ -122,7 +122,7 @@ private:
     // number of events (grace notes + note)
     // 0 for tie
     // > 0 for grace notes + event
-    unsigned int _nbe;
+    size_t _nbe;
     
     // in MIDIcent
     // not used

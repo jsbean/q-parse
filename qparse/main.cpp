@@ -27,7 +27,7 @@ double duration(clock_t start)
 int main(int argc, const char * argv[])
 {
     clock_t time_start;
-    clock_t time_end;
+    //clock_t time_end;
     
 // test WTA file IO
     assert (argc >= 2);
@@ -46,7 +46,7 @@ int main(int argc, const char * argv[])
     cout << *ta;
 
     time_start = clock();
-    unsigned int res = ta->resolution();
+    size_t res = ta->resolution();
     cout << "time to compute resolution : ";
     cout << duration(time_start) << "ms \n";
     std::cout << "\nresolution = " << res << '\n';

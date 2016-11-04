@@ -96,7 +96,7 @@ public:
 
     // at(i) returns the ith state in the body
     // i must be an index of the body
-    State at(int) const;
+    State at(size_t) const;
     
     // add given State at the end of the body of this transition
     void add(State);
@@ -217,7 +217,7 @@ public:
     // the state is an initial state
     bool isInitial(State) const;
     
-    unsigned int resolution() const;
+    size_t resolution() const;
     
     // add(s, i) register state s
     // if s was already registered, return a reference to its transition list.

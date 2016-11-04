@@ -27,14 +27,14 @@ int Label::arity() const
 }
 
 
-int Label::nbGraceNotes(unsigned int n)
+size_t Label::nbGraceNotes(size_t n)
 {
     if (n > 0)
         return n - 1;
     else return 0;  // 1 event or 0 event (continuation)
 }
 
-bool Label::continuation(unsigned int n)
+bool Label::continuation(size_t n)
 {
     return (n == 0);
 }
@@ -91,13 +91,13 @@ EventLabel::EventLabel(int n):_nbe(n)
         _type = EVENT;
 }
 
-int EventLabel::nbGraceNotes() const
+size_t EventLabel::nbGraceNotes() const
 {
     assert(isLeaf());
     return (Label::nbGraceNotes(_nbe));
 }
 
-void EventLabel::addGraceNotes(int g)
+void EventLabel::addGraceNotes(size_t g)
 {
     assert (_type == EVENT);
     assert (g >=0);

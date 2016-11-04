@@ -17,10 +17,10 @@ Distance::Distance(const Alignment& p)
 {
     const Segment& s = p.input();
 //    const size_t m = p.input()->size();
-    const int b = p.begin();
-    const int e = p.end();
-    const int ll = p.l_size();
-    const int rl = p.r_size();
+    const size_t b = p.begin();
+    const size_t e = p.end();
+    const size_t ll = p.l_size();
+    const size_t rl = p.r_size();
     
     _val = 0;
 
@@ -49,7 +49,7 @@ Distance::Distance(const Alignment& p)
     }
     
     //normalization
-    const int r = p.input().resolution();
+    const size_t r = p.input().resolution();
     const size_t d = p.input().size();
 
     _val *= (2 / (d*r)); // TBC

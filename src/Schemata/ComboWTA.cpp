@@ -16,7 +16,7 @@ ComboState::ComboState():cs_state(0), cs_rp(0), cs_rr(0)
 }
 
 
-ComboState::ComboState(State s, AlignmentTree* t, int rp, int rr):
+ComboState::ComboState(State s, AlignmentTree* t, size_t rp, size_t rr):
 cs_state(s),
 cs_path(t),
 cs_rp(rp),
@@ -27,7 +27,7 @@ cs_rr(rr)
 }
 
 
-ComboState::ComboState(const ComboState& cs, int rp, int rr):
+ComboState::ComboState(const ComboState& cs, size_t rp, size_t rr):
 cs_state(cs.cs_state),
 cs_path(cs.cs_path),
 cs_rp(rp),
@@ -61,7 +61,7 @@ bool ComboState::operator==(const ComboState& s) const
     return true;
 }
 
-// lexicographic comparison on hash value (unsigned int[5])
+// lexicographic comparison on hash value (size_t[5])
 bool ComboState::operator<(const ComboState& s) const
 {
     for (int i = 0; i < _hash_len; i++)
@@ -201,7 +201,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
             assert (vp.size() == a);
             // conditions: rr must be propagated from target cs to rightmost child
             // i.e. rr_a = rr
-            int maxrr = vp[a-1]->root->r_size(); // rsize for the last element of vp
+            size_t maxrr = vp[a-1]->root->r_size(); // rsize for the last element of vp
             if (cs.cs_rr <= maxrr) // is the max possible rr for rightmost child (propagated rr)
             {
                 // the weight is a combination of null distance and the weight w of the original schema transition
@@ -212,8 +212,8 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 // this aux. vector will store all the possible values
                 // of the a-1 first rr of child ComboStates,
                 // between 0 and the max allowed rr value defined in vp (r_size)
-                //unsigned int rrs[a-1];
-                vector<unsigned int> rrs(a-1);
+                //size_t rrs[a-1];
+                vector<size_t> rrs(a-1);
                 // initialized to null vector
                 for (int i = 0; i < a-1; i++)
                     rrs[i] = 0;
@@ -225,7 +225,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
                 {
                     // construct and add a new transition defined by the current rrs vector and computed Alignment's
                     Transition newt = Transition(Distance(w)); // new transition for ComboWTA
-                    unsigned int rp = cs.cs_rp; // propagation of rp from target cs to leftmost child
+                    size_t rp = cs.cs_rp; // propagation of rp from target cs to leftmost child
                     for(int i = 0; i < a-1; i++)
                     {
                         // recursive registration of new ComboState i of transition
@@ -272,7 +272,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 }
 
 
-ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, unsigned int rp):
+ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, size_t rp):
 _schema(schema)
 {
     _statemap.clear();
@@ -291,8 +291,8 @@ _schema(schema)
     for (State s : schema.initials)
     {
 //        State s = *it;
-        unsigned int max_rr = full->r_size();
-        for (unsigned int rr = 0; rr <= max_rr; rr++)
+        size_t max_rr = full->r_size();
+        for (size_t rr = 0; rr <= max_rr; rr++)
         {
             // arbitrarily
             ComboState cs = ComboState(s, _tree, rp, rr);

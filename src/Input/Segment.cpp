@@ -13,7 +13,7 @@
 
 
 
-Segment::Segment(double b, double e, unsigned int r):_begin(b),_end(e),_res(r)
+Segment::Segment(double b, double e, size_t r):_begin(b),_end(e),_res(r)
 {
     assert(r >= 1);
     assert(_begin <= _end);
@@ -23,7 +23,7 @@ Segment::Segment(double b, double e, unsigned int r):_begin(b),_end(e),_res(r)
 }
 
 
-Segment::Segment(string filename, unsigned int r):_res(r)
+Segment::Segment(string filename, size_t r):_res(r)
 {
     assert(r >= 1);
 
@@ -91,7 +91,7 @@ size_t Segment::size() const
     return _date.size();
 }
 
-unsigned int Segment::date(size_t i) const
+size_t Segment::date(size_t i) const
 {
     assert(i < _date.size());
     return _date[i];
