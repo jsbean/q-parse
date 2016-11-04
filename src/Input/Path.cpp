@@ -34,7 +34,7 @@ size_t Path::begin() const
 size_t Path::end() const
 {
     assert(_len > 0);
-    return _begin + _len - 1;
+    return _begin + _len;
 }
 
 size_t Path::length() const
@@ -57,7 +57,7 @@ bool Path::aligned(size_t p)
 size_t Alignment::align(size_t b)
 {
     size_t m = _seg.size(); // cast size_t (unsigned long) into size_t
-    size_t mid = _begin + (_len / 2);
+    double mid = double(_begin) + (double(_len) / 2);
     size_t end = _begin + _len;
     int c = 0;
     size_t i;
