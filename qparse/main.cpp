@@ -34,20 +34,21 @@ int main(int argc, const char * argv[])
     assert (argc >= 2);
     std::cout << "\n==== Read schema WTA from " << argv[1] << '\n';
 
-    WTA* ta = new WTA(argv[1]);
-//    ta->print();  // cout << ta;
+    WTA* schema = new WTA(argv[1]);
+    schema->print();
+    cout << *schema;
 
     cout << "\n==== Clean schema:\n";
     time_start = clock();
-    ta->clean();
+    schema->clean();
     //time_end = clock();
     cout << "time to clean WTA : ";
     cout << duration(time_start) << "ms \n";
-    ta->print();
-    cout << *ta;
+    schema->print();
+    cout << *schema;
 
     time_start = clock();
-    size_t res = ta->resolution();
+    size_t res = schema->resolution();
     cout << "time to compute resolution : ";
     cout << duration(time_start) << "ms \n";
     std::cout << "\nresolution = " << res << '\n';
@@ -60,25 +61,40 @@ int main(int argc, const char * argv[])
 
     std::cout << "\n==== COnstruction COmbo\n";
     time_start = clock();
-    ComboWTA* combo = new ComboWTA(seg, *ta, 0);
+    ComboWTA* combo = new ComboWTA(seg, *schema, 0);
     cout << "time to compute ComboWTA : ";
     cout << duration(time_start) << "ms \n";
 
-    delete ta;
+    delete schema;
 
     cout << "\nCombo:\n";
     combo->print();
     cout << *combo;
     
-    cout << "\n==== Clean Combo:\n";
-    time_start = clock();
-    combo->clean();
-    cout << "time to clean ComboWTA : ";
-    cout << duration(time_start) << "ms \n";
-    combo->print();
-    cout << *combo;
+//    cout << "\n==== Clean Combo:\n";
+//    time_start = clock();
+//    combo->clean();
+//    cout << "time to clean ComboWTA : ";
+//    cout << duration(time_start) << "ms \n";
+//    combo->print();
+//    cout << *combo;
 
+
+// test 1-best
+    cout << "\n==== 1-best for all of " << schema->initials.size() << " initials\n";
+    time_start = clock();
+    Ktable<WeightMax> kt0 = Ktable<WeightMax>(schema);
+    iRun r = kt0.best(1);
+    cout << "weight 1-best = ";
+    if (r.unknown()) { cout << "NaN\n"; }
+    else { cout << r.weight << "\n"; }
     
+    cout << "time to 1-best for all initial states ComboWTA : ";
+    cout << duration(time_start) << "ms \n";
+
+    return 0;
+
+
 // test k-best
     cout << "\n==== 1-best for each of " << combo->initials.size() << " initials\n";
     time_start = clock();
