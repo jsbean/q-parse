@@ -215,7 +215,13 @@ public:
     bool isRegistered(State) const;
     
     // the state is an initial state
+    // TBR
     bool isInitial(State) const;
+    
+    // initial(pre, post)
+    // pre and post are use for quantification and ignored in this version
+    // (useless for schemas)
+    virtual State initial(size_t pre=0, size_t post=0) const { return _initial; }
     
     size_t resolution() const;
     
@@ -284,22 +290,26 @@ public:
     // print sizes and table content to std output
     void print();
     
+    
     // set of initial states
+    // TBR
     std::set<State> initials;
 
     
 protected:
 
-    // number of transitions
-    size_t _cpt_tr;
-
-    // full size (number of occurences of states)
-    size_t _cpt_size;
-
     // transition table
     //map<State,vector<Transition*>> _table;
     map<State, TransitionList> _table;
+
+    State _initial;
     
+    // number of transitions
+    size_t _cpt_tr;
+    
+    // full size (number of occurences of states)
+    size_t _cpt_size;
+
     // add(s, sl, w) add a new transition of head s and body sl and weight w
     // if s is not registered, it is added to the table.
     // returns a pointer to the created transition.

@@ -146,6 +146,17 @@ public:
     
     // construction from input segment and WTA (base schema)
     ComboWTA(const Segment&, const WTA&, size_t rp=0);
+    
+    inline size_t max_pre() const { return _max_pre; }
+
+    inline size_t max_post() const { return _max_post; }
+
+    
+    // initial(pre, port) returns state representing the whole segment,
+    // with pre points of the previous segment aligned to the left
+    // and post points of the current segment aligned to the right
+    // (i.e. to the left of the next segment)
+    State initial(size_t pre=0, size_t post=0) const;
    
 private:
     // Global variables for the ComboWTA construction
@@ -165,7 +176,14 @@ private:
     // the ComboStates use th epointers stored in this tree
     Alignment* _tree;
     
-    // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs if there is one
+    vector<vector<State>> _initials;
+    
+    size_t _max_pre;
+    size_t _max_post;
+    
+    
+    // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs
+    // if there exists one.
     // otherwise:
     //     a new ComboWTA state s is created,
     //     s is associated to cs,

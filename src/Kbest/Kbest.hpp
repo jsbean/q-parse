@@ -265,21 +265,31 @@ public:
         }
     }
     
+    // shortcut: k-best of initial state
+    Run best(size_t k)
+    {
+        return best(_wta->initial(), k);
+    }
+
+    // shortcut
+    Run best(size_t pre, size_t post, size_t k)
+    {
+        return best(_wta->initial(pre, post), k);
+    }
     
-    // best(k)
-    // returns the kth best for all initial states.
+    // best(S, k)
+    // returns the kth best for all states in the given set.
     // return an empty run of weight 0 when there exists less than k best
     // for initial states.
-    iRun best(size_t k)
+    // TBR?
+    iRun best(set<State> S, size_t k)
     {
         assert (k > 0);
         
         // initialization
         if (! _init)
         {
-            //            for (set<State>::iterator i = _wta->initials.begin();
-            //                 i != _wta->initials.end(); ++i)
-            for (State s : _wta->initials)
+            for (State s : S)
             {
                 pushinit(s, 1);
             }
@@ -308,7 +318,7 @@ public:
         
         // k-best run already computed
         if (_ibest.size() >= k)
-            return _ibest[k-1];  //return Run(_ibest[k-1]);
+            return _ibest[k-1];
         else
             return iRun();
         // ALT: tail recursive call return best(k)

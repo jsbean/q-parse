@@ -98,7 +98,3 @@ inline bool operator!=(const DurationList& lhs, const DurationList& rhs)
     return !operator==(lhs,rhs);
 }
 
-
-
-
-

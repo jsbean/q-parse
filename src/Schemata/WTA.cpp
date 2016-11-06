@@ -239,6 +239,8 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
     if(!file.is_open())
         throw "cannot open file";
     
+    bool firstline = true;
+    
     //read stream line by line
     for(string line; getline(file, line); )
     {
@@ -273,8 +275,15 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
 
         float val;
         if (!(in >> val)) continue; // parse error: skip line
-        // add transition to the table
+        
+        // one transition parsed from current line
+        // add this transition to the table
         // copy content of vector body to new transition
+        if (firstline)
+        {
+            _initial = s; // initial is the first target state read in the file
+            firstline = false;
+        }
         Transition t = Transition(body, Weight(val));
         assert(t.inner() || t.terminal());
         add(s, t);
@@ -284,6 +293,7 @@ WTA::WTA(string filename):_cpt_tr(0), _cpt_size(0)
             cout << Transition(body, Weight(val)) << "\n";
         }
     }
+    assert (! firstline); // at least one transition was parsed
     file.close();
     initials = { 0 };
 }

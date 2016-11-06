@@ -136,12 +136,25 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     _statemap[cs] = s;
     //register state
     TransitionList& tv = add(s, initial); // empty vector of Transitions
+ 
+    State q = cs.cs_state;                // current state in schema
+
+    // case of initial states
+    if (q == _schema.initial())
+    {
+        assert (_initials.size() > cs.cs_rp);
+        assert (_initials[cs.cs_rp].size() > cs.cs_rr);
+        _initials[cs.cs_rp][cs.cs_rr] = s;
+        if ((cs.cs_rp == 0) && (cs.cs_rr == 0))
+        {
+            _initial = s;
+        }
+    }
+    
     
     // add transitions to new state s
-
-    State q = cs.cs_state;              // current state in schema
-                                        // cs.cs_path is current node in tree
-    //Alignment* p = cs.cs_path->root;    // current Path (Alignment)
+    // cs.cs_path is current node in tree
+    // = current Path (Alignment)
 
     if (TRACE_LEVEL > 1)
     {
@@ -279,31 +292,43 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
 }
 
 
+State ComboWTA::initial(size_t pre, size_t post) const
+{
+    assert (_initials.size() > pre);
+    assert (_initials[pre].size() > post);
+    return _initials[pre][post];
+
+}
+
+
 ComboWTA::ComboWTA(const Segment& seg, const WTA& schema, size_t rp):
-_schema(schema)
+_schema(schema),
+_max_pre(rp)
 {
     _statemap.clear();
     _cpt = 0;
     _tree = new Alignment(seg);
-    
+
+    _max_post = _tree->r_size();
+    State init = _schema.initial();
+    _initials.resize(_max_pre + 1);
+
     // construction of initial ComboState's
     // with:
     // - initial schema state
     // - Alignment covering the whole segment
-    // - rr values between 0 and the number of points in second half of segment
-    // - rp given
-    for (State s : schema.initials)
+    // - _max_post values between 0 and the number of points in second half of segment
+    // - _max_pre values between 0 and the number given
+    for (size_t i = 0; i <= _max_pre; i++)
     {
-        size_t max_rr = _tree->r_size();
-        for (size_t rr = 0; rr <= max_rr; rr++)
+        _initials[i].resize(_max_post+1);
+        for (size_t j = 0; j <= _max_post; j++)
         {
-            // arbitrarily
-            ComboState cs = ComboState(s, _tree, rp, rr);
-            addComboState(cs, true);
+            addComboState(ComboState(init, _tree, i, j));
             // the other ComboState's will be added recursively
         }
     }
-
+    
     // end of construction
     // destroy all Alignments (Paths)
     delete _tree;

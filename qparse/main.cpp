@@ -52,7 +52,20 @@ int main(int argc, const char * argv[])
     cout << "time to compute resolution : ";
     cout << duration(time_start) << "ms \n";
     std::cout << "\nresolution = " << res << '\n';
-
+    
+    
+// test 1-best (compute max weight of schema)
+    cout << "\n==== 1-best for all of " << schema->initials.size() << " initials\n";
+    time_start = clock();
+    Ktable<WeightMax> kt0 = Ktable<WeightMax>(schema);
+    Run r = kt0.best(1);
+    cout << "weight 1-best (max) = ";
+    if (r.unknown()) { cout << "NaN\n"; }
+    else { cout << r.weight << "\n"; }
+    
+    cout << "time to 1-best (max) for initial state of schema : ";
+    cout << duration(time_start) << "ms \n";
+    
 // test Combo construction
     if (argc == 2) return 0;
     std::cout << "\n==== Read input segment from " << argv[2] << '\n';
@@ -80,52 +93,34 @@ int main(int argc, const char * argv[])
 //    cout << *combo;
 
 
-// test 1-best
-    cout << "\n==== 1-best for all of " << schema->initials.size() << " initials\n";
-    time_start = clock();
-    Ktable<WeightMax> kt0 = Ktable<WeightMax>(schema);
-    iRun r = kt0.best(1);
-    cout << "weight 1-best = ";
-    if (r.unknown()) { cout << "NaN\n"; }
-    else { cout << r.weight << "\n"; }
+
+
     
-    cout << "time to 1-best for all initial states ComboWTA : ";
-    cout << duration(time_start) << "ms \n";
-
-    return 0;
-
-
-// test k-best
-    cout << "\n==== 1-best for each of " << combo->initials.size() << " initials\n";
-    time_start = clock();
-    Ktable<WeightMin> kt = Ktable<WeightMin>(combo);
-    for (set<State>::iterator i = combo->initials.begin();
-         i != combo->initials.end(); ++i)
-    {
-        State s = *i;
-        Run r = kt.best(s, 1);
-        cout << "weight 1-best[" << s << "] = " << r.weight << " ";
-        cout << r.duration << "\n";
-    }
-    cout << "time to compute 1-best for every initial state ComboWTA : ";
-    cout << duration(time_start) << "ms \n";
     
-// test k-best for initials
-    int k = 50;
-    cout << "\n==== " << k << "-best for " << combo->initials.size() << " initials altogether\n";
+// test k-best for initial states of Combo
+    int k = 30;
     time_start = clock();
     Ktable<WeightMin> kkt = Ktable<WeightMin>(combo);
-    for (int i = k; i > 0; i--)
+    
+    for (size_t pre = 0; pre <= combo->max_pre(); pre++)
     {
-        iRun r = kkt.best(i);
-        if (! r.unknown())
+        for (size_t post = 0; post <= combo->max_post(); post++)
         {
-            cout << "weight " << i << "-best = " << r.weight;
-            cout << " (" << r.rank << "-best for state " << r.head << ") ";
-            cout << r.duration << "\n";
+            cout << "\n==== " << k << "-best for ";
+            cout << "pre=" << pre << " post=" << post << "\n";
+            for (int i = k; i > 0; i--)
+            {
+                Run r = kkt.best(pre, post, i);
+                if (! r.unknown())
+                {
+                    cout << "weight " << i << "-best = " << r.weight;
+                    cout << " " << r.duration << "\n";
+                }
+            }
         }
     }
-    cout << "time to " << k << "-best for all initial states ComboWTA : ";
+    
+    cout << "\ntime for " << k << "-best for all initial states ComboWTA : ";
     cout << duration(time_start) << "ms \n";
    
     delete combo;
