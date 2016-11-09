@@ -88,6 +88,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "input-03.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "input-04.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

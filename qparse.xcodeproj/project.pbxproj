@@ -10,6 +10,7 @@
 		320085B31DC9FBC500CF04C4 /* Rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 320085B11DC9FBC500CF04C4 /* Rational.cpp */; };
 		3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3215A7A01DBE5CCC00C2D868 /* Run.cpp */; };
 		323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 323C42541DB40F960037D0B1 /* ComboWTA.cpp */; };
+		324C96D41DD0DC960076F966 /* SubdivisionSchema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */; };
 		324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* main.cpp */; };
 		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
 		3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215A1DA40E4800D2C789 /* Distance.cpp */; };
@@ -42,6 +43,8 @@
 		3234444A1DBA62E20066FBDC /* CONSTANT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CONSTANT.h; path = ../src/CONSTANT.h; sourceTree = "<group>"; };
 		323C42541DB40F960037D0B1 /* ComboWTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComboWTA.cpp; path = ../src/Schemata/ComboWTA.cpp; sourceTree = "<group>"; };
 		323C42551DB40F960037D0B1 /* ComboWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWTA.hpp; path = ../src/Schemata/ComboWTA.hpp; sourceTree = "<group>"; };
+		324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SubdivisionSchema.cpp; path = ../src/Schemata/SubdivisionSchema.cpp; sourceTree = "<group>"; };
+		324C96D31DD0DC960076F966 /* SubdivisionSchema.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SubdivisionSchema.hpp; path = ../src/Schemata/SubdivisionSchema.hpp; sourceTree = "<group>"; };
 		324E4EBB1D9FC3B100114F39 /* qparse */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qparse; sourceTree = BUILT_PRODUCTS_DIR; };
 		324E4EBE1D9FC3B100114F39 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = qparse/main.cpp; sourceTree = "<group>"; };
 		325121541DA4065600D2C789 /* WTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WTA.cpp; path = ../src/Schemata/WTA.cpp; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				325121541DA4065600D2C789 /* WTA.cpp */,
 				323C42551DB40F960037D0B1 /* ComboWTA.hpp */,
 				323C42541DB40F960037D0B1 /* ComboWTA.cpp */,
+				324C96D31DD0DC960076F966 /* SubdivisionSchema.hpp */,
+				324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */,
 				320D8B691DBAA81A00767573 /* Kbest.hpp */,
 				32E1F2E61DCA47BE00A1782C /* DurationList.hpp */,
 				32E1F2E51DCA47BE00A1782C /* DurationList.cpp */,
@@ -185,6 +190,7 @@
 				32E1F2E71DCA47BE00A1782C /* DurationList.cpp in Sources */,
 				3262BBE01DA6415900796318 /* Event.cpp in Sources */,
 				324E4EBF1D9FC3B100114F39 /* main.cpp in Sources */,
+				324C96D41DD0DC960076F966 /* SubdivisionSchema.cpp in Sources */,
 				323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */,
 				32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */,
 				325121561DA4065600D2C789 /* WTA.cpp in Sources */,

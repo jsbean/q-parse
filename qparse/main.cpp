@@ -17,6 +17,7 @@
 
 //#include "ComboWTA.hpp"
 #include "Kbest.hpp"
+#include "SubdivisionSchema.hpp"
 
 
 double duration(clock_t start)
@@ -26,7 +27,19 @@ double duration(clock_t start)
 
 int main(int argc, const char * argv[])
 {
-
+    
+    ONode n2 = ONode(2);
+    ONode n3 = ONode(3);
+    ANode ex1 = ANode();
+    ex1.add(n2);
+    ex1.add(n3);
+    ex1.add(n2);
+    
+    dagSchema dex1 = dagSchema(ex1);
+    
+    return 0;
+    
+    
     clock_t time_start;
     //clock_t time_end;
     
@@ -93,9 +106,6 @@ int main(int argc, const char * argv[])
 //    cout << *combo;
 
 
-
-
-    
     
 // test k-best for initial states of Combo
     int k = 30;

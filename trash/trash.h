@@ -13,6 +13,15 @@
 #endif /* trash_h */
 
 
+// test schema convertion
+dagSchema sche = dagSchema();
+sche.add(ds_transition(0, 2, 2));
+sche.add(ds_transition(2, 2, 3));
+sche.add(ds_transition(2, 3, 3));
+sche.add(ds_transition(2, 5, 3));
+sche.add(ds_transition(3, 3, 1));
+
+sche.rename(2, 4);
 
 
 
