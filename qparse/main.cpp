@@ -27,32 +27,6 @@ double duration(clock_t start)
 
 int main(int argc, const char * argv[])
 {
-    // (2 2 3) = 2.2.3
-    ONode on2 = ONode(2);
-    ONode on3 = ONode(3);
-    ANode ex1 = ANode();
-    ex1.add(on2);
-    ex1.add(on3);
-    ex1.add(on2);
-    dagSchema dex1 = dagSchema(ex1);
-
-    // (2 (2 3 5) 3) = 2.(2|3|5).3
-    ANode an2 = ANode(2);
-    ANode an3 = ANode(3);
-    ANode an5 = ANode(5);
-    ONode on235 = ONode();
-    on235.add(an2);
-    on235.add(an3);
-    on235.add(an5);
-    ANode ex2 = ANode();
-    ex2.add(on2);
-    ex2.add(on235);
-    ex2.add(on3);
-    dagSchema dex2 = dagSchema(ex2);
-  
-    
-    return 0;
-    
     
     clock_t time_start;
     //clock_t time_end;

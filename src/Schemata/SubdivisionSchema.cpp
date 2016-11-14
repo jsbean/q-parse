@@ -13,6 +13,8 @@
 void ds_transition::rename(unsigned int i, unsigned int j)
 {
     assert (dst_source != dst_target);
+    assert (dst_source != j);
+    assert (dst_target != j);
     if (dst_source == i) { dst_source = j; }
     if (dst_target == i) { dst_target = j; }
     assert (dst_source != dst_target);
@@ -21,48 +23,20 @@ void ds_transition::rename(unsigned int i, unsigned int j)
 
 void ds_transition::shift(unsigned int n)
 {
-    if (dst_source > 1) { dst_source += n; }
-    if (dst_target > 1) { dst_target += n; }
+    dst_source += n;
+    dst_target += n;
 }
 
 
-
-
-dagSchema& dagSchema::operator+=(dagSchema& rhs)
+void ds_transition::shift0(unsigned int n)
 {
-    _table.insert(_table.end(), rhs._table.begin(), rhs._table.end());
-    unsigned int tm = max();
-    unsigned int rm = rhs.max();
-    _max_state = (tm >= rm)?tm:rm;
-    return *this; // return the result by reference
+    if (dst_source > 0) { dst_source += n; }
+    if (dst_target > 0) { dst_target += n; }
 }
 
 
-// collage par fusion source de this avec source de rhs
-// et target de this avec target de rhs.
-dagSchema& dagSchema::operator/=(dagSchema& rhs)
-{
-    rhs.shift(rhs.max());
-    // union of tables
-    _table.insert(_table.end(), rhs._table.begin(), rhs._table.end());
-    return *this; // return the result by reference
-}
 
-// concatenation par fusion target de this avec source de rhs.
-// le source est le source de this, la target est la target de rhs.
-dagSchema& dagSchema::operator*=(dagSchema& rhs)
-{
-    unsigned int tm = max();
-    unsigned int rm = rhs.max();
-    unsigned int m = (tm >= rm)?tm:rm;
-    untarget(m+1);
-    rhs.unsource(m+1);
-    rhs.shift(m);
-    // union of tables
-    _table.insert(_table.end(), rhs._table.begin(), rhs._table.end());
-    _max_state =  rhs.max();
-    return *this; // return the result by reference
-}
+
 
 
 dagSchema::dagSchema(const ANode& an)
@@ -84,13 +58,11 @@ dagSchema::dagSchema(const ANode& an)
         for(; i !=  an.children.end(); ++i)
         {
             dagSchema next = dagSchema(*i);
-            unsigned int m = (max() >= next.max())?max():next.max();
-            next.shift(m);
-            untarget(m+1);
-            next.unsource(m+1);
-            // union of tables
+            unsigned int m = next.max();
+            next.shift(_max_state); // the source of next is shifted to _max_state
+            // union of tables into this _table
             _table.insert(_table.end(), next._table.begin(), next._table.end());
-            _max_state =  next.max();
+            _max_state += m;
         }
     }
 }
@@ -111,15 +83,22 @@ dagSchema::dagSchema(const ONode& on)
         dagSchema first = dagSchema(*i); // dagschema from first (ONode) children
         _table = first._table;
         _max_state = first._max_state;
+        assert (_max_state > 0);
         i++;
         for(; i !=  on.children.end(); ++i)
         {
             dagSchema next = dagSchema(*i);
-            unsigned int m = (max() >= next.max())?max():next.max();
-            next.shift(m);
+            unsigned int m = next.max();
+            assert (m > 0);
+            if ((_max_state >1) || (m > 1))
+            {
+                next.shift0(_max_state);
+                assert (next._max_state = _max_state + m);
+                rename(_max_state, _max_state+m);
+                _max_state += m;
+            }
             // union of tables
             _table.insert(_table.end(), next._table.begin(), next._table.end());
-            _max_state =  next.max();
         }
     }
 }
@@ -139,12 +118,21 @@ void dagSchema::rename(unsigned int i, unsigned int j)
     if (j > _max_state) { _max_state = j; }
 }
 
-
 void dagSchema::shift(unsigned int n)
 {
     for (int s = 0; s < _table.size(); s++)
     {
         _table[s].shift(n); // modif en place
+    }
+    _max_state += n;
+}
+
+void dagSchema::shift0(unsigned int n)
+{
+    assert (_max_state > 0);
+    for (int s = 0; s < _table.size(); s++)
+    {
+        _table[s].shift0(n); // modif en place
     }
     _max_state += n;
 }

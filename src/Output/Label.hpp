@@ -60,7 +60,10 @@ public:
     
     // return the number of grace node encoded in given leaf label
     static size_t nbGraceNotes(size_t);
-    
+
+    // return the leaf label encoding the given number of grace nodes
+    //static size_t leafLabel(size_t);
+
     static bool continuation(size_t);
 
     // return true if this node is a leaf and a rest

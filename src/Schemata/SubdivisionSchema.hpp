@@ -15,8 +15,9 @@
 
 #include <stdio.h>
 #include <assert.h>
-
 #include <vector>
+
+#include "Complexity.hpp"
 
 #endif /* SubdivisionSchema_hpp */
 
@@ -43,7 +44,7 @@
 // For example : ((2 3) ((2 3) ((3 5) 2))) means
 // (2 2 3) or (2 3 2) or (2 5 2) or (3 2 3) or (3 3 2) or (3 5 2).
 // ((2 3) ((2 3) ((3 5) 2))) = ∧(∨(2 3) ∨(∧(2 3) ∧(∨(3 5) 2)))
-//                           = (2 | 3) . ((2.3) | ((3|5).2))
+//                           = (2|3) . ((2.3) | ((3|5).2))
 //
 class AONode
 {
@@ -113,13 +114,19 @@ struct ds_transition
     
     void rename(unsigned int s, unsigned int u);
     
-    // increase source and target state by n, only if they are != 0, 1
+    // increase source and target state by n
     void shift(unsigned int n);
+
+    // increase source and target state by n, if they are not 0
+    void shift0(unsigned int n);
+
 };
 
 
 // dag whose edges are labeled by arity values
-// two distinguished nodes 0 and 1
+// two distinguished nodes:
+// a source node: 0
+// a target node: _max_state
 class dagSchema
 {
 public:
@@ -138,39 +145,6 @@ public:
         return (lm >= rm)?lm:rm;
     }
     
-    // union (compound assignment)
-    // is member to modify the private members
-    dagSchema& operator+=(dagSchema&);
-    
-    // parallel composition (compound assignment)
-    // is member to modify the private members
-    dagSchema& operator/=(dagSchema& rhs);
-    
-    // parallel composition (compound assignment)
-    // is member to modify the private members
-    dagSchema& operator*=(dagSchema& rhs);
-
-    
-    // friends defined inside class body are inline and are hidden from non-ADL lookup
-    // passing lhs by value helps optimize chained a+b+c
-    // otherwise, both parameters may be const references
-    friend dagSchema operator+(dagSchema lhs, dagSchema& rhs)
-    {
-        lhs += rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
-    }
-
-    friend dagSchema operator/(dagSchema lhs, dagSchema& rhs)
-    {
-        lhs /= rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
-    }
-
-    friend dagSchema operator*(dagSchema lhs, dagSchema& rhs)
-    {
-        lhs /= rhs; // reuse compound assignment
-        return lhs; // return the result by value (uses move constructor)
-    }
 
     // for testing. do not use
     void add(const ds_transition& dst);
@@ -186,16 +160,13 @@ private:
     // rename state i into state j
     void rename(unsigned int i, unsigned int j);
 
-    void unsource(unsigned int j) { rename(0, j); }
-
-    void untarget(unsigned int j) { rename(1, j); }
-
-
-    // rename every state s != 0, 1 into s + n
+    // rename every state s into s + n
+    // the result is not a dag-schema
     void shift(unsigned int n);
-    
-    void shift() { shift(_max_state); }
-    
+
+    // rename every state s into s + n except 0
+    void shift0(unsigned int n);
+
 };
 
 
