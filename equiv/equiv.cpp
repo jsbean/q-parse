@@ -94,8 +94,10 @@ int main(int argc, const char * argv[])
         Run r = kkt.best(i);
         if (! r.unknown())
         {
+            RhythmTree* t = kkt.tree(r);
             cout << i << "-best: ";
-            cout << kkt.tree(r)->to_string();
+            //cout << kkt.tree(r)->to_string();
+            cout << t->to_string();
             cout << " (weight=" << r.weight << ")";
             cout << " " << r.duration << "\n";
         }

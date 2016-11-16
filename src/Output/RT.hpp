@@ -25,9 +25,9 @@ public:
     
     ~RhythmTree();
 
-    bool inner() const { return _children.empty(); }
+    bool terminal() const { return _children.empty(); }
 
-    bool terminal() const { return (! inner()); }
+    bool inner() const { return (! terminal()); }
     
     // arity for inner node
     // label for terminal node
