@@ -20,7 +20,8 @@
 #include <assert.h>
 #include <array>
 #include <queue>
-#include <map>
+//#include <map>
+#include <unordered_map>
 
 #include "WTA.hpp"
 #include "DurationList.hpp"
@@ -53,9 +54,10 @@ public:
     
     ~ValueState();
     
-    State state() { return (_state); }
+    State state() const { return _state; }
 
-    DurationList* value() { assert(_tree); return (_tree->top); }
+    DurationList value() const { assert(_tree); return _tree->top; }
+    DurationTree* tree() const { assert(_tree); return _tree; }
     
     bool operator==(const ValueState& s) const;
     
@@ -72,7 +74,58 @@ private:
 };
 
 
+namespace std {
+    template <> struct hash<ValueState>
+    {
+        size_t operator()(const ValueState& vs) const
+        {
+            return hash<State>()(vs.state()) ^ hash<DurationList>()(vs.value());
+        }
+    };
+}
 
 
+
+// table of transitions
+// construction top-down, given an initial schema (WTA) and a DurationList
+class ValueWTA: public WTA
+{
+public:
+    
+    // construction from given initial duration list and WTA (base schema)
+    ValueWTA(const DurationList&, const WTA&);
+    
+    
+private:
+    // Global variables for the ComboWTA construction
+    
+    const WTA& _schema;
+    
+    // counter for new ComboWTA states
+    State _cpt;
+    
+    // map of ComboState into their index in ComboWTA
+    // tmp (only for constructor)
+    //unordered_map<cs_key, State, container_hasher> _statemap;
+    unordered_map<ValueState, State> _statemap;
+    
+    // tree of Alignments (Path with info on alignment to input segment)
+    // organized hierarchically by sub-alignments
+    // the ComboStates use th epointers stored in this tree
+    DurationTree* _tree;
+    
+    // addValueState(vs, flag) returns the ValueWTA state associated to the ValueState vs
+    // if there exists one.
+    // otherwise:
+    //     a new ValueWTA State s is created,
+    //     s is associated to vs,
+    //     s is added to the transition table
+    //     the ValueWTA transitions with head s are computed and added to the table
+    //     s is returned
+    State addValueState(const ValueState&, bool initial=false);
+    
+    bool compatible(State label, const ValueState& vs);
+    
+};
 
 

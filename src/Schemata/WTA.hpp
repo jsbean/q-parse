@@ -291,7 +291,7 @@ public:
     
     
     // set of initial states
-    // TBR
+    // TODO SUPPR
     std::set<State> initials;
 
     

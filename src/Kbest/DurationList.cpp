@@ -41,6 +41,48 @@ bool DurationList::single_event() const
     return ( _continuation.null() && (_main.size() == 1));
 }
 
+bool DurationList::event() const
+{
+    if ( _continuation.null() && (_main.size() >= 1))
+    {
+        list<Rational>::const_reverse_iterator i = _main.crbegin();
+        assert (i != _main.crend());
+        assert (*i >= 0);
+        // sequence of grace notes followed by non null event
+        if ( *i == 0 ) return false;
+        while (i != _main.crend())
+        {
+            assert (*i >= 0);
+            if ( *i > 0 ) return false;
+            ++i;
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+size_t DurationList::nbgn() const
+{
+    assert ( _continuation.null());
+    assert (_main.size() >= 1);
+    list<Rational>::const_reverse_iterator i = _main.crbegin();
+    assert (i != _main.crend());
+    size_t res = 0;
+    assert (*i > 0); // last element is the event
+    // previouses are the grace notes
+    while (i != _main.crend())
+    {
+        assert (*i == 0);
+        ++res;
+        ++i;
+    }
+    return res;        
+}
+
+
 bool DurationList::single_continuation() const
 {
     return ( (! _continuation.null()) && _main.empty());
@@ -115,20 +157,18 @@ DurationTree::~DurationTree()
     // the passed segment is not deleted
 }
 
-DurationTree::DurationTree(DurationList* d):top(d)
+DurationTree::DurationTree(const DurationList& d):top(d)
 {
-    assert(d);
-    _length = d->length();
+    _length = d.length();
 }
 
 DurationTree* DurationTree::sub(size_t a, size_t n)
 {
     assert (a > 1);
     assert (n < a);
-    assert (top);
-    assert (! top->empty());
-    assert (! top->single_event());
-    assert (! top->single_continuation());
+    assert (! top.empty());
+    assert (! top.single_event());
+    assert (! top.single_continuation());
 
     // creates an empty vector if there is none associated to a
     vector<DurationTree*>& v = _children[a];
@@ -138,25 +178,25 @@ DurationTree* DurationTree::sub(size_t a, size_t n)
         // length of each part of the division in a parts
         Rational len = _length/Rational(a);
         // copy
-        DurationList rest = *top;
+        DurationList rest(top);
         
         while (! rest.empty())
         {
             // we construct duration subtree by hand
             DurationTree* dt = new DurationTree();
-            dt->top = new DurationList();
+            dt->top = DurationList();
             dt->_length = len;
-            assert (dt->top->_main.empty());
+            assert (dt->top._main.empty());
             assert (dt->_children.empty());
 
             if (rest._continuation >= len)
             {
-                dt->top->_continuation = len;
+                dt->top._continuation = len;
                 rest._continuation -= len;
             }
             else
             {
-                dt->top->_continuation = rest._continuation;
+                dt->top._continuation = rest._continuation;
                 Rational accu = rest._continuation;
                 assert (! rest._main.empty());
                 Rational next;
@@ -165,13 +205,13 @@ DurationTree* DurationTree::sub(size_t a, size_t n)
                      next = rest._main.front())
                 {
                     accu += next;
-                    dt->top->add(next);
+                    dt->top.add(next);
                     rest._main.pop_front();
                     assert (! rest._main.empty());
                 }
                 if (accu + next == len)
                 {
-                    dt->top->add(next);
+                    dt->top.add(next);
                     rest._continuation = Rational(0);
                     rest._main.pop_front();
                 }
@@ -180,13 +220,13 @@ DurationTree* DurationTree::sub(size_t a, size_t n)
                     assert (accu < len);
                     // the next is split in 2 parts
                     // part 1 in current sub
-                    dt->top->add(len - accu);
+                    dt->top.add(len - accu);
                     // part 2 as continuation in next sub
                     rest._continuation = accu + next - len;
                     rest._main.pop_front();
                 }
             }
-            assert (dt->top->length() == dt->_length);
+            assert (dt->top.length() == dt->_length);
             v.push_back(dt);
         }
     }

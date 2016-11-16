@@ -50,8 +50,19 @@ public:
 
     bool empty() const;
     
+    size_t size() const { return (_main.size() + ((_continuation > 0)?1:0)); }
+    
+    Rational cont() const { return _continuation; }
+    
     // no continuation and only one event in the main list.
     bool single_event() const;
+
+    // no continuation and some grace notes (dur=0) + one event (dur>0) in the main list.
+    bool event() const;
+    
+    // number of grace note
+    // must be an event()
+    size_t nbgn() const;
 
     // one (non null) continuation and no event in the main list.
     bool single_continuation() const;
@@ -104,6 +115,18 @@ private:
 };
 
 
+namespace std {
+    template <> struct hash<DurationList>
+    {
+        size_t operator()(const DurationList& d) const
+        {
+            return (hash<size_t>()(d.size()) ^
+                    hash<double>()(toDouble(d.cont())));
+        }
+    };
+}
+
+
 inline bool operator==(const DurationList& lhs, const DurationList& rhs)
 {
     if ((lhs._continuation == rhs._continuation) &&
@@ -132,17 +155,19 @@ inline bool operator!=(const DurationList& lhs, const DurationList& rhs)
 
 
 
+
+
 // a tree container for duration lists,
 // to avoid recomputation of division of duration lists
 class DurationTree
 {
 public:
-    DurationTree():top(NULL) {};
-    DurationTree(DurationList* d);
+    DurationTree():top() {};
+    DurationTree(const DurationList& d);
     
     ~DurationTree();
     
-    DurationList* top;
+    DurationList top;
     
     DurationTree* sub(size_t, size_t);
     

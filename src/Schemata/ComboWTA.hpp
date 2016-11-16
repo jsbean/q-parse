@@ -183,14 +183,14 @@ private:
     size_t _max_post;
     
     
-    // toState(cs, flag) returns the ComboWTA state associated to the CoboState cs
+    // addComboState(cs, flag) returns the ComboWTA state associated to the CoboState cs
     // if there exists one.
     // otherwise:
     //     a new ComboWTA state s is created,
     //     s is associated to cs,
     //     s is added to the table
     //     the ComboWTA transitions with head s are computed and added to the table
-    //     r is returned
+    //     s is returned
     // moreover, the state is added to the initial state set of the ComboWTA if initial=true
     State addComboState(const ComboState&, bool initial=false);
     

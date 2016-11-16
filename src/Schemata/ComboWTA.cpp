@@ -111,6 +111,7 @@ bool ComboWTA::compatible(State label, const ComboState& cs, const Alignment* p)
 }
 
 
+// TODO suppr. flag initial
 State ComboWTA::addComboState(const ComboState& cs, bool initial)
 {
     if (TRACE_LEVEL > 1) { cout << "combo state: " << cs << " "; }
@@ -128,7 +129,7 @@ State ComboWTA::addComboState(const ComboState& cs, bool initial)
     if (TRACE_LEVEL > 1)
     {
         cout << " = state " << s;
-        if (initial) { cout << "*"; }
+        if (initial) { cout << "*"; }  //TODO if (cs._state == _schema._initial)
     }
     
     // add map of current ComboState to new State
@@ -331,7 +332,7 @@ _max_pre(rp)
     // end of construction
     // destroy all Alignments (Paths)
     delete _tree;
-    // destroy all Combostates
+    // destroy all ComboStates
     _statemap.clear();
 }
 
