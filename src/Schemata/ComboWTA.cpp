@@ -7,7 +7,6 @@
 //
 
 #include "ComboWTA.hpp"
-//#include "Distance.hpp"
 
 
 ComboState::ComboState():cs_state(0), cs_rp(0), cs_rr(0)

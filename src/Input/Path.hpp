@@ -75,7 +75,6 @@ protected:
 // of the points of an input segment
 class Alignment: public Path
 {
-    friend class AlignmentTree;
     
 public:
     
