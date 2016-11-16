@@ -97,6 +97,20 @@ void Run::reset()
     duration = DurationList();
 }
 
+size_t Run::arity()
+{
+    size_t a = _children.size();
+    switch (a)
+    {
+        case 0:
+        case 1:
+            return 0;
+            
+        default:
+            return a;
+    }
+}
+
 
 bpointer Run::at(size_t i) const
 {

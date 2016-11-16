@@ -17,6 +17,7 @@
 
 #include "ValueWTA.hpp"
 #include "Kbest.hpp"
+#include "RT.hpp"
 
 
 double duration(clock_t start)
@@ -93,7 +94,9 @@ int main(int argc, const char * argv[])
         Run r = kkt.best(i);
         if (! r.unknown())
         {
-            cout << "weight " << i << "-best = " << r.weight;
+            cout << i << "-best: ";
+            cout << kkt.tree(r)->to_string();
+            cout << " (weight=" << r.weight << ")";
             cout << " " << r.duration << "\n";
         }
     }

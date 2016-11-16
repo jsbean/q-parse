@@ -82,8 +82,8 @@ public:
     inline bool unknown() const { return weight.null(); }
     
     // return the number of children of this Run
-    // TODO modif for 0 or 2+ (case terminal = 0, not 1)
-    inline size_t arity() { return (_children.size()); }
+    // modif for 0 or > 2 (case terminal = 0, not 1)
+    size_t arity();
 
     
     // getState(i) returns the state component of the ith children

@@ -147,11 +147,6 @@ public:
             return best(k);     // tail recursive call for the case there is more than one best to construct
         }
     }
-
-    RhythmTree* tree(Run& r)
-    {
-        return NULL; // TODO
-    }
     
 private:
     
@@ -329,7 +324,30 @@ public:
     }
     
     
-    
+    RhythmTree* tree(Run& r)
+    {
+        assert (! r.null());
+        if (r.terminal())
+        {
+            return (new RhythmTree(r.label()));
+        }
+        else
+        {
+            assert (r.inner());
+            RhythmTree* res = new RhythmTree();
+            size_t a = r.arity();
+            assert (a > 1);
+            for (size_t i = 0; i < a; i++)
+            {
+                Run rsk = this->best(r.getState(i), r.getRank(i)); // best(s, k)
+                assert (rsk.inner() || rsk.terminal());
+                assert (! rsk.unknown());
+                res->add(tree(rsk));
+            }
+            return res;
+        }
+    }
+
 
 private:
     const WTA* _wta;
