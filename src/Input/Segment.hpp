@@ -17,12 +17,12 @@
 #define Segment_hpp
 
 #include <stdio.h>
-#include <vector>
 #include <assert.h>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 #include "Event.hpp"
 

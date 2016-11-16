@@ -56,12 +56,6 @@
 		320085B11DC9FBC500CF04C4 /* Rational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rational.cpp; path = ../src/Output/Rational.cpp; sourceTree = "<group>"; };
 		320085B21DC9FBC500CF04C4 /* Rational.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Rational.hpp; path = ../src/Output/Rational.hpp; sourceTree = "<group>"; };
 		3205BCA61DDC92CD005ADC89 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
-		3205BCAA1DDC92CE005ADC89 /* equiv.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = equiv.entitlements; sourceTree = "<group>"; };
-		3205BCAB1DDC92CE005ADC89 /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
-		3205BCAC1DDC92CE005ADC89 /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
-		3205BCAF1DDC92CE005ADC89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TodayViewController.xib; sourceTree = "<group>"; };
-		3205BCB11DDC92CE005ADC89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3205BCB31DDC92CE005ADC89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3205BCCE1DDC938D005ADC89 /* equiv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = equiv; sourceTree = BUILT_PRODUCTS_DIR; };
 		320D8B691DBAA81A00767573 /* Kbest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Kbest.hpp; path = src/Kbest/Kbest.hpp; sourceTree = SOURCE_ROOT; };
 		3215A7A01DBE5CCC00C2D868 /* Run.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Run.cpp; path = src/Kbest/Run.cpp; sourceTree = SOURCE_ROOT; };
@@ -122,34 +116,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3205BCA81DDC92CE005ADC89 /* equiv */ = {
-			isa = PBXGroup;
-			children = (
-				3205BCAB1DDC92CE005ADC89 /* TodayViewController.h */,
-				3205BCAC1DDC92CE005ADC89 /* TodayViewController.m */,
-				3205BCAE1DDC92CE005ADC89 /* TodayViewController.xib */,
-				3205BCB11DDC92CE005ADC89 /* Info.plist */,
-				3205BCB21DDC92CE005ADC89 /* InfoPlist.strings */,
-				3205BCA91DDC92CE005ADC89 /* Supporting Files */,
-			);
-			path = equiv;
-			sourceTree = "<group>";
-		};
-		3205BCA91DDC92CE005ADC89 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				3205BCAA1DDC92CE005ADC89 /* equiv.entitlements */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		324E4EB21D9FC3B000114F39 = {
 			isa = PBXGroup;
 			children = (
 				32C08BF31DDC9A6F0097158D /* equiv.cpp */,
 				324E4EBE1D9FC3B100114F39 /* qparse.cpp */,
 				324E4EBD1D9FC3B100114F39 /* Sources */,
-				3205BCA81DDC92CE005ADC89 /* equiv */,
 				3205BCA51DDC92CD005ADC89 /* Frameworks */,
 				324E4EBC1D9FC3B100114F39 /* Products */,
 			);
@@ -343,25 +315,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		3205BCAE1DDC92CE005ADC89 /* TodayViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3205BCAF1DDC92CE005ADC89 /* Base */,
-			);
-			name = TodayViewController.xib;
-			sourceTree = "<group>";
-		};
-		3205BCB21DDC92CE005ADC89 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3205BCB31DDC92CE005ADC89 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		3205BCCC1DDC938D005ADC89 /* Debug */ = {

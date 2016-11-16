@@ -31,9 +31,50 @@ _main()
     }
 }
 
+
+DurationList::DurationList(string filename)
+{
+    ifstream file;
+    
+    file.open(filename, ios_base::in);
+    if(!file.is_open())
+        throw "cannot open file";
+    
+    bool first = true;
+    
+    for(string line; getline(file, line); )
+    {
+        Rational d;
+        
+        // skip empty line
+        if (line.size() == 0) continue;
+        
+        istringstream in(line);   //make a stream from the line
+        if (!(in >> d)) continue; // parse error: skip line
+
+        if (first && (d < 0))
+        {
+            _continuation = d;
+            first = false;
+        }
+        else
+        {
+            assert (d >= 0);
+            add(d);
+        }
+    }
+    file.close();
+}
+
+
 bool DurationList::empty() const
 {
     return ( _continuation.null() && _main.empty());
+}
+
+bool DurationList::single_continuation() const
+{
+    return ( (! _continuation.null()) && _main.empty());
 }
 
 bool DurationList::single_event() const
@@ -80,12 +121,6 @@ size_t DurationList::nbgn() const
         ++i;
     }
     return res;        
-}
-
-
-bool DurationList::single_continuation() const
-{
-    return ( (! _continuation.null()) && _main.empty());
 }
 
 Rational DurationList::length() const
@@ -167,8 +202,9 @@ DurationTree* DurationTree::sub(size_t a, size_t n)
     assert (a > 1);
     assert (n < a);
     assert (! top.empty());
-    assert (! top.single_event());
     assert (! top.single_continuation());
+    assert (! top.single_event());
+    assert (! top.event());
 
     // creates an empty vector if there is none associated to a
     vector<DurationTree*>& v = _children[a];

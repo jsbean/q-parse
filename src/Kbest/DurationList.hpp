@@ -20,6 +20,10 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 #include <list>
 #include <map>
 #include <vector>
@@ -45,6 +49,13 @@ public:
 
     // copy of duration list where all elements are multiplied by given Ratio
     DurationList(const DurationList&, Rational);
+    
+    // read duration list from file
+    // one ratio per line
+    // if the first line is negative ratio, it is a continuation
+    // all other line must contain positive or null ratios
+    // the file must not be empty
+    DurationList(string);
 
     bool empty() const;
     
@@ -52,6 +63,9 @@ public:
     
     Rational cont() const { return _continuation; }
     
+    // one (non null) continuation and no event in the main list.
+    bool single_continuation() const;
+
     // no continuation and only one event in the main list.
     bool single_event() const;
 
@@ -61,9 +75,6 @@ public:
     // number of grace note
     // must be an event()
     size_t nbgn() const;
-
-    // one (non null) continuation and no event in the main list.
-    bool single_continuation() const;
     
     // sum of the elements of the duration list (including continuation)
     Rational length() const;

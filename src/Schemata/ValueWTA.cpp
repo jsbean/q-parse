@@ -48,11 +48,15 @@ bool ValueWTA::compatible(State label, const ValueState& vs)
 {
     return (
             // case of a continuation (tie)
-            (Label::continuation(label) && vs.value().single_continuation())
+            (Label::continuation(label) &&
+             vs.value().single_continuation())
            ||
-            // if it contains note and grace notes (no continuation):
-            // the label must be consistent with
-            // the duration list (# grace notes)
+            // case of single note (no grace notes, no continuation)
+            ((! Label::continuation(label)) &&
+             (Label::nbGraceNotes(label) == 0) &&
+              vs.value().single_event())
+           ||
+            // case of note and grace notes (no continuation)
             ((! Label::continuation(label)) && vs.value().event() &&
              (Label::nbGraceNotes(label) == vs.value().nbgn())));
 }
@@ -65,13 +69,13 @@ State ValueWTA::addValueState(const ValueState& vs, bool initial)
     unordered_map<ValueState, State>::const_iterator it = _statemap.find(vs);
     if (it != _statemap.end())
     {
-        if (TRACE_LEVEL > 1) { cout << " = state " << it->second << " (old)\n"; }
+        if (TRACE_LEVEL > 1) { cout << " = state " << it->second << " (done)\n"; }
         return it->second;
     }
     
     // otherwise, create new State
     State s = _cpt++;
-    if (TRACE_LEVEL > 1) { cout << " = state " << s; }
+    if (TRACE_LEVEL > 1) { cout << " = state " << s << "\n"; }
     
     // add map of current ComboState to new State
     _statemap[vs] = s;
@@ -103,8 +107,13 @@ State ValueWTA::addValueState(const ValueState& vs, bool initial)
             
             if (TRACE_LEVEL > 1)
             {
+                cout << "...";
                 cout << "lab=" << label << " ";
-                cout << "#gn=" << Label::nbGraceNotes(label) << " ";
+                //cout << "#gn=" << Label::nbGraceNotes(label) << " ";
+                cout << vs.value() << " ";
+                if (vs.value().single_continuation()) { cout << " (single cont) "; }
+                if (vs.value().single_event()) { cout << " (single event) "; }
+                if (vs.value().event()) { cout << " (event) "; }
             }
             if (compatible(label, vs))
             {
@@ -119,7 +128,10 @@ State ValueWTA::addValueState(const ValueState& vs, bool initial)
         }
         // inner schema transition:
         // add one inner transition to ValueWTA
-        else if (t.inner())
+        else if (t.inner() &&
+                 (! vs.tree()->top.single_continuation()) &&
+                 (! vs.tree()->top.single_event()) &&
+                 (! vs.tree()->top.event()))
         {
             assert (a > 1);
             Transition newt = Transition(w); // new transition for ValueWTA
