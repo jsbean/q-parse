@@ -15,8 +15,6 @@
 #include <math.h> 
 
 
-#endif /* Complexity_hpp */
-
 class Weight;
 
 class Penalty
@@ -35,3 +33,6 @@ public:
     static Weight gracenote(size_t);
       
 };
+
+
+#endif /* Complexity_hpp */

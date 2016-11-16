@@ -24,9 +24,6 @@
 #include "Run.hpp"
 
 
-#endif /* Kbest_hpp */
-
-
 
 // comparison class
 // one ordering for k-best to select the min weight run
@@ -358,3 +355,6 @@ private:
     
 };
 
+
+
+#endif /* Kbest_hpp */

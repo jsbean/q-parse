@@ -13,10 +13,6 @@
 #include <iostream>
 
 
-#endif /* Weight_hpp */
-
-
-
 // class for weights in automata transitions
 // can be used for weights in file (serialized WTA)
 class Weight
@@ -85,6 +81,8 @@ inline bool operator!=(const Weight& lhs, const Weight& rhs)
     return !operator==(lhs,rhs);
 }
 
+
+#endif /* Weight_hpp */
 
 
 

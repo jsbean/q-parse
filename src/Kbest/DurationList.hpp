@@ -26,8 +26,6 @@
 
 #include "Rational.hpp"
 
-#endif /* DurationList_hpp */
-
 using namespace std;
 
 
@@ -184,3 +182,4 @@ private:
 
 
 
+#endif /* DurationList_hpp */

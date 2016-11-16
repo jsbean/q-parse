@@ -17,9 +17,6 @@
 #include "segment.hpp"
 
 
-#endif /* Path_hpp */
-
-
 // a path defines an interval of positions in [0..RES]
 // where RES is the resolution associated to the given schema
 class Path
@@ -154,4 +151,7 @@ private:
     
 };
 
+
+
+#endif /* Path_hpp */
 

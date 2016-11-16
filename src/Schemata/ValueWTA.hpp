@@ -27,9 +27,6 @@
 #include "DurationList.hpp"
 #include "Label.hpp"
 
-#endif /* ValueWTA_hpp */
-
-
 using namespace std;
 
 class DurationList; // Rhythmic Value
@@ -128,4 +125,5 @@ private:
     
 };
 
+#endif /* ValueWTA_hpp */
 

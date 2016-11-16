@@ -17,10 +17,7 @@
 #include "Weight.hpp"
 #include "Path.hpp"
 
-#endif /* Distance_hpp */
-
 using namespace std;
-
 
 class Distance: public Weight
 {
@@ -60,3 +57,6 @@ private:
     
     //vector<double> _dist;
 };
+
+
+#endif /* Distance_hpp */

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>equiv.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>qparse.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>3205BCA31DDC92CD005ADC89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3205BCB81DDC938D005ADC89</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>324E4EBA1D9FC3B000114F39</key>
 		<dict>
 			<key>primary</key>

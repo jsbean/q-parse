@@ -23,11 +23,11 @@
 #include <assert.h>
 #include <vector>
 
+
 //#include "Event.hpp"
 
 #define MAX_AR 13
 
-#endif /* Label_hpp */
 
 using namespace std;
 
@@ -66,18 +66,6 @@ public:
 
     static bool continuation(size_t);
 
-    // return true if this node is a leaf and a rest
-    //bool isRest() const;
-    
-    // return true if this node is a leaf and a note
-    //bool isNote() const;
-    
-    // return true if this node is a leaf and a chord
-    //virtual bool isChord() const;
-    
-    // return true if this node is a leaf and a tie
-    //virtual bool isTie() const { return false; }
-    
 protected:
     
     LabelKind _type;
@@ -133,3 +121,7 @@ private:
     
 };
 
+
+
+
+#endif /* Label_hpp */

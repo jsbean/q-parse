@@ -25,7 +25,6 @@
 #include "WTA.hpp"
 #include "Label.hpp"
 
-#endif /* ComboWTA_hpp */
 
 using namespace std;
 
@@ -197,3 +196,8 @@ private:
     bool compatible(State label, const ComboState& cs, const Alignment* p);
     
 };
+
+
+
+#endif /* ComboWTA_hpp */
+

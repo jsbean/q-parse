@@ -13,8 +13,6 @@
 
 #include <iostream>
 
-#endif /* Rational_hpp */
-
 
 using namespace std;
 
@@ -135,3 +133,9 @@ bool operator>(const Rational& lhs, const Rational& rhs);
 ostream& operator<< (ostream& ostr, const Rational& r);
 istream& operator>> (istream& istr, Rational& r);
 
+
+
+
+
+
+#endif /* Rational_hpp */

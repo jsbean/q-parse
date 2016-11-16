@@ -10,6 +10,26 @@
 
 #include "Label.hpp"
 
+
+
+// static function
+//size_t Label::nbGraceNotes(size_t);
+size_t Label::nbGraceNotes(size_t n)
+{
+    if (n > 0)
+        return n - 1;
+    else return 0;  // 1 event or 0 event (continuation)
+}
+
+// static function
+//bool Label::continuation(size_t);
+bool Label::continuation(size_t n)
+{
+    return (n == 0);
+}
+
+
+
 Label::Label(int a): _ar(a)
 {
     assert (a >= 0);
@@ -26,47 +46,6 @@ int Label::arity() const
     return _ar;
 }
 
-
-size_t Label::nbGraceNotes(size_t n)
-{
-    if (n > 0)
-        return n - 1;
-    else return 0;  // 1 event or 0 event (continuation)
-}
-
-bool Label::continuation(size_t n)
-{
-    return (n == 0);
-}
-
-
-//bool Label::isRest() const
-//{
-//    if (_type == EVENT)
-//    {
-//        assert (_event);
-//        return (_event->kind() == REST);
-//    }
-//    else
-//        return false;
-//}
-//
-//bool Label::isNote() const
-//{
-//    if (_type == EVENT)
-//    {
-//        assert (_event != NULL);
-//        return (_event->kind() == REST);
-//    }
-//    else
-//        return false;
-//}
-//
-//bool Label::isTie() const
-//{
-//    assert (_ar >= 0);
-//    return ((_ar == 0) && (_type == TIE));
-//}
 
 
 InnerLabel::InnerLabel(int a)

@@ -26,10 +26,7 @@
 
 #include "Event.hpp"
 
-#endif /* Segment_hpp */
-
 using namespace std;
-
 
 class Segment
 {
@@ -81,3 +78,7 @@ private:
     vector<size_t> _date;
     
 };
+
+
+
+#endif /* Segment_hpp */

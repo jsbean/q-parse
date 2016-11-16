@@ -22,10 +22,6 @@
 #include "CONSTANT.h"
 
 
-#endif /* Event_hpp */
-
-
-
 enum EventKind
 {
     REST,
@@ -66,3 +62,5 @@ private:
 };
 
 
+
+#endif /* Event_hpp */

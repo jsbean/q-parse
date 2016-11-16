@@ -350,3 +350,53 @@ for (set<State>::iterator i = combo->initials.begin();
 cout << "time to compute 1-best for every initial state ComboWTA : ";
 cout << duration(time_start) << "ms \n";
 
+
+
+
+/////////////////////////////
+//LABEL
+/////////////////////////////
+
+
+// return true if this node is a leaf and a rest
+//bool isRest() const;
+
+// return true if this node is a leaf and a note
+//bool isNote() const;
+
+// return true if this node is a leaf and a chord
+//virtual bool isChord() const;
+
+// return true if this node is a leaf and a tie
+//virtual bool isTie() const { return false; }
+
+
+
+//bool Label::isRest() const
+//{
+//    if (_type == EVENT)
+//    {
+//        assert (_event);
+//        return (_event->kind() == REST);
+//    }
+//    else
+//        return false;
+//}
+//
+//bool Label::isNote() const
+//{
+//    if (_type == EVENT)
+//    {
+//        assert (_event != NULL);
+//        return (_event->kind() == REST);
+//    }
+//    else
+//        return false;
+//}
+//
+//bool Label::isTie() const
+//{
+//    assert (_ar >= 0);
+//    return ((_ar == 0) && (_type == TIE));
+//}
+

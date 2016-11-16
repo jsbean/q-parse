@@ -50,7 +50,6 @@
 
 #include "Distance.hpp" // includes class Weight
 
-#endif /* WTA_hpp */
 
 using namespace std;
 
@@ -323,4 +322,8 @@ protected:
     set<State> allstates();
     
 };
+
+#endif /* WTA_hpp */
+
+
 

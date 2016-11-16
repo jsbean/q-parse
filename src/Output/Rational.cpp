@@ -9,8 +9,8 @@
 #include <sstream>
 #include <stdlib.h>
 #include <math.h>
-#include "CONSTANT.h"
 
+#include "CONSTANT.h"
 #include "Rational.hpp"
 
 

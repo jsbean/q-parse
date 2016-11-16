@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-//#include "ComboWTA.hpp"
+#include "ComboWTA.hpp"
 #include "Kbest.hpp"
 #include "SubdivisionSchema.hpp"
 

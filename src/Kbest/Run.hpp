@@ -12,12 +12,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "ComboWTA.hpp"
+#include "WTA.hpp"
+#include "Label.hpp"
 #include "DurationList.hpp"
-
-#endif /* Run_hpp */
-
-
 
 
 struct bpointer
@@ -142,4 +139,6 @@ public:
 
 };
 
+
+#endif /* Run_hpp */
 

@@ -8,6 +8,7 @@
 
 #include "WTA.hpp"
 
+
 Transition::Transition(vector<State> v, const Weight& w):_weight(w),_body(v)
 {
     assert(v.size() > 0);

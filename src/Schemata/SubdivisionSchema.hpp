@@ -19,8 +19,6 @@
 
 #include "Complexity.hpp"
 
-#endif /* SubdivisionSchema_hpp */
-
 
 // AND-OR alternating nested lists used by Adrien in RQ.
 //
@@ -170,3 +168,6 @@ private:
 };
 
 
+
+
+#endif /* SubdivisionSchema_hpp */
