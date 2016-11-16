@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  qparse.cpp
 //  qparse
 //
 // https://github.com/florento/q-parse
