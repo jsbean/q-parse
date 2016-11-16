@@ -50,7 +50,7 @@ public:
     // inner node if arity > 0
     Label(int a=0);
     
-    int arity() const;
+    size_t arity() const;
     
     bool isLeaf() const { return (_ar == 0); };
 
@@ -71,7 +71,7 @@ protected:
     LabelKind _type;
 
     // arity (0 for leaf)
-    int _ar;
+    size_t _ar;
 
 };
 

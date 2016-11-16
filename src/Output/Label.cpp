@@ -39,7 +39,7 @@ Label::Label(int a): _ar(a)
         _type = TIE;
 };
 
-int Label::arity() const
+size_t Label::arity() const
 {
     assert(_ar >= 0);
     assert(_ar <= MAX_AR);

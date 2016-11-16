@@ -28,7 +28,7 @@ struct bpointer
 
 
 // a run is created from a transition,
-// it stores the weith of the parent transition (parent weight),
+// it stores the weight of the parent transition (parent weight),
 // a list of children represented by bpointers.
 // a current evaluated weight,
 // a list of relative durations.
@@ -37,15 +37,16 @@ struct bpointer
 // - null run:
 //   null parent weight, null current weight, no children, empty duration list.
 // - terminal (leaf) run, created from terminal (length 1) parent transition:
-//   parent weight = current weight > 0, no children, singleton duration list.
+//   parent weight = current weight > 0,
+//   1 child : fake bpointer containing the transition label and rank 0,
+//   duration list with single continuation or single event preceeded graces notes
 // - inner run, crated from inner (length > 1) parent transition:
 //   parent weight > 0,
 //   current weight == 0 (unknown) or current weight > 0 (evaluated)
 //   # children = length parent transition
 //   duration list == empty (unkown) or not (evaluated).
 class Run
-{
-    
+{   
 public:
     // construct a null run (special)
     Run();
@@ -68,17 +69,20 @@ public:
     // terminal (leaf) run
     inline bool terminal() const { return ((! tweight.null()) &&
                                            (tweight == weight) &&
-                                           _children.empty()); }
-
+                                           (_children.size() == 1)); }
+    
     // inner run
     inline bool inner() const { return ((! tweight.null()) &&
                                         (_children.size() > 1)); }
-
-
+    
+    // the run must be terminal
+    size_t label() const;
+    
     // inner run with unevaluated weight
     inline bool unknown() const { return weight.null(); }
     
     // return the number of children of this Run
+    // TODO modif for 0 or 2+ (case terminal = 0, not 1)
     inline size_t arity() { return (_children.size()); }
 
     

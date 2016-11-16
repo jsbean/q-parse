@@ -48,8 +48,9 @@ duration()
             }
             duration.add(Rational(1)); // the event in leaf has relative duration 1
         }
-        // children is empty vector
-        assert(_children.size() == 0);
+        // children is singleton vector
+        _children.push_back(bpointer(label, 0));
+        assert(_children.size() == 1);
         assert(this->terminal());
     }
     // inner transition: fill _children with pointers to 1-bests
@@ -80,6 +81,15 @@ _children(r._children)
     assert (r.null() || r.terminal() || r.inner());
     assert (this->null() || this->terminal() || this->inner());
 }
+
+
+size_t Run::label() const
+{
+    assert (this->terminal());    // 1 children
+    assert (_children.front().bp_rank == 0);
+    return _children.front().bp_state;
+}
+
 
 void Run::reset()
 {

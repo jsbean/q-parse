@@ -22,6 +22,7 @@
 #include <map>
 
 #include "Run.hpp"
+#include "RT.hpp"
 
 
 
@@ -147,6 +148,10 @@ public:
         }
     }
 
+    RhythmTree* tree(Run& r)
+    {
+        return NULL; // TODO
+    }
     
 private:
     
@@ -274,6 +279,7 @@ public:
         return best(_wta->initial(pre, post), k);
     }
     
+    
     // best(S, k)
     // returns the kth best for all states in the given set.
     // return an empty run of weight 0 when there exists less than k best
@@ -321,6 +327,8 @@ public:
         // ALT: tail recursive call return best(k)
         // in case there is more than one best to construct
     }
+    
+    
     
 
 private:

@@ -20,6 +20,8 @@
 		324E4EBF1D9FC3B100114F39 /* qparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* qparse.cpp */; };
 		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
 		3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215A1DA40E4800D2C789 /* Distance.cpp */; };
+		325F85B21DDCC7490053A732 /* RT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325F85B01DDCC7490053A732 /* RT.cpp */; };
+		325F85B31DDCCF9D0053A732 /* RT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325F85B01DDCC7490053A732 /* RT.cpp */; };
 		3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBD81DA63E7200796318 /* Segment.cpp */; };
 		3262BBE01DA6415900796318 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBDE1DA6415900796318 /* Event.cpp */; };
 		327AEFDF1DD8C34F005354D8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 327AEFDD1DD8C34F005354D8 /* Complexity.cpp */; };
@@ -71,6 +73,8 @@
 		325121551DA4065600D2C789 /* WTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WTA.hpp; path = ../src/Schemata/WTA.hpp; sourceTree = "<group>"; };
 		3251215A1DA40E4800D2C789 /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = src/Input/Distance.cpp; sourceTree = SOURCE_ROOT; };
 		3251215B1DA40E4800D2C789 /* Distance.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Distance.hpp; path = src/Input/Distance.hpp; sourceTree = SOURCE_ROOT; };
+		325F85B01DDCC7490053A732 /* RT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RT.cpp; path = src/Output/RT.cpp; sourceTree = SOURCE_ROOT; };
+		325F85B11DDCC7490053A732 /* RT.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = RT.hpp; path = src/Output/RT.hpp; sourceTree = SOURCE_ROOT; };
 		326133471DDB5D4C0031F903 /* ValueWTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ValueWTA.cpp; path = src/Schemata/ValueWTA.cpp; sourceTree = SOURCE_ROOT; };
 		326133481DDB5D4C0031F903 /* ValueWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ValueWTA.hpp; path = src/Schemata/ValueWTA.hpp; sourceTree = SOURCE_ROOT; };
 		3262BBD81DA63E7200796318 /* Segment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Segment.cpp; path = src/Input/Segment.cpp; sourceTree = SOURCE_ROOT; };
@@ -169,6 +173,8 @@
 			children = (
 				320085B21DC9FBC500CF04C4 /* Rational.hpp */,
 				320085B11DC9FBC500CF04C4 /* Rational.cpp */,
+				325F85B11DDCC7490053A732 /* RT.hpp */,
+				325F85B01DDCC7490053A732 /* RT.cpp */,
 				3291851D1DBE1DD2008FFE31 /* Label.hpp */,
 				3291851C1DBE1DD2008FFE31 /* Label.cpp */,
 			);
@@ -289,6 +295,7 @@
 				3205BCC21DDC938D005ADC89 /* ValueWTA.cpp in Sources */,
 				3205BCC41DDC938D005ADC89 /* Weight.cpp in Sources */,
 				3205BCC51DDC938D005ADC89 /* WTA.cpp in Sources */,
+				325F85B31DDCCF9D0053A732 /* RT.cpp in Sources */,
 				32C08BF51DDC9A830097158D /* equiv.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,6 +309,7 @@
 				3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */,
 				327AEFDF1DD8C34F005354D8 /* Complexity.cpp in Sources */,
 				32E1F2E71DCA47BE00A1782C /* DurationList.cpp in Sources */,
+				325F85B21DDCC7490053A732 /* RT.cpp in Sources */,
 				3262BBE01DA6415900796318 /* Event.cpp in Sources */,
 				324C96D41DD0DC960076F966 /* SubdivisionSchema.cpp in Sources */,
 				323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */,
