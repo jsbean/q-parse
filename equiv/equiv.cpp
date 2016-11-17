@@ -25,6 +25,8 @@ double duration(clock_t start)
     return ((double)(clock() - start)/CLOCKS_PER_SEC * 1000);
 }
 
+
+
 int main(int argc, const char * argv[])
 {
     
@@ -37,7 +39,7 @@ int main(int argc, const char * argv[])
     
     WTA* schema = new WTA(argv[1]);
     schema->print();
-    cout << *schema;
+    // cout << *schema;
     
     cout << "\n==== Clean schema:\n";
     time_start = clock();
@@ -57,8 +59,9 @@ int main(int argc, const char * argv[])
     
     // test ValueWTA construction
     if (argc == 2) return 0;
-    std::cout << "\n==== Read rhythmic value from " << argv[2] << '\n';
-    DurationList seg = DurationList(argv[2]);
+    std::cout << "\n==== Read rhythmic value from " << argv[2] << ".txt\n";
+    string valuename = string(argv[2])+".txt";
+    DurationList seg = DurationList(valuename);
     std::cout << "length rhythmic value: " << seg.size() << '\n';
     
     std::cout << "\n==== COnstruction ValueWTA\n";
@@ -84,7 +87,7 @@ int main(int argc, const char * argv[])
     
     
     // test k-best for initial states of ValueWTA
-    int k = 30;
+    int k = 100;
     time_start = clock();
     Ktable<WeightMin> kkt = Ktable<WeightMin>(vwta);
     
@@ -98,6 +101,9 @@ int main(int argc, const char * argv[])
             cout << i << "-best: ";
             //cout << kkt.tree(r)->to_string();
             cout << t->to_string();
+            cout << " ";
+            cout << t->lily(4);
+            cout << " ";
             cout << " (weight=" << r.weight << ")";
             cout << " " << r.duration << "\n";
         }
@@ -105,6 +111,59 @@ int main(int argc, const char * argv[])
     
     cout << "\ntime for " << k << "-best for ValueWTA : ";
     cout << duration(time_start) << "ms \n";
+    
+    cout << "\n==== LilyPOnd output for " << k << "-best equiv\n";
+    ofstream file;
+    string filename = string(argv[2])+".ly";
+    file.open(filename, ios_base::out);
+    if(!file.is_open())
+    {
+        cerr << "cannot open file "+filename+"\n";
+        return 1;
+    }
+    
+    // try 1-best (for duration list)
+    Run r0 = kkt.best(1);
+    if (! r0.unknown())
+    {
+        // LilyPond header
+        file << "\\header{ \n";
+        file << "  title = \"rhythm notation of value ";
+        file << r0.duration;
+        file << " (";
+        file << argv[1];
+        file << ")";
+        file << "\"\n";
+        file << "}\n";
+        file << "\n";
+        
+        // beginning of score
+        file << "\\score {\n";
+        file << "<<\n";
+        file << "\\new RhythmicStaff {\n";
+        file << "\\time 1/4\n";
+
+        // one best sol per bar
+        for (int i = 1; i <= k; i++)
+        {
+            Run r = kkt.best(i);
+            if (! r.unknown())
+            {
+                RhythmTree* t = kkt.tree(r);
+                file << t->lily(4);
+                file << "\n";
+            }
+        }
+
+        // end of score
+        file << "}\n";
+        file << ">>\n";
+        file << "}\n";
+        file << "\n";
+        file << "\\version \"2.18.2\"\n";
+    }
+    
+    file.close();
     
     delete vwta;
     

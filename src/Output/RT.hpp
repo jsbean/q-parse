@@ -36,7 +36,10 @@ public:
     // add a subtree
     void add(RhythmTree*);
 
-    string to_string();
+    string to_string() const;
+    
+    // LilyPond format
+    string lily(int depth, bool tie=false) const;
 
 private:
     // type state. for leaves only (no significance for inner nodes)
@@ -45,6 +48,10 @@ private:
     // every entry in this map associate to
     // an arity n a partition a1,...,an of this DurationList
     std::vector<RhythmTree*> _children;
+    
+    // utility for LilyPond convert
+    // return whether the leftmost innermost leaf is a tie (continuation)
+    bool tied() const;
     
 };
 
