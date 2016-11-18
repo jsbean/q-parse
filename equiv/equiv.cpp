@@ -36,7 +36,6 @@ int main(int argc, const char * argv[])
     // test WTA file IO
     assert (argc >= 2);
     std::cout << "\n==== Read schema WTA from " << argv[1] << '\n';
-    
     WTA* schema = new WTA(argv[1]);
     schema->print();
     // cout << *schema;
@@ -113,8 +112,12 @@ int main(int argc, const char * argv[])
     cout << duration(time_start) << "ms \n";
     
     cout << "\n==== LilyPOnd output for " << k << "-best equiv\n";
+    string schemafile = string(argv[1]);
+    size_t lastindex = schemafile.find_last_of(".");
+    string schemaprefix = schemafile.substr(0, lastindex);
+    
     ofstream file;
-    string filename = string(argv[2])+".ly";
+    string filename = string(argv[2])+"-"+schemaprefix+".ly";
     file.open(filename, ios_base::out);
     if(!file.is_open())
     {
@@ -128,7 +131,7 @@ int main(int argc, const char * argv[])
     {
         // LilyPond header
         file << "\\header{ \n";
-        file << "  title = \"rhythm notation of value ";
+        file << "  title = \"rhythm notations of value ";
         file << r0.duration;
         file << " (";
         file << argv[1];
@@ -150,8 +153,15 @@ int main(int argc, const char * argv[])
             if (! r.unknown())
             {
                 RhythmTree* t = kkt.tree(r);
+                // without dots
                 file << t->lily(4);
+                //file << "\n";
+                // with dots (test)
+                string d = t->lilydot(4);
+                if (t->_dot) { file << "\n" << d; }
+                file << " \\bar \"||\" ";
                 file << "\n";
+                //file << "}\n";
             }
         }
 
