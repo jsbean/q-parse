@@ -195,6 +195,7 @@ string RhythmTree::lilydot(int depth,
         }
         else if (ignore_first && ignore_second)
         {
+            assert (a == 2);
             // skip
         }
         else
@@ -234,7 +235,7 @@ string RhythmTree::lilydot(int depth,
                          _children[i+1]->tie())
                 {
                     res += _children[i]->lilydot(depth*2,
-                                                 true,              // curent tie,
+                                                 false,             // curent tie,
                                                  false,             // current dot,
                                                  next_ignore_first, // ignore_first
                                                  true               // ignore_second
