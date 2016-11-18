@@ -1,5 +1,5 @@
 //
-//  qparse.cpp
+//  quant.cpp
 //  qparse
 //
 // https://github.com/florento/q-parse
@@ -7,6 +7,9 @@
 //  Created by Florent Jacquemard on 01/10/16.
 //  Copyright © 2016 Florent Jacquemard. All rights reserved.
 //
+// terminal command line for
+// rhythm quantization with qparse library
+
 
 #include <stdio.h>
 #include <time.h>

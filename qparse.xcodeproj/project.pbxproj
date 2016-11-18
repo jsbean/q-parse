@@ -17,7 +17,7 @@
 		3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3215A7A01DBE5CCC00C2D868 /* Run.cpp */; };
 		323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 323C42541DB40F960037D0B1 /* ComboWTA.cpp */; };
 		324C96D41DD0DC960076F966 /* SubdivisionSchema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */; };
-		324E4EBF1D9FC3B100114F39 /* qparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* qparse.cpp */; };
+		324E4EBF1D9FC3B100114F39 /* quant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324E4EBE1D9FC3B100114F39 /* quant.cpp */; };
 		325121561DA4065600D2C789 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
 		3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3251215A1DA40E4800D2C789 /* Distance.cpp */; };
 		325F85B21DDCC7490053A732 /* RT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325F85B01DDCC7490053A732 /* RT.cpp */; };
@@ -88,8 +88,8 @@
 		323C42551DB40F960037D0B1 /* ComboWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWTA.hpp; path = ../src/Schemata/ComboWTA.hpp; sourceTree = "<group>"; };
 		324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SubdivisionSchema.cpp; path = ../src/Schemata/SubdivisionSchema.cpp; sourceTree = "<group>"; };
 		324C96D31DD0DC960076F966 /* SubdivisionSchema.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SubdivisionSchema.hpp; path = ../src/Schemata/SubdivisionSchema.hpp; sourceTree = "<group>"; };
-		324E4EBB1D9FC3B100114F39 /* qparse */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qparse; sourceTree = BUILT_PRODUCTS_DIR; };
-		324E4EBE1D9FC3B100114F39 /* qparse.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = qparse.cpp; path = qparse/qparse.cpp; sourceTree = "<group>"; };
+		324E4EBB1D9FC3B100114F39 /* quant */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = quant; sourceTree = BUILT_PRODUCTS_DIR; };
+		324E4EBE1D9FC3B100114F39 /* quant.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = quant.cpp; path = quant/quant.cpp; sourceTree = SOURCE_ROOT; };
 		325121541DA4065600D2C789 /* WTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WTA.cpp; path = ../src/Schemata/WTA.cpp; sourceTree = "<group>"; };
 		325121551DA4065600D2C789 /* WTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = WTA.hpp; path = ../src/Schemata/WTA.hpp; sourceTree = "<group>"; };
 		3251215A1DA40E4800D2C789 /* Distance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Distance.cpp; path = src/Input/Distance.cpp; sourceTree = SOURCE_ROOT; };
@@ -154,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				32C08BF31DDC9A6F0097158D /* equiv.cpp */,
-				324E4EBE1D9FC3B100114F39 /* qparse.cpp */,
+				324E4EBE1D9FC3B100114F39 /* quant.cpp */,
 				32E712211DDDB1AA00FC1D64 /* schemas.cpp */,
 				324E4EBD1D9FC3B100114F39 /* Sources */,
 				3205BCA51DDC92CD005ADC89 /* Frameworks */,
@@ -165,7 +165,7 @@
 		324E4EBC1D9FC3B100114F39 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				324E4EBB1D9FC3B100114F39 /* qparse */,
+				324E4EBB1D9FC3B100114F39 /* quant */,
 				3205BCCE1DDC938D005ADC89 /* equiv */,
 				32E712201DDDB13F00FC1D64 /* schemas */,
 			);
@@ -264,9 +264,9 @@
 			productReference = 3205BCCE1DDC938D005ADC89 /* equiv */;
 			productType = "com.apple.product-type.tool";
 		};
-		324E4EBA1D9FC3B000114F39 /* qparse */ = {
+		324E4EBA1D9FC3B000114F39 /* quant */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 324E4EC21D9FC3B100114F39 /* Build configuration list for PBXNativeTarget "qparse" */;
+			buildConfigurationList = 324E4EC21D9FC3B100114F39 /* Build configuration list for PBXNativeTarget "quant" */;
 			buildPhases = (
 				324E4EB71D9FC3B000114F39 /* Sources */,
 				324E4EB81D9FC3B000114F39 /* Frameworks */,
@@ -276,9 +276,9 @@
 			);
 			dependencies = (
 			);
-			name = qparse;
+			name = quant;
 			productName = qparse;
-			productReference = 324E4EBB1D9FC3B100114F39 /* qparse */;
+			productReference = 324E4EBB1D9FC3B100114F39 /* quant */;
 			productType = "com.apple.product-type.tool";
 		};
 		32E7120A1DDDB13F00FC1D64 /* schemas */ = {
@@ -326,7 +326,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				324E4EBA1D9FC3B000114F39 /* qparse */,
+				324E4EBA1D9FC3B000114F39 /* quant */,
 				3205BCB81DDC938D005ADC89 /* equiv */,
 				32E7120A1DDDB13F00FC1D64 /* schemas */,
 			);
@@ -369,7 +369,7 @@
 				32D939661DA4F868004497D2 /* Path.cpp in Sources */,
 				3251215C1DA40E4800D2C789 /* Distance.cpp in Sources */,
 				3262BBDA1DA63E7200796318 /* Segment.cpp in Sources */,
-				324E4EBF1D9FC3B100114F39 /* qparse.cpp in Sources */,
+				324E4EBF1D9FC3B100114F39 /* quant.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,7 +546,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		324E4EC21D9FC3B100114F39 /* Build configuration list for PBXNativeTarget "qparse" */ = {
+		324E4EC21D9FC3B100114F39 /* Build configuration list for PBXNativeTarget "quant" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				324E4EC31D9FC3B100114F39 /* Debug */,
