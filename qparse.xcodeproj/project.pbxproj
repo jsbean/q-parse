@@ -40,7 +40,6 @@
 		32E712131DDDB13F00FC1D64 /* SubdivisionSchema.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */; };
 		32E712151DDDB13F00FC1D64 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
 		32E712161DDDB13F00FC1D64 /* WTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 325121541DA4065600D2C789 /* WTA.cpp */; };
-		32E712221DDDB1AA00FC1D64 /* schemas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32E712211DDDB1AA00FC1D64 /* schemas.cpp */; };
 		32E712231DDDB1DD00FC1D64 /* schemas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32E712211DDDB1AA00FC1D64 /* schemas.cpp */; };
 		32EBB0AF1DA3B36F00D2CBA8 /* Weight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32EBB0AD1DA3B36F00D2CBA8 /* Weight.cpp */; };
 /* End PBXBuildFile section */
@@ -354,7 +353,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32E712221DDDB1AA00FC1D64 /* schemas.cpp in Sources */,
 				3291851E1DBE1DD2008FFE31 /* Label.cpp in Sources */,
 				320085B31DC9FBC500CF04C4 /* Rational.cpp in Sources */,
 				3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */,
