@@ -52,7 +52,7 @@ string RhythmTree::to_string() const
             case 1:
                 return "n";
             default:
-                return (::to_string(Label::nbGraceNotes(label()))+"+n");
+                return (::to_string(Label::nbGraceNotes(label()))+"g+n");
         }
     }
     else
