@@ -63,6 +63,9 @@ public:
     
     Rational cont() const { return _continuation; }
     
+    list<Rational>::const_iterator begin() const { return _main.cbegin(); }
+    list<Rational>::const_iterator end() const   { return _main.cend(); }
+    
     // one (non null) continuation and no event in the main list.
     bool single_continuation() const;
 
@@ -87,7 +90,7 @@ public:
     
     // multiply all elements given Ratio
     void mult(Rational);
-
+    
     // concatenation
     DurationList& operator+=(const DurationList& rhs)
     {
@@ -111,7 +114,6 @@ public:
     
     friend inline bool operator==(const DurationList&, const DurationList&);
     friend inline bool operator!=(const DurationList&, const DurationList&);
-
     
 private:
     // duration to tie when appending to other list
@@ -122,6 +124,7 @@ private:
     list<Rational> _main;
     
 };
+
 
 
 namespace std {

@@ -151,6 +151,7 @@ void DurationList::mult(Rational q)
     for(Rational &x : _main) { x *= q; }
 }
 
+
 std::ostream& operator<<(std::ostream& o, const DurationList& l)
 {
     o << '[';

@@ -17,6 +17,8 @@
 
 #include "ValueWTA.hpp"
 #include "Kbest.hpp"
+#include "DurationList.hpp"
+#include "Onsets.hpp"
 #include "RT.hpp"
 
 
@@ -49,21 +51,35 @@ int main(int argc, const char * argv[])
     schema->print();
     cout << *schema;
     
-//    time_start = clock();
-//    size_t res = schema->resolution();
-//    cout << "time to compute resolution : ";
-//    cout << duration(time_start) << "ms \n";
-//    std::cout << "\nresolution = " << res << '\n';
-    
-    
+    // read rhythmic value (2 options)
+    DurationList seg;
+    if (argc == 3)
+    {
+        std::cout << "\n==== Read rhythmic value from " << argv[2] << ".txt\n";
+        string valuename = string(argv[2])+".txt";
+        seg = DurationList(valuename);
+        std::cout << "length rhythmic value: " << seg.size() << '\n';
+    }
+    else if (argc == 4)
+    {
+        std::cout << "\n==== Merge rhythmic values from " << argv[2] << ".txt";
+        std::cout << " and " << argv[3] << ".txt\n";
+        string valuename1 = string(argv[2])+".txt";
+        Onsets on1 = Onsets(DurationList(valuename1));
+        string valuename2 = string(argv[3])+".txt";
+        Onsets on2 = Onsets(DurationList(valuename2));
+        Onsets on = on1+on2;
+        seg = (on1+on2).ioi();
+    }
+    else
+    {
+        cout << "usage: equiv schema.txt ioilist or \n";
+        cout << "       equiv schema.txt ioilist1 ioilist2 \n";
+        return 0;
+    }
+
     // test ValueWTA construction
-    if (argc == 2) return 0;
-    std::cout << "\n==== Read rhythmic value from " << argv[2] << ".txt\n";
-    string valuename = string(argv[2])+".txt";
-    DurationList seg = DurationList(valuename);
-    std::cout << "length rhythmic value: " << seg.size() << '\n';
-    
-    std::cout << "\n==== COnstruction ValueWTA\n";
+    std::cout << "\n==== Construction ValueWTA\n";
     time_start = clock();
     ValueWTA* vwta = new ValueWTA(seg, *schema);
     cout << "time to compute ComboWTA : ";
@@ -117,7 +133,16 @@ int main(int argc, const char * argv[])
     string schemaprefix = schemafile.substr(0, lastindex);
     
     ofstream file;
-    string filename = string(argv[2])+"-"+schemaprefix+".ly";
+    string filename;
+    if (argc == 3)
+    {
+        filename = string(argv[2])+"-"+schemaprefix+".ly";
+    }
+    else if (argc == 4)
+    {
+        filename = string(argv[2])+"+"+string(argv[3])+"-"+schemaprefix+".ly";
+    }
+
     file.open(filename, ios_base::out);
     if(!file.is_open())
     {
