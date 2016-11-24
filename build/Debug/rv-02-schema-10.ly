@@ -8,7 +8,7 @@
 \time 1/4
  {  { e16 e16 }  e8 }  \bar "||" 
 \tuplet 3/2 {  { e16~  { e32 e32~ }  }   { e16 e16~ }  e8 } 
-\tuplet 3/2 {  { e16. e32~ }  e16~ e8. }  \bar "||" 
+\tuplet 3/2 {  { e16. e32~ }  e16 e8. }  \bar "||" 
 }
 >>
 }

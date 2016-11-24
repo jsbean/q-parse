@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 #include <time.h>
-#include <iostream>
 #include <assert.h>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -53,14 +53,19 @@ int main(int argc, const char * argv[])
     
     // read rhythmic value (2 options)
     DurationList seg;
-    if (argc == 3)
+
+    if (argc == 2) // schema
+    {
+        // nothing to do
+    }
+    else if (argc == 3) // schema, rythmic value
     {
         std::cout << "\n==== Read rhythmic value from " << argv[2] << ".txt\n";
         string valuename = string(argv[2])+".txt";
         seg = DurationList(valuename);
         std::cout << "length rhythmic value: " << seg.size() << '\n';
     }
-    else if (argc == 4)
+    else if (argc == 4) // schema, first rythmic value, second rythmic value
     {
         std::cout << "\n==== Merge rhythmic values from " << argv[2] << ".txt";
         std::cout << " and " << argv[3] << ".txt\n";
@@ -70,49 +75,61 @@ int main(int argc, const char * argv[])
         Onsets on2 = Onsets(DurationList(valuename2));
         Onsets on = on1+on2;
         seg = (on1+on2).ioi();
+        cout << "merge=" << seg << "\n";
     }
     else
     {
-        cout << "usage: equiv schema.txt ioilist or \n";
-        cout << "       equiv schema.txt ioilist1 ioilist2 \n";
+        cout << "usage: equiv schema.txt or \n";
+        cout << "       equiv schema.txt IOIlist or \n";
+        cout << "       equiv schema.txt IOIlist1 IOIlist2 \n";
         return 0;
     }
+    
+    Ktable<WeightMin>* kkt = NULL;
+    
+    if (argc == 2) // enumeration of schema
+    {
+        kkt = new Ktable<WeightMin>(schema);
+    }
+    else if ((argc == 3) || (argc == 4)) // enumeration of schema inter rhythmic values
+    {
+        // test ValueWTA construction
+        std::cout << "\n==== Construction ValueWTA\n";
+        time_start = clock();
+        ValueWTA* vwta = new ValueWTA(seg, *schema);
+        cout << "time to compute ComboWTA : ";
+        cout << duration(time_start) << "ms \n";
+        
+        // delete schema;
+        
+        cout << "\nValueWTA:\n";
+        vwta->print();
+        cout << *vwta;
+        
+        //    cout << "\n==== Clean ValueWTA:\n";
+        //    time_start = clock();
+        //    vwta->clean();
+        //    cout << "time to clean ValueWTA : ";
+        //    cout << duration(time_start) << "ms \n";
+        //    vwta->print();
+        //    cout << *vwta;
 
-    // test ValueWTA construction
-    std::cout << "\n==== Construction ValueWTA\n";
-    time_start = clock();
-    ValueWTA* vwta = new ValueWTA(seg, *schema);
-    cout << "time to compute ComboWTA : ";
-    cout << duration(time_start) << "ms \n";
-    
-    delete schema;
-    
-    cout << "\nValueWTA:\n";
-    vwta->print();
-    cout << *vwta;
-    
-    //    cout << "\n==== Clean ValueWTA:\n";
-    //    time_start = clock();
-    //    vwta->clean();
-    //    cout << "time to clean ValueWTA : ";
-    //    cout << duration(time_start) << "ms \n";
-    //    vwta->print();
-    //    cout << *vwta;
-    
-    
+        assert (vwta);
+        kkt = new Ktable<WeightMin>(vwta);
+    }
+    assert (kkt);
     
     // test k-best for initial states of ValueWTA
     int k = 100;
     time_start = clock();
-    Ktable<WeightMin> kkt = Ktable<WeightMin>(vwta);
     
     cout << "\n==== " << k << "-best equiv\n";
     for (int i = k; i > 0; i--)
     {
-        Run r = kkt.best(i);
+        Run r = kkt->best(i);
         if (! r.unknown())
         {
-            RhythmTree* t = kkt.tree(r);
+            RhythmTree* t = kkt->tree(r);
             cout << i << "-best: ";
             //cout << kkt.tree(r)->to_string();
             cout << t->to_string();
@@ -131,10 +148,13 @@ int main(int argc, const char * argv[])
     string schemafile = string(argv[1]);
     size_t lastindex = schemafile.find_last_of(".");
     string schemaprefix = schemafile.substr(0, lastindex);
-    
-    ofstream file;
     string filename;
-    if (argc == 3)
+    
+    if (argc == 2)
+    {
+        filename = schemaprefix+".ly";
+    }
+    else if (argc == 3)
     {
         filename = string(argv[2])+"-"+schemaprefix+".ly";
     }
@@ -143,6 +163,8 @@ int main(int argc, const char * argv[])
         filename = string(argv[2])+"+"+string(argv[3])+"-"+schemaprefix+".ly";
     }
 
+    cout << "write output to file "+filename+"\n";
+    ofstream file;
     file.open(filename, ios_base::out);
     if(!file.is_open())
     {
@@ -151,7 +173,7 @@ int main(int argc, const char * argv[])
     }
     
     // try 1-best (for duration list)
-    Run r0 = kkt.best(1);
+    Run r0 = kkt->best(1);
     if (! r0.unknown())
     {
         // LilyPond header
@@ -174,13 +196,13 @@ int main(int argc, const char * argv[])
         // one best sol per bar
         for (int i = 1; i <= k; i++)
         {
-            Run r = kkt.best(i);
+            Run r = kkt->best(i);
             if (! r.unknown())
             {
-                RhythmTree* t = kkt.tree(r);
+                RhythmTree* t = kkt->tree(r);
                 // without dots
                 file << t->lily(4);
-                //file << "\n";
+                // file << "\n";
                 // with dots (test)
                 string d = t->lilydot(4);
                 if (t->_dot) { file << "\n" << d; }
@@ -200,7 +222,9 @@ int main(int argc, const char * argv[])
     
     file.close();
     
-    delete vwta;
+    // TODO delete kkt->_wta
+    if (kkt) { delete kkt; }
+    delete schema;
     
     return 0;
 }

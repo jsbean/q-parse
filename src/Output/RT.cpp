@@ -96,16 +96,22 @@ string RhythmTree::lily(int depth, bool tie) const
             if (tie) { res += "~"; }
             return res;
         }
-        else if (g == 0) // single note
+        else // [grace notes +] note
         {
+            if (g > 0) // grace notes + note
+            {
+                res += "\\grace {";
+                for (size_t i = 0; i < g; i++)
+                {
+                    res += "f";
+                    res += ::to_string(depth*2);
+                }
+                res += "} ";
+            }
+            // note
             res += "e";
             res += ::to_string(depth);
             if (tie) { res += "~"; }
-            return res;
-        }
-        else // note + grace notes
-        {
-            // TODO
             return res;
         }
     }
@@ -164,17 +170,24 @@ string RhythmTree::lilydot(int depth,
             if (tie) { res += "~"; }
             return res;
         }
-        else if (g == 0)            // single note
+        else           //  note
         {
+            if (g > 0) // grace notes + note
+            {
+                res += "\\grace {";
+                for (size_t i = 0; i < g; i++)
+                {
+                    res += "f";
+                    res += ::to_string(depth*2);
+                }
+                res += "} ";
+            }
+                      // note (dotted or not)
             res += "e";
             res += ::to_string(depth);
             if (dot) { res += "."; }
             if (tie) { res += "~"; }
             return res;
-        }
-        else                        // note + grace notes
-        {
-            return res;             // TODO
         }
     }
     else // inner()
