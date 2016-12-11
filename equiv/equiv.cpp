@@ -133,10 +133,11 @@ int main(int argc, const char * argv[])
             cout << i << "-best: ";
             //cout << kkt.tree(r)->to_string();
             cout << t->to_string();
-            cout << " ";
+            cout << "\n";
+            cout << "        ";
             cout << t->lily(4);
-            cout << " ";
-            cout << " (weight=" << r.weight << ")";
+            cout << "\n";
+            cout << "        (weight=" << r.weight << ")";
             cout << " " << r.duration << "\n";
         }
     }

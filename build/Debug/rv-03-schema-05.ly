@@ -17,7 +17,7 @@
 \tuplet 5/2 { e8~ e8~  { e16 e16~ }   { \tuplet 3/2 { e32~ e32 e32~ }  e16~ }  e8 } 
 \tuplet 5/2 { e8~ e8. e16~ \tuplet 3/2 { e32~ e32 e32 }  e8. }  \bar "||" 
 \tuplet 7/2 { e8~ e8~ e8~  { e16 e16~ }   { e16~ \tuplet 3/2 { e32 e32~ e32~ }  }  e8~ e8 } 
-\tuplet 7/2 { e8~ e8~ e8. e16~  { e16~ \tuplet 3/2 { e32 e32~ e32~ }  }  e8~ e8 }  \bar "||" 
+\tuplet 7/2 { e4~ e8. e16~  { e16~ \tuplet 3/2 { e32 e32~ e32~ }  }  e8~ e8 }  \bar "||" 
 }
 >>
 }

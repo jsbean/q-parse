@@ -10,6 +10,30 @@
 #include "Weight.hpp"
 
 
+
+Weight Complexity::penalty_arity[18] =
+{
+    Weight(0.01),  // x2
+    Weight(0.02),  // x3
+    Weight(0.03),  // x4
+    Weight(0.04),  // x5
+    Weight(0.05),  // x6
+    Weight(0.06),  // x7
+    Weight(0.07),  // x8
+    Weight(0.08),  // x9
+    Weight(0.09),  // x10
+    Weight(0.10),  // x11
+    Weight(0.11),  // x12
+    Weight(0.12),  // x13
+    Weight(0.13),  // x14
+    Weight(0.14),  // x15
+    Weight(0.15),  // x16
+    Weight(0.16),  // x17
+    Weight(0.17),  // x18
+    Weight(0.18)   // x19
+};
+
+
 Weight Penalty::inner(size_t arity)
 {
     assert (arity > 1);
