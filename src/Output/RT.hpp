@@ -49,8 +49,11 @@ public:
     string lilydot(int depth);
     
     // global variable set if a dot is added in lilydot
-    static bool _dot;
-
+    static bool dot_flag;
+    
+    // format for Tree Edit Distance Salzburg library
+    string APTED() const;
+    
 private:
     // type state. for leaves only (no significance for inner nodes)
     size_t _label;

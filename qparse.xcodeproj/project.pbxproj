@@ -30,6 +30,8 @@
 		3262BBE01DA6415900796318 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3262BBDE1DA6415900796318 /* Event.cpp */; };
 		3264A29F1DDF116D00035646 /* quant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3264A29E1DDF116D00035646 /* quant.cpp */; };
 		327AEFDF1DD8C34F005354D8 /* Complexity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 327AEFDD1DD8C34F005354D8 /* Complexity.cpp */; };
+		328D8B9C1DFDD9F700506E63 /* APTED.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328D8B9B1DFDD9F700506E63 /* APTED.cpp */; };
+		328D8B9D1DFDD9F700506E63 /* APTED.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 328D8B9B1DFDD9F700506E63 /* APTED.cpp */; };
 		3291851E1DBE1DD2008FFE31 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3291851C1DBE1DD2008FFE31 /* Label.cpp */; };
 		32C08BF51DDC9A830097158D /* equiv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32C08BF31DDC9A6F0097158D /* equiv.cpp */; };
 		32C08BF61DDCB0540097158D /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3291851C1DBE1DD2008FFE31 /* Label.cpp */; };
@@ -93,7 +95,6 @@
 		323C42541DB40F960037D0B1 /* ComboWTA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComboWTA.cpp; path = ../src/Schemata/ComboWTA.cpp; sourceTree = "<group>"; };
 		323C42551DB40F960037D0B1 /* ComboWTA.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ComboWTA.hpp; path = ../src/Schemata/ComboWTA.hpp; sourceTree = "<group>"; };
 		3245EF2C1DE04DEF00E6566C /* LilyPond.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LilyPond.cpp; path = ../src/Output/LilyPond.cpp; sourceTree = "<group>"; };
-		3245EF2D1DE04DEF00E6566C /* LilyPond.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LilyPond.hpp; path = ../src/Output/LilyPond.hpp; sourceTree = "<group>"; };
 		324C96D21DD0DC960076F966 /* SubdivisionSchema.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SubdivisionSchema.cpp; path = ../src/Schemata/SubdivisionSchema.cpp; sourceTree = "<group>"; };
 		324C96D31DD0DC960076F966 /* SubdivisionSchema.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = SubdivisionSchema.hpp; path = ../src/Schemata/SubdivisionSchema.hpp; sourceTree = "<group>"; };
 		324E4EBB1D9FC3B100114F39 /* quant */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = quant; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +113,7 @@
 		3264A29E1DDF116D00035646 /* quant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = quant.cpp; path = qparse/quant.cpp; sourceTree = "<group>"; };
 		327AEFDD1DD8C34F005354D8 /* Complexity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Complexity.cpp; path = src/Schemata/Complexity.cpp; sourceTree = SOURCE_ROOT; };
 		327AEFDE1DD8C34F005354D8 /* Complexity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Complexity.hpp; path = src/Schemata/Complexity.hpp; sourceTree = SOURCE_ROOT; };
+		328D8B9B1DFDD9F700506E63 /* APTED.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = APTED.cpp; path = src/Output/APTED.cpp; sourceTree = SOURCE_ROOT; };
 		3291851C1DBE1DD2008FFE31 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Label.cpp; path = ../src/Output/Label.cpp; sourceTree = "<group>"; };
 		3291851D1DBE1DD2008FFE31 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Label.hpp; path = ../src/Output/Label.hpp; sourceTree = "<group>"; };
 		32C08BF31DDC9A6F0097158D /* equiv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = equiv.cpp; path = equiv/equiv.cpp; sourceTree = "<group>"; };
@@ -217,8 +219,8 @@
 				32129C861DDFACCF0012472F /* Onsets.cpp */,
 				325F85B11DDCC7490053A732 /* RT.hpp */,
 				325F85B01DDCC7490053A732 /* RT.cpp */,
-				3245EF2D1DE04DEF00E6566C /* LilyPond.hpp */,
 				3245EF2C1DE04DEF00E6566C /* LilyPond.cpp */,
+				328D8B9B1DFDD9F700506E63 /* APTED.cpp */,
 				3291851D1DBE1DD2008FFE31 /* Label.hpp */,
 				3291851C1DBE1DD2008FFE31 /* Label.cpp */,
 			);
@@ -352,12 +354,13 @@
 				3205BCBC1DDC938D005ADC89 /* Run.cpp in Sources */,
 				3205BCBA1DDC938D005ADC89 /* Rational.cpp in Sources */,
 				32129C891DDFB9100012472F /* DurationList.cpp in Sources */,
+				328D8B9C1DFDD9F700506E63 /* APTED.cpp in Sources */,
 				32129C881DDFACCF0012472F /* Onsets.cpp in Sources */,
 				3205BCC21DDC938D005ADC89 /* ValueWTA.cpp in Sources */,
 				3205BCC41DDC938D005ADC89 /* Weight.cpp in Sources */,
-				3245EF2E1DE04DEF00E6566C /* LilyPond.cpp in Sources */,
 				3205BCC51DDC938D005ADC89 /* WTA.cpp in Sources */,
 				325F85B31DDCCF9D0053A732 /* RT.cpp in Sources */,
+				3245EF2E1DE04DEF00E6566C /* LilyPond.cpp in Sources */,
 				32C08BF51DDC9A830097158D /* equiv.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,12 +396,13 @@
 				32E7120D1DDDB13F00FC1D64 /* Rational.cpp in Sources */,
 				32E7120E1DDDB13F00FC1D64 /* Run.cpp in Sources */,
 				32E7120F1DDDB13F00FC1D64 /* Complexity.cpp in Sources */,
-				32E712111DDDB13F00FC1D64 /* RT.cpp in Sources */,
+				328D8B9D1DFDD9F700506E63 /* APTED.cpp in Sources */,
 				32E712121DDDB13F00FC1D64 /* Event.cpp in Sources */,
 				32E712131DDDB13F00FC1D64 /* SubdivisionSchema.cpp in Sources */,
-				3245EF2F1DE04DEF00E6566C /* LilyPond.cpp in Sources */,
 				32E712151DDDB13F00FC1D64 /* Weight.cpp in Sources */,
 				32E712161DDDB13F00FC1D64 /* WTA.cpp in Sources */,
+				32E712111DDDB13F00FC1D64 /* RT.cpp in Sources */,
+				3245EF2F1DE04DEF00E6566C /* LilyPond.cpp in Sources */,
 				32E712231DDDB1DD00FC1D64 /* schemas.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

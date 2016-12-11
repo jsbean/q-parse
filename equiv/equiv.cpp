@@ -206,7 +206,7 @@ int main(int argc, const char * argv[])
                 // file << "\n";
                 // with dots (test)
                 string d = t->lilydot(4);
-                if (t->_dot) { file << "\n" << d; }
+                if (t->dot_flag) { file << "\n" << d; }
                 file << " \\bar \"||\" ";
                 file << "\n";
                 //file << "}\n";
