@@ -18,6 +18,7 @@
 		32129C891DDFB9100012472F /* DurationList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32129C831DDFAC750012472F /* DurationList.cpp */; };
 		32129C8A1DDFB9320012472F /* DurationList.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 32129C841DDFAC750012472F /* DurationList.hpp */; };
 		3215A7A21DBE5CCC00C2D868 /* Run.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3215A7A01DBE5CCC00C2D868 /* Run.cpp */; };
+		32221F3D1E019B0900F0BAF9 /* DurationList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32129C831DDFAC750012472F /* DurationList.cpp */; };
 		323C42561DB40F960037D0B1 /* ComboWTA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 323C42541DB40F960037D0B1 /* ComboWTA.cpp */; };
 		3245EF2E1DE04DEF00E6566C /* LilyPond.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3245EF2C1DE04DEF00E6566C /* LilyPond.cpp */; };
 		3245EF2F1DE04DEF00E6566C /* LilyPond.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3245EF2C1DE04DEF00E6566C /* LilyPond.cpp */; };
@@ -402,6 +403,7 @@
 				32E712151DDDB13F00FC1D64 /* Weight.cpp in Sources */,
 				32E712161DDDB13F00FC1D64 /* WTA.cpp in Sources */,
 				32E712111DDDB13F00FC1D64 /* RT.cpp in Sources */,
+				32221F3D1E019B0900F0BAF9 /* DurationList.cpp in Sources */,
 				3245EF2F1DE04DEF00E6566C /* LilyPond.cpp in Sources */,
 				32E712231DDDB1DD00FC1D64 /* schemas.cpp in Sources */,
 			);
